@@ -14,11 +14,6 @@ $(document).ready(function() {
 	// var object = jQuery.parseJSON(json);
 	// jQuery("div").text(object.test);
 
-	// for(var i = 0; i < timelines.length; i++){
-	// alert(timelines[0].days);
-
-	// }
-
 	assignableTasks = Array();
 
 	for ( var i = 0; i < tasks.length; i++) {
