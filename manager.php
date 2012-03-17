@@ -1,5 +1,7 @@
 <?php
 
+//Manager php
+
 $semanaIni = $dateSt = '03/05/2012';
 $semanas = 4;
 
