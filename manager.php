@@ -14,38 +14,41 @@ $timelines = Array(
 		Array("id" => 6,"name" => "Alicia", "team" => 2, "days" => Array())
 );
 
-// $day = Array(
-// 		'date' => "12/05/2012",
-// 		'week' => 0,
-// 		'day'=> 0,
-// 		'hours' => 8,
-// 		'used' => 0 ,
-// 		'tasks' => Array());
+// Array samples
+/*
+$day = Array(
+		'date' => "12/05/2012",
+		'week' => 0,
+		'day'=> 0,
+		'hours' => 8,
+		'used' => 0 ,
+		'tasks' => Array());
 
-// $dayTask = Array("time" => 4,
-// 		'color' => '#ffffff');
-
+$dayTask = Array("time" => 4,
+		'color' => '#ffffff');
+*/
 
 
 // Tasks definition
+/*
+$tasks = Array();
 
-// $tasks = Array();
+$task = Array(
+		'name' => 'Lorem ipsum dolor',
+		'duration' => 48,
+		'closed' => 0,
+		'color' => '#ccc',
+		'splits' => 1,
+		'split' => Array());
 
-// $task = Array(
-// 		'name' => 'Lorem ipsum dolor',
-// 		'duration' => 48,
-// 		'closed' => 0,
-// 		'color' => '#ccc',
-// 		'splits' => 1,
-// 		'split' => Array());
-
-// $split = Array(
-// 		'id' => 0,
-// 		'parentId' => 0,
-// 		'devId' => 0,
-// 		'assigned' => 0,
-// 		'duration' => 10		// cannot be bigger than the parent task
-// 		);
+$split = Array(
+		'id' => 0,
+		'parentId' => 0,
+		'devId' => 0,
+		'assigned' => 0,
+		'duration' => 10		// cannot be bigger than the parent task
+		);
+*/
 
 //TEST TASKS
 
