@@ -117,9 +117,12 @@ for($w = 0; $w < $semanas ; $w++){
 	$literal .= <<<xxx
 <table class="weekTable" cellpadding="0" cellspacing="0" border="0">
 <caption>Week {$weekN}</caption>
-	<tr class="header">
-		<td></td><td>{$date1}</td><td>{$date2}</td><td>{$date3}</td><td>{$date4}</td><td>{$date5}</td>
+	<thead>
+	<tr>
+		<th></th><th>{$date1}</th><th>{$date2}</th><th>{$date3}</th><th>{$date4}</th><th>{$date5}</th>
 	</tr>
+	</thead>
+	<tbody>
 xxx;
 
 	$teamSt = $timelines[0]["team"];
@@ -185,6 +188,7 @@ xxx;
 	$dateSt = date("d-m-Y",strtotime("$dateSt + 7 day"));// current date
 
 	$literal .= <<<xxx
+	</tbody>
 </table>
 xxx;
 
