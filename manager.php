@@ -34,6 +34,7 @@ $dayTask = Array("time" => 4,
 $tasks = Array();
 
 $task = Array(
+		'id' => 0,
 		'name' => 'Lorem ipsum dolor',
 		'duration' => 48,
 		'closed' => 0,
@@ -154,26 +155,26 @@ xxx;
 
 		$literal .= <<<xxx
 	<tr>
-		<td class="devName">
+		<td class="devName" style="width:20px;">
 			{$timelines[$tm]['name']}
 		</td>
-		<td>
+		<td style="width:16%">
 			<div class="smallContainer" id="div_{$weekN}_{$tm}_1">
 			</div>
 		</td>
-		<td>
+		<td style="width:16%">
 			<div class="smallContainer" id="div_{$weekN}_{$tm}_2">
 			</div>
 		</td>
-		<td>
+		<td style="width:16%">
 			<div class="smallContainer" id="div_{$weekN}_{$tm}_3">
 			</div>
 		</td>
-		<td>
+		<td style="width:16%">
 			<div class="smallContainer" id="div_{$weekN}_{$tm}_4">
 			</div>
 		</td>
-		<td>
+		<td style="width:16%">
 			<div class="smallContainer" id="div_{$weekN}_{$tm}_5">
 			</div>
 		</td>
