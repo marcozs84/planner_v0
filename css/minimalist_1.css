@@ -1,0 +1,96 @@
+@CHARSET "ISO-8859-1";
+
+*{
+	margin:0px;
+	padding:0px;
+	font-family:arial;
+	font-size:12px;
+}
+
+html, body{
+	width:100%;
+	height:100%;
+}
+
+.weeksWrapper{
+	width:100%;
+}
+
+.weeksWrapper > div{
+	margin:10px;
+}
+
+h1{
+	font-size:24px;
+}
+.weekTable{
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-collapse: collapse;
+    font-family: "Lucida Sans Unicode","Lucida Grande",Sans-Serif;
+    font-size: 12px;
+    /* margin: 20px; */
+    text-align: left;
+    width: 480px;
+}
+
+.weekTable caption{
+	font-size: 24px;
+	text-align:left;
+}
+
+.weekTable > thead > tr > th{
+	border-bottom: 2px solid #6678B1;
+    color: #003399;
+    font-size: 14px;
+    font-weight: normal;
+    padding: 10px 8px;
+}
+
+.weekTable > tbody > tr:hover > td{
+	color: #000099;
+}
+.weekTable > tbody > tr > td{
+	border-bottom: 1px solid #CCCCCC;
+    color: #666699;
+    padding: 6px 8px;
+	vertical-align:top;
+}
+
+.weekTable > tbody > tr > .devName{
+	padding:2px;
+	vertical-align:middle;
+}
+
+.weekTable > tbody > .teamSeparator > td{
+	height:2px;
+	background-color:#6678B1;
+	border:none;
+	padding:0px;
+}
+
+.smallContainer{
+	height:100%;
+}
+
+.task{
+	width:100%;
+	border:none;
+}
+
+.task, .task > tr > td{
+	margin:0px;
+	padding:0px;
+	border:none;
+}
+
+.taskName{
+	background-color: #e5e5e5;
+	padding:3px;
+}
+
+.taskTime{
+	width:20px;
+	color: #fff;
+	background-color: #333;
+	text-align:center;
+}
