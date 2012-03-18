@@ -1,15 +1,12 @@
 $(document).ready(function() {
-	// $('#xhrform').submit(function() {
-	// if ($('#firstname').val() == '') {
-	// alert('firstname esta vacio');
-	// }else{
-	// //makeRequest();
-	// }
-	// return false;
-	// });
-
-	// $("#info").append(timelines);
-	// alert(timelines);
+//	 $('#xhrform').submit(function() {
+//		if ($('#firstname').val() == '') {
+//			alert('firstname esta vacio');
+//		} else {
+//			// makeRequest();
+//		}
+//		return false;
+//	});
 
 	// var object = jQuery.parseJSON(json);
 	// jQuery("div").text(object.test);
@@ -21,8 +18,6 @@ $(document).ready(function() {
 			assignableTasks.push(tasks[i].split[j]);
 		}
 	}
-
-	// console.log(assignableTasks);
 
 	assignTask(assignableTasks[0], 3);
 	assignTask(assignableTasks[2], 3);
@@ -238,9 +233,9 @@ function assignTask(task, devId) {
 			tTask.duration = dayAvailable;
 			obj.tasks.push(tTask);
 			obj.used = dayAvailable;
-			if (dayAvailable == hrsTotal) {
+//			if (dayAvailable == hrsTotal) {
 //				taskHeight = 'height:100%;';
-			}
+//			}
 			unassigned = unassigned - dayAvailable;
 			dayCounter++;
 		} else {
@@ -257,15 +252,6 @@ function assignTask(task, devId) {
 		color = getFontColor(backColor);
 		name = getTaskName(task.parentId);
 
-		// alert(color);
-
-		// $('#div_' + obj.week + '_' + timeId + '_' + obj.day).append(
-		// '<div class="task" style="'+taskHeight+'"><span class="taskName"
-		// style="background-color:'
-		// + backColor + '; color:' + color + '">' + name
-		// + '</span><span class="taskTime">' + obj.used
-		// + '</span></div>');
-
 		var sufix = obj.week + '_' + timeId + '_' + obj.day + '_' + task.id;
 
 		$('#div_' + obj.week + '_' + timeId + '_' + obj.day)
@@ -279,40 +265,12 @@ function assignTask(task, devId) {
 								+ '</td><td class="taskTime">' + obj.used
 								+ '</td></table>');
 
-		// alert($('#div_' + obj.week + '_' + timeId + '_' + obj.day).height());
-
 		elements22.push('#div_' + obj.week + '_' + timeId + '_' + obj.day);
-
-		// $('#div_' + obj.week + '_' + timeId + '_' + obj.day).height($('#div_'
-		// + obj.week + '_' + timeId + '_' + obj.day).parent().height());
-
-		// $('#tbl_'+sufix).height() = $('#tbl_'+sufix).parent().height();
-		// alert(1);
-
 		temp = 0;
-
-		// timeSt = ;
 	}
-
-	// alert('div_' + obj.week + '_' + timeId + '_' + obj.day);
-
-	// dayTask = {
-	// "time" : 4,
-	// 'color' : '#007800'
-	// };
-
 }
 
 function assignHeights() {
-	
-//	return false;
-
-//	alert(elements22);
-//	for ( var i = 0; i < elements22.length; i++) {
-//		$(elements22[i]).height($(elements22[i]).parent().height());
-//		// alert($(elements22[i]).id());
-//	}
-
 	var elename = 0;
 	for ( var i = 0; i < timeline.length; i++) {
 		for ( var j = 0; j < timeline[i].days.length; j++) {
@@ -322,17 +280,11 @@ function assignHeights() {
 
 				elename = '#tbl_' + timeline[i].days[j].week + '_' + i + '_'
 						+ timeline[i].days[j].day + '_' + timeline[i].days[j].tasks[k].id;
-//				$(elename).height(timeline[i].days[j].tasks[k].duration * 12.5);
-//				$(elename).css("border","2px solid #000")
 				if (timeline[i].days[j].tasks.length == 1 && timeline[i].days[j].tasks[k].duration == timeline[i].days[j].hours) {
 					$(elename).parent().height($(elename).parent().parent().height());
 					$(elename).height($(elename).parent().height());
-//					alert(elename);
 				}
-				// alert(elename);
 			}
 		}
 	}
-	// var sufix = obj.week + '_' + timeId + '_' + obj.day + '_' + task.id;
-
 }
