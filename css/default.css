@@ -1,0 +1,39 @@
+@CHARSET "ISO-8859-1";
+
+.weekTable{
+	/*margin:10px;*/
+	width:100%;
+	border-left:1px solid #e5e5e5;
+}
+
+.weekTable caption{
+	font-size: 24px;
+	text-align:left;
+}
+
+.weekTable > thead > tr > th{
+	/* border-top:1px solid #c8c8c8; */
+}
+.weekTable > thead tr{
+	background-color:#ccc;
+	text-align:center;
+	vertical-align:middle;
+}
+
+.weekTable > tbody > tr > td{
+	border-right:1px solid #ccc;
+	border-bottom:1px solid #ccc;
+	font-size:12px;
+	vertical-align:top;
+}
+
+.weekTable > tbody > tr > .devName{
+	padding:2px;
+	vertical-align:middle;
+}
+
+.weekTable > tbody > .teamSeparator > td{
+	height:10px;
+	background-color:#000;
+	border:none;
+}

@@ -158,26 +158,26 @@ xxx;
 
 		$literal .= <<<xxx
 	<tr>
-		<td class="devName" style="width:20px;">
+		<td class="devName" style="width:50px;">
 			{$timelines[$tm]['name']}
 		</td>
-		<td style="width:16%">
+		<td style="width:20%">
 			<div class="smallContainer" id="div_{$weekN}_{$tm}_1">
 			</div>
 		</td>
-		<td style="width:16%">
+		<td style="width:20%">
 			<div class="smallContainer" id="div_{$weekN}_{$tm}_2">
 			</div>
 		</td>
-		<td style="width:16%">
+		<td style="width:20%">
 			<div class="smallContainer" id="div_{$weekN}_{$tm}_3">
 			</div>
 		</td>
-		<td style="width:16%">
+		<td style="width:20%">
 			<div class="smallContainer" id="div_{$weekN}_{$tm}_4">
 			</div>
 		</td>
-		<td style="width:16%">
+		<td style="width:20%">
 			<div class="smallContainer" id="div_{$weekN}_{$tm}_5">
 			</div>
 		</td>

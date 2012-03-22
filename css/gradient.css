@@ -1,0 +1,73 @@
+@CHARSET "ISO-8859-1";
+
+
+
+.weekTable{
+    border-collapse: collapse;
+    font-family: "Lucida Sans Unicode","Lucida Grande",Sans-Serif;
+    font-size: 12px;
+    text-align: left;
+    width:100%;
+}
+
+.weekTable caption{
+	font-size: 24px;
+	text-align:left;
+	font-family: "Lucida Sans Unicode","Lucida Grande",Sans-Serif;
+	color: #003399;
+}
+
+.weekTable > thead > tr > th{
+    background: url("../imgs/gradient/gradhead.png") repeat-x scroll 0 0 #B9C9FE;
+    border-bottom: 1px solid #FFFFFF;
+    border-top: 2px solid #D3DDFF;
+    color: #003399;
+    font-size: 13px;
+    font-weight: normal;
+    padding: 8px;
+	text-align:center;
+}
+
+.weekTable > tbody > tr:hover > td{
+    background: url("../imgs/gradient/gradhover.png") repeat-x scroll 0 0 #D0DAFD;
+    color: #333399;
+}
+.weekTable > tbody > tr > td{
+    background: url("../imgs/gradient/gradback.png") repeat-x scroll 0 0 #E8EDFF;
+    border-bottom: 1px solid #FFFFFF;
+    border-top: 1px solid #FFFFFF;
+    color: #666699;
+    padding: 8px;
+    padding: 5px 0px 5px 5px;
+	vertical-align:top;
+}
+
+.weekTable > tbody > tr > .devName{
+	padding:2px;
+	vertical-align:middle;
+	font-weight:bold;
+}
+
+.weekTable > tbody > .teamSeparator > td{
+	height:2px;
+	background-color:#6678B1;
+	border:none;
+	padding:0px;
+}
+
+/************************************/
+div.floating-menu {
+	position: fixed;
+	background-color:#B9C9FE;
+	border-bottom: 2px solid #D3DDFF;
+}
+
+div.floating-menu a, div.floating-menu h3 {
+	color:#003399;
+}
+
+div.floating-menu a{
+	float:right;
+	background: url("../imgs/gradient/gradhead.png") repeat-x scroll 0 0 #B9C9FE;
+	border:1px solid #D3DDFF;
+}
