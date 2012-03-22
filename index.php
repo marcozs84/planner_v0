@@ -27,6 +27,10 @@ include_once 'manager.php';
 	type="text/javascript"
 	src="js/manager.js"
 ></script>
+<script
+	type="text/javascript"
+	src="js/taskList.js"
+></script>
 
 <?php
 $path = "development-bundle/ui/minified/";
