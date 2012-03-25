@@ -76,13 +76,16 @@ closedir($handle);
 <body>
 
 <div class="floating-menu">
-<h3>Planner menu</h3>
+<h3>Planner</h3>
 <a href="javascript:;">Add Developer</a>
 <a href="javascript:;">Assign Tasks</a>
 <a href="javascript:;">Display Tasks</a>
 <a href="javascript:;">Create Task</a>
 </div>
 
+
+<div class="weeksWrapper">
+	<div>
 
 <div class="demo">
 
@@ -125,8 +128,6 @@ closedir($handle);
 
 </div><!-- End demo -->
 
-<div class="weeksWrapper">
-	<div>
 
 
 <h1>Planner</h1>

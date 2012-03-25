@@ -1,16 +1,25 @@
+var assignableTasks = Array();
+
 $(document).ready(function() {
 
 	assignableTasks = Array();
+	fixedTasks = Array();
 
 	for ( var i = 0; i < tasks.length; i++) {
-		for ( var j = 0; j < tasks[i].split.length; j++) {
-			assignableTasks.push(tasks[i].split[j]);
+		for ( var j = 0; j < tasks[i].splits.length; j++) {
+			assignableTasks[tasks[i].splits[j].id] = tasks[i].splits[j];
 		}
 	}
 
-	assignTask(assignableTasks[0], 3);
+	// assignFixedTasks();
+
+	// assignTask(assignableTasks[0], 3);
+	assignTask(assignableTasks[1], 3);
 	assignTask(assignableTasks[2], 3);
-	assignTask(assignableTasks[1], 6);
+	assignTask(assignableTasks[3], 6);
+	assignTask(assignableTasks[4], 6);
+	assignTask(assignableTasks[5], 6);
+	assignTask(assignableTasks[6], 3);
 
 	assignHeights();
 
@@ -20,9 +29,9 @@ var Task = function(task) {
 	this.id = 0;
 	this.name = "";
 	this.duration = "";
+	this.assigned = 0;
 	this.closed = "";
 	this.color = "";
-	this.splits = "";
 	this.splits = Array();
 
 	this.construct = function() {
@@ -30,10 +39,10 @@ var Task = function(task) {
 			this.id = task.id;
 			this.name = task.name;
 			this.duration = task.duration;
+			this.assigned = task.assigned;
 			this.closed = task.closed;
 			this.color = task.color;
 			this.splits = task.splits;
-			this.split = task.split;
 		}
 	}
 
@@ -58,6 +67,17 @@ var Split = function(split) {
 	}
 
 	this.construct();
+}
+
+function getTaskById(id) {
+	var task = '';
+	for ( var i = 0; i < tasks.length; i++) {
+		if (tasks[i].id == id) {
+			task = tasks[i];
+			break;
+		}
+	}
+	return task;
 }
 
 function getTaskName(id) {
@@ -150,14 +170,14 @@ function setAssigned(parentId, id) {
 		if (tasks[i].id == parentId) {
 			oTask = tasks[i];
 			color = tasks[i].color;
-			for ( var j = 0; j < tasks[i].split.length; j++) {
-				if (tasks[i].split[j].id == id) {
-					tasks[i].split[j].assigned = 1;
+			for ( var j = 0; j < tasks[i].splits.length; j++) {
+				if (tasks[i].splits[j].id == id) {
+					tasks[i].splits[j].assigned = 1;
 				}
 			}
 
-			for ( var j = 0; j < tasks[i].split.length; j++) {
-				if (tasks[i].split[j].assigned == 1) {
+			for ( var j = 0; j < tasks[i].splits.length; j++) {
+				if (tasks[i].splits[j].assigned == 1) {
 					assignations++;
 				}
 			}
@@ -179,11 +199,12 @@ function assignTask(task, devId) {
 
 	if (task.assigned == 1) {
 		alert('The provided task was already assigned.');
-		return FALSE;
+		return false;
 	}
 
 	var timeId = 0; // represents Developers timeline.
 
+	// Searching Developers timeline
 	for ( var i = 0; i < timeline.length; i++) {
 		if (timeline[i].id == devId) {
 			timeId = i;
@@ -194,12 +215,28 @@ function assignTask(task, devId) {
 
 	var available = 0;
 
+	// Search for first available day
 	for ( var i = 0; i < dev.days.length; i++) {
-		available = dev.days[i].hours - dev.days[i].used;
-		hrsTotal = dev.days[i].hours;
-		if (available > 0) {
-			objI = i;
-			break;
+		if (task.startDate == '') {
+			available = dev.days[i].hours - dev.days[i].used;
+			hrsTotal = dev.days[i].hours;
+			if (available > 0) {
+				objI = i;
+				break;
+			}
+		} else {
+			if (dev.days[i].date == task.startDate) {
+				available = dev.days[i].hours - dev.days[i].used;
+				hrsTotal = dev.days[i].hours;
+				if (available > 0) {
+					objI = i;
+					break;
+				} else {
+					alert("No hay espacio en la fecha deseada.");
+					return false;
+					break;
+				}
+			}
 		}
 	}
 
@@ -212,27 +249,27 @@ function assignTask(task, devId) {
 
 	var obj = 0;
 	while (unassigned > 0) {
-		tTask = new Split(task);
+		tTask = new Split(
+				task);
 		dayAvailable = dev.days[dayCounter].hours - dev.days[dayCounter].used;
+		if (dayAvailable < 1) {
+			dayCounter++;
+			continue;
+		}
 		hrsTotal = dev.days[dayCounter].hours;
 		obj = dev.days[dayCounter];
 		if (unassigned > dayAvailable) {
-			// task.duration = dayAvailable;
-			// obj.tasks.push(task);
 			tTask.duration = dayAvailable;
 			obj.tasks.push(tTask);
-			obj.used = dayAvailable;
-			// if (dayAvailable == hrsTotal) {
-			// taskHeight = 'height:100%;';
-			// }
+			obj.used += dayAvailable;
+			assigned = dayAvailable;
 			unassigned = unassigned - dayAvailable;
 			dayCounter++;
 		} else {
-			// task.duration = unassigned;
-			// obj.tasks.push(task);
 			tTask.duration = unassigned;
 			obj.tasks.push(tTask);
-			obj.used = unassigned;
+			obj.used += unassigned;
+			assigned = unassigned;
 			unassigned = 0;
 			setAssigned(task.parentId, task.id);
 		}
@@ -250,10 +287,10 @@ function assignTask(task, devId) {
 								+ '" cellspacing="0" cellpadding="0" border="0" class="task" style="'
 								+ taskHeight
 								+ '"><tr><td class="taskName" style="background-color:'
-								+ backColor + '; color:' + color + '">tbl_'
-								+ sufix + ':<br />' + name
-								+ '</td><td class="taskTime">' + obj.used
-								+ '</td></table>');
+								+ backColor + '; color:' + color + '">'
+								// + sufix + ':<br />' + name
+								+ name + '</td><td class="taskTime">'
+								+ assigned + '</td></table>');
 
 		elements22.push('#div_' + obj.week + '_' + timeId + '_' + obj.day);
 		temp = 0;

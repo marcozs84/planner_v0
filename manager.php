@@ -37,19 +37,54 @@ $task = Array(
 		'id' => 0,
 		'name' => 'Lorem ipsum dolor',
 		'duration' => 48,
+		'assigned' => 0,
 		'closed' => 0,
 		'color' => '#ccc',
-		'splits' => 1,
-		'split' => Array());
+		'splits' => Array());
 
 $split = Array(
 		'id' => 0,
 		'parentId' => 0,
 		'devId' => 0,
 		'assigned' => 0,
+		'startDate' => '',
 		'duration' => 10		// cannot be bigger than the parent task
 		);
 */
+
+// class Task {
+// 	public $id = 0;
+// 	public $name = '';
+// 	public $duration = 0;
+// 	public $assigned = 0;
+//	public $startDate = '';
+// 	public $closed = false;
+// 	public $color = '';  // #ccc
+// 	public $splits = Array();
+
+// 	public function addSplit($split){
+// 		$this->splits[] = $split;
+// 	}
+// }
+
+// class Split {
+// 	public $id = 0;
+// 	public $parentId = 0;
+// 	public $devId = 0;
+// 	public $assigned = 0;
+// 	public $startDate = '';
+// 	public $duration = 0;
+// }
+
+// $task1 = new Task();
+// $task1->id = 0;
+// $task1->name = 'nombre';
+// $task1->duration = 10;
+
+// $split1 = new Split();
+// $split1->id = 0;
+
+// print json_encode($task1);
 
 //TEST TASKS
 
@@ -59,15 +94,15 @@ $task1 = Array(
 		'duration' => 12,
 		'assigned' => 0,
 		'closed' => 0,
-		'color' => '#332255',
-		'splits' => 1,
-		'split' => Array(
-			$taskPart = Array(
-					'id' => 1,
-					'parentId' => 1,
-					'devId' => 0,
-					'assigned' => 0,
-					'duration' => 12
+		'color' => '#066',
+		'splits' => Array(
+			Array(
+				'id' => 1,
+				'parentId' => 1,
+				'devId' => 0,
+				'assigned' => 0,
+				'startDate' => '',
+				'duration' => 12
 			)
 		));
 
@@ -78,13 +113,13 @@ $task2 = Array(
 		'assigned' => 0,
 		'closed' => 0,
 		'color' => '#ff0000',
-		'splits' => 2,
-		'split' => Array(
+		'splits' => Array(
 			Array(
 				'id' => 2,
 				'parentId' => 2,
 				'devId' => 0,
 				'assigned' => 0,
+				'startDate' => '',
 				'duration' => 4
 			),
 			Array(
@@ -92,12 +127,70 @@ $task2 = Array(
 				'parentId' => 2,
 				'devId' => 0,
 				'assigned' => 0,
+				'startDate' => '',
 				'duration' => 8
+			)
+		));
+
+$task3 = Array(
+		'id' => 3,
+		'name' => 'Fixed date task',
+		'duration' => 13,
+		'assigned' => 0,
+		'closed' => 0,
+		'color' => '#83000c',
+		'splits' => Array(
+			Array(
+				'id' => 4,
+				'parentId' => 3,
+				'devId' => 0,
+				'assigned' => 0,
+				'startDate' => '07/03/2012',
+				'duration' => 13
+			)
+		));
+
+$task4 = Array(
+		'id' => 4,
+		'name' => 'Fixed date task 2',
+		'duration' => 13,
+		'assigned' => 0,
+		'closed' => 0,
+		'color' => '#874900',
+		'splits' => Array(
+			Array(
+				'id' => 5,
+				'parentId' => 4,
+				'devId' => 0,
+				'assigned' => 0,
+				'startDate' => '08/03/2012',
+				'duration' => 13
+			)
+		));
+
+$task5 = Array(
+		'id' => 5,
+		'name' => 'auto task 5',
+		'duration' => 13,
+		'assigned' => 0,
+		'closed' => 0,
+		'color' => '#036',
+		'splits' => Array(
+			Array(
+				'id' => 6,
+				'parentId' => 5,
+				'devId' => 0,
+				'assigned' => 0,
+				'startDate' => '',
+				'duration' => 13
 			)
 		));
 
 $tasks[] = $task1;
 $tasks[] = $task2;
+$tasks[] = $task3;
+$tasks[] = $task4;
+$tasks[] = $task5;
 
 //---------------------------
 
@@ -193,3 +286,23 @@ xxx;
 xxx;
 
 }
+
+function genDevList($timelines, $objId = "", $class = "" ){
+	$literal = '';
+	$literal .= <<<xxx
+		<select id="{$objId}" class="{$class}">
+xxx;
+	for($tm = 0 ; $tm < count($timelines); $tm++){
+		$id = $timelines[$tm]['id'];
+		$name = $timelines[$tm]['name'];
+		$literal .= <<<xxx
+			<option value="{$id}">{$name} </option>
+xxx;
+	}
+	$literal .= <<<xxx
+		</select>
+xxx;
+	return $literal;
+}
+
+// print genDevList($timelines);
