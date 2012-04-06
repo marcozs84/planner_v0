@@ -16,6 +16,10 @@ include_once 'manager.php';
 ></script>
 <script
 	type="text/javascript"
+	src="js/jquery.dotdotdot-1.4.0-packed.js"
+></script>
+<script
+	type="text/javascript"
 	src="js/jquery-ui-1.8.18.custom.min.js"
 ></script>
 <script type="text/javascript">
@@ -23,6 +27,7 @@ include_once 'manager.php';
    var tasks = <?php print json_encode($tasks); ?>;
    var startWeek = <?php print $startWeek; ?>;
 </script>
+
 <script
 	type="text/javascript"
 	src="js/manager.js"
@@ -30,6 +35,10 @@ include_once 'manager.php';
 <script
 	type="text/javascript"
 	src="js/taskList.js"
+></script>
+<script
+	type="text/javascript"
+	src="js/fixedTaskMove.js"
 ></script>
 
 <?php
@@ -89,7 +98,7 @@ closedir($handle);
 
 <div class="demo">
 
-<div id="dialog-form" title="Create new user">
+<div id="dialog-form" title="Create new user" style="display:none;">
 	<p class="validateTips">All form fields are required.</p>
 
 	<form>
@@ -128,12 +137,40 @@ closedir($handle);
 
 </div><!-- End demo -->
 
+<div class="demo">
+
+<div id="moveFTask" title="Move fixed tasks" style="display:none;">
+	<p class="validateTips">
+		La tarea getTaskName(task.parentId) no pudo ser asignado en la fecha
+		correspondiente, probablemente porque una tarea anterior esta retrasada.
+		Desea mover la tarea a la siguiente fecha disponible?
+	</p>
+
+	<form>
+	<table cellspacing="0" cellpadding="0" border="0">
+		<tr>
+			<td style="width:20px;"><input id="fTaskMoveNextAuto" type="radio" name="moveTask" value="automove"></td>
+			<td><label for="fTaskMoveNextAuto">Move to the next available space</label></td>
+		</tr>
+		<tr>
+			<td><input id="fTaskMoveNextDate" type="radio" name="moveTask" value="update"></td>
+			<td><label for="fTaskMoveNextDate">Move task to this date:</label> <input type="text" id="newdateFTask"> </td>
+		</tr>
+	</table>
+	</form>
+
+</div>
+
+<button id="openMoveFTask_2">Open modal for Moving FTask</button>
+
+<a href="javascript:;" id="openMoveFTask" >open link moving task</a>
+
+</div><!-- End demo -->
+
 
 
 <h1>Planner</h1>
-
 <?PHP
-
 
 
 // print json_encode($timelines);

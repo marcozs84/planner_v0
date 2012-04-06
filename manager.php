@@ -6,12 +6,12 @@ $semanas = 4;
 $startWeek = date("W",strtotime("$dateSt"));
 
 $timelines = Array(
-// 		Array("id" => 1,"name" => "Mario Luis", "team" => 1, "days" => Array()),
-// 		Array("id" => 2,"name" => "Mateo", "team" => 1, "days" => Array()),
-		Array("id" => 3, "name" => "Mariela", "team" => 1, "days" => Array()),
-// 		Array("id" => 4,"name" => "Alberto", "team" => 2, "days" => Array()),
-// 		Array("id" => 5,"name" => "Albaro", "team" => 2, "days" => Array()),
-		Array("id" => 6,"name" => "Alicia", "team" => 2, "days" => Array())
+// 		Array("id" => 1,"name" => "Mario Luis", "team" => 1, "days" => Array(), "tasks" => Array()),
+// 		Array("id" => 2,"name" => "Mateo", "team" => 1, "days" => Array(), "tasks" => Array()),
+		Array("id" => 3, "name" => "Mariela", "team" => 1, "days" => Array(), "tasks" => Array()),
+// 		Array("id" => 4,"name" => "Alberto", "team" => 2, "days" => Array(), "tasks" => Array()),
+// 		Array("id" => 5,"name" => "Albaro", "team" => 2, "days" => Array(), "tasks" => Array()),
+		Array("id" => 6,"name" => "Alicia", "team" => 2, "days" => Array(), "tasks" => Array())
 );
 
 // Array samples
@@ -47,44 +47,14 @@ $split = Array(
 		'parentId' => 0,
 		'devId' => 0,
 		'assigned' => 0,
+		'closed' => 0,
 		'startDate' => '',
-		'duration' => 10		// cannot be bigger than the parent task
+		'originalDate' => '',
+		'delay' => 0,			// In Hours, the amount of hours delayed, 0 means no delays.
+		'duration' => 10		// cannot be bigger than the parent task.
 		);
 */
 
-// class Task {
-// 	public $id = 0;
-// 	public $name = '';
-// 	public $duration = 0;
-// 	public $assigned = 0;
-//	public $startDate = '';
-// 	public $closed = false;
-// 	public $color = '';  // #ccc
-// 	public $splits = Array();
-
-// 	public function addSplit($split){
-// 		$this->splits[] = $split;
-// 	}
-// }
-
-// class Split {
-// 	public $id = 0;
-// 	public $parentId = 0;
-// 	public $devId = 0;
-// 	public $assigned = 0;
-// 	public $startDate = '';
-// 	public $duration = 0;
-// }
-
-// $task1 = new Task();
-// $task1->id = 0;
-// $task1->name = 'nombre';
-// $task1->duration = 10;
-
-// $split1 = new Split();
-// $split1->id = 0;
-
-// print json_encode($task1);
 
 //TEST TASKS
 
@@ -101,7 +71,11 @@ $task1 = Array(
 				'parentId' => 1,
 				'devId' => 0,
 				'assigned' => 0,
+				'closed' => 0,
 				'startDate' => '',
+				'originalDate' => '',
+				'delayBeginning' => 0,
+				'delay' => 5,
 				'duration' => 12
 			)
 		));
@@ -119,7 +93,11 @@ $task2 = Array(
 				'parentId' => 2,
 				'devId' => 0,
 				'assigned' => 0,
+				'closed' => 0,
 				'startDate' => '',
+				'originalDate' => '',
+				'delayBeginning' => 0,
+				'delay' => 0,
 				'duration' => 4
 			),
 			Array(
@@ -127,7 +105,11 @@ $task2 = Array(
 				'parentId' => 2,
 				'devId' => 0,
 				'assigned' => 0,
+				'closed' => 0,
 				'startDate' => '',
+				'originalDate' => '',
+				'delayBeginning' => 0,
+				'delay' => 0,
 				'duration' => 8
 			)
 		));
@@ -145,7 +127,11 @@ $task3 = Array(
 				'parentId' => 3,
 				'devId' => 0,
 				'assigned' => 0,
+				'closed' => 0,
 				'startDate' => '07/03/2012',
+				'originalDate' => '07/03/2012',
+				'delayBeginning' => 0,
+				'delay' => 0,
 				'duration' => 13
 			)
 		));
@@ -163,7 +149,11 @@ $task4 = Array(
 				'parentId' => 4,
 				'devId' => 0,
 				'assigned' => 0,
-				'startDate' => '08/03/2012',
+				'closed' => 0,
+				'startDate' => '07/03/2012',
+				'originalDate' => '07/03/2012',
+				'delayBeginning' => 0,
+				'delay' => 0,
 				'duration' => 13
 			)
 		));
@@ -181,7 +171,11 @@ $task5 = Array(
 				'parentId' => 5,
 				'devId' => 0,
 				'assigned' => 0,
+				'closed' => 0,
 				'startDate' => '',
+				'originalDate' => '',
+				'delayBeginning' => 0,
+				'delay' => 0,
 				'duration' => 13
 			)
 		));

@@ -33,17 +33,20 @@
     color: #333399;
 }
 .weekTable > tbody > tr > td{
-    background: url("../imgs/gradient/gradback.png") repeat-x scroll 0 0 #E8EDFF;
+    /*background: url("../imgs/gradient/gradback.png") repeat-x scroll 0 0 #E8EDFF;*/
     border-bottom: 1px solid #FFFFFF;
     border-top: 1px solid #FFFFFF;
     color: #666699;
     padding: 8px;
     padding: 5px 0px 5px 5px;
+	padding:0px;
 	vertical-align:top;
+
+	min-height:100px;
 }
 
 .weekTable > tbody > tr > .devName{
-	padding:2px;
+	padding:5px;
 	vertical-align:middle;
 	font-weight:bold;
 }
@@ -53,6 +56,11 @@
 	background-color:#6678B1;
 	border:none;
 	padding:0px;
+}
+
+.taskName{
+	/*background-image:url("../imgs/gradient/gradTask2.png");*/
+	background-repeat:repeat-x;
 }
 
 /************************************/
