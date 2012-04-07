@@ -60,7 +60,7 @@ $split = Array(
 
 $task1 = Array(
 		'id' => 1,
-		'name' => 'Lorem ipsum',
+		'name' => 'Lorem ipsum Lorem ipsum ',
 		'duration' => 12,
 		'assigned' => 0,
 		'closed' => 0,
@@ -248,24 +248,18 @@ xxx;
 		<td class="devName" style="width:50px;">
 			{$timelines[$tm]['name']}
 		</td>
-		<td style="width:20%">
-			<div class="smallContainer" id="div_{$weekN}_{$tm}_1">
-			</div>
-		</td>
-		<td style="width:20%">
-			<div class="smallContainer" id="div_{$weekN}_{$tm}_2">
-			</div>
-		</td>
-		<td style="width:20%">
-			<div class="smallContainer" id="div_{$weekN}_{$tm}_3">
-			</div>
-		</td>
-		<td style="width:20%">
-			<div class="smallContainer" id="div_{$weekN}_{$tm}_4">
-			</div>
-		</td>
-		<td style="width:20%">
-			<div class="smallContainer" id="div_{$weekN}_{$tm}_5">
+		<td colspan="5">
+			<div class="father">
+				<div class="smallContainer" id="div_{$weekN}_{$tm}_1">
+				</div>
+				<div class="smallContainer" id="div_{$weekN}_{$tm}_2">
+				</div>
+				<div class="smallContainer" id="div_{$weekN}_{$tm}_3">
+				</div>
+				<div class="smallContainer" id="div_{$weekN}_{$tm}_4">
+				</div>
+				<div class="smallContainer" id="div_{$weekN}_{$tm}_5">
+				</div>
 			</div>
 		</td>
 	</tr>

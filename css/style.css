@@ -93,3 +93,50 @@ div.floating-menu a,div.floating-menu h3 {
 	margin: 0px;
 	text-decoration: none;
 }
+
+
+/************************************/
+
+
+.father{
+	width:100%;
+	clear:both;
+	height:90px;
+}
+.father{
+	border-top:1px solid;
+	border-left:1px solid;
+	border-color:#e5e5e5;
+}
+.father > div{
+	width:20%;
+	/* height:80px; */
+	float:left;
+}
+
+.father > div > div{
+/* 	border-right:1px solid; */
+/* 	border-bottom:1px solid; */
+	border-color:#eee;
+	/* padding:2px 4px; */
+	padding:0px;
+	vertical-align:middle;
+	background-color:#ccc;
+}
+.dotdotdot{
+	height:100%;
+}
+.task{
+	height:100%;
+	width:100%;
+}
+.taskName{
+	/*padding:4px;*/
+	vertical-align:middle;
+	height:100%;
+	padding-top:4px;
+}
+.taskTime{
+	width:20px;
+	text-align:center;
+}

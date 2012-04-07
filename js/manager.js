@@ -24,26 +24,34 @@ $(document).ready(function() {
 
 	generateAll();
 
+	$('.father > div').grrrid('justify', 'height');
+
 	assignHeights();
 	
-// $('.taskName').textOverFlow('...',true);
-//	$(".finalCont").dotdotdot();
-//	$("#testerdiv").dotdotdot();
-//	$(".taskName").dotdotdot({
-//        ellipsis: '... ',   /* The HTML to add as ellipsis. */
-//		wrapper	: 'span',	/*	The element to wrap the content in. */
-//		ellipsis: '... ',	/*	The HTML to add as ellipsis. */
-//		wrap	: 'word',	/*	How to cut off the text/html: 
-//									'word'/'letter'/'children' */
-//		after	: null,		/*	A jQuery-selector for the element to keep
-//									and put after the ellipsis. */
-//		watch	: false,	/*	Whether to update the ellipsis:
-//									true/'window' */
-//		height	: null,		/*	Optionally set a max-height,
-//									if null, the height will be measured. */
-//		tolerance: 0		/*	Deviation for the height-option. */
-//	});
-// $('.taskName').css("color","red");
+	$('.finalCont').dotdotdot({
+		wrapper	: 'div',
+		wrap	: "word",
+		watch	: true
+	});
+
+	// $('.taskName').textOverFlow('...',true);
+	// $(".finalCont").dotdotdot();
+	// $("#testerdiv").dotdotdot();
+	// $(".taskName").dotdotdot({
+	// ellipsis: '... ', /* The HTML to add as ellipsis. */
+	// wrapper : 'span', /* The element to wrap the content in. */
+	// ellipsis: '... ', /* The HTML to add as ellipsis. */
+	// wrap : 'word', /* How to cut off the text/html:
+	// 'word'/'letter'/'children' */
+	// after : null, /* A jQuery-selector for the element to keep
+	// and put after the ellipsis. */
+	// watch : false, /* Whether to update the ellipsis:
+	// true/'window' */
+	// height : null, /* Optionally set a max-height,
+	// if null, the height will be measured. */
+	// tolerance: 0 /* Deviation for the height-option. */
+	// });
+	// $('.taskName').css("color","red");
 
 });
 
@@ -396,10 +404,11 @@ function buildTask(task) {
 		}
 
 		$('#div_' + oDay.week + '_' + timeId + '_' + oDay.day).append(
-				'<table id="tbl_' + sufix + '" cellspacing="0" cellpadding="0" border="0" class="task ' + classes + '" style="'
-						+ '"><tr><td class="taskName" style="background-color:' + backColor + '; color:' + color + '"><div class="finalCont">'
+				'<div><table id="tbl_' + sufix + '" cellspacing="0" cellpadding="0" border="0" class="task ' + classes
+						+ '" style="' + '"><tr><td class="taskName" style="background-color:' + backColor + '; color:' + color
+						+ '"><div class="finalCont">'
 						// + sufix + ':<br />' + name
-						+ name + '</div></td><td class="taskTime">' + assigned + '</td></table>');
+						+ name + '</div></td><td class="taskTime">' + assigned + '</td></table></div>');
 
 		elements22.push('#div_' + oDay.week + '_' + timeId + '_' + oDay.day);
 		temp = 0;
@@ -415,37 +424,67 @@ function buildTask(task) {
 }
 
 function assignHeights() {
-	
+
 	var elename = 0;
 	var divElement = 0;
 	for ( var i = 0; i < timeline.length; i++) {
 		for ( var j = 0; j < timeline[i].days.length; j++) {
 
-			divElement = '#div_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day;
-			$(divElement).height($(divElement).parent().height());
+//			divElement = '#div_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day;
+//			$(divElement).height($(divElement).parent().height());
+
+//			 newheight = (100 / timeline[i].days[j].tasks.length).toFixed(0);
+//			 newheight = newheight + '%';
+//			 $(divElement+" > table").height(newheight);
+
+			// newheight = ($(divElement).parent().height() /
+			// timeline[i].days[j].tasks.length).toFixed(0);
+			// newheight = newheight + 'px';
+			// $(divElement+" > table").height(newheight);
+			// $(divElement+" > table .taskName div").height(newheight);
 			
-			newheight = (100 / timeline[i].days[j].tasks.length).toFixed(0);
-			newheight = newheight + '%';
-			$(divElement+" > table").height(newheight);
+			if(timeline[i].days[j].tasks.length > 2){
+				xtramargin = ' margin-top:4px; margin-bottom:4px; ';
+			}else{
+				xtramargin = '';
+			}
 
-//			newheight = ($(divElement).parent().height() / timeline[i].days[j].tasks.length).toFixed(0);
-//			newheight = newheight + 'px';
-//			$(divElement+" > table").height(newheight);
-//			$(divElement+" > table .taskName div").height(newheight);
+			for ( var k = 0; k < timeline[i].days[j].tasks.length; k++) {
+				// timeline[i].days[j].week;
+				// timeline[i].days[j].tasks[k].duration;
 
-// for ( var k = 0; k < timeline[i].days[j].tasks.length; k++) {
-// // timeline[i].days[j].week;
-// // timeline[i].days[j].tasks[k].duration;
-//
-// elename = '#tbl_' + timeline[i].days[j].week + '_' + i + '_' +
-// timeline[i].days[j].day + '_'
-// + timeline[i].days[j].tasks[k].id;
-//
-// // $(elename).parent().height($(elename).parent().parent().height());
-// newheight = 100 / timeline[i].days[j].tasks.length;
-// newheight = newheight + '%';
-// $(elename).height(newheight);
-// }
+				elename = '#tbl_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day + '_'
+				+ timeline[i].days[j].tasks[k].id;
+				
+				elenameTaskName = '#tbl_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day + '_'
+				+ timeline[i].days[j].tasks[k].id + ' .taskName div';
+				
+				elename2 = '#tbl_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day + '_'
+						+ timeline[i].days[j].tasks[k].id + ' .finalCont';
+				
+//				if(xtramargin != ''){
+//					$(elename).css('overflow','hidden');
+//					$(elenameTaskName).css('margin-top','4px');
+//					$(elenameTaskName).css('margin-bottom','4px');	
+//				}
+				
+//				$(elename).parent();
+//				alert($(elename).height());
+//				$(elename + ' .taskName').height($(elename).parent());
+//				$(elename).css('margin',"0px");
+//				alert($(elename).parent().height());
+				
+//				$(elename2).height($(elename).parent().height());
+//				$(elename2).css('max-height',$(elename).parent().height() + 'px');
+				$(elename2).css('max-height','20px');
+				
+//				alert($(elename2).height());
+
+				// $(elename).parent().height($(elename).parent().parent().height());
+//				newheight = 100 / timeline[i].days[j].tasks.length;
+//				newheight = newheight + '%';
+//				$(elename).height(newheight);
+			}
 		}
 	}
 }

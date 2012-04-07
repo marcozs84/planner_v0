@@ -20,6 +20,10 @@ include_once 'manager.php';
 ></script>
 <script
 	type="text/javascript"
+	src="js/jquery.grrrid-1.0.0.js"
+></script>
+<script
+	type="text/javascript"
 	src="js/jquery-ui-1.8.18.custom.min.js"
 ></script>
 <script type="text/javascript">
