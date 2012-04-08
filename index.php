@@ -16,6 +16,10 @@ include_once 'manager.php';
 ></script>
 <script
 	type="text/javascript"
+	src="js/jquery.dataTables.min.js"
+></script>
+<script
+	type="text/javascript"
 	src="js/jquery.dotdotdot-1.4.0-packed.js"
 ></script>
 <script
@@ -81,6 +85,11 @@ closedir($handle);
 	type="text/css"
 />
 <link
+	href="css/demo_table.css"
+	rel="stylesheet"
+	type="text/css"
+/>
+<link
 	href="css/gradient.css"
 	rel="stylesheet"
 	type="text/css"
@@ -90,12 +99,27 @@ closedir($handle);
 
 <div class="floating-menu">
 <h3>Planner</h3>
-<a href="javascript:;">Add Developer</a>
-<a href="javascript:;">Assign Tasks</a>
-<a href="javascript:;">Display Tasks</a>
-<a href="javascript:;">Create Task</a>
+
+<a href="javascript:;" onclick="openModal('taskList')">Add Developer</a>
+<a href="javascript:;" onclick="openModal('taskList')">Assign Tasks</a>
+<a href="javascript:;" onclick="openModal('taskList')">Display Tasks</a>
+<a href="javascript:;" onclick="openModal('taskList')">Create Task</a>
+
+<script type="text/javascript">
+
+function openModal(view){
+	$("#"+view).dialog("open");
+}
+
+</script>
+
 </div>
 
+<div style="display:none;">		<!-- Div holder for all views -->
+<?php
+	include_once 'jsViews/taskList.php';
+?>
+</div>
 
 <div class="weeksWrapper">
 	<div>

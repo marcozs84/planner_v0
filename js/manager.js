@@ -18,6 +18,7 @@ $(document).ready(function() {
 	assignTask(assignableTasks[3], 6);
 	assignTask(assignableTasks[4], 6); // fixed
 	assignTask(assignableTasks[5], 6); // fixed
+	assignTask(assignableTasks[7], 3); // fixed
 	assignTask(assignableTasks[6], 3);
 
 	// removeTask(assignableTasks[4]);
@@ -430,7 +431,8 @@ function assignHeights() {
 	for ( var i = 0; i < timeline.length; i++) {
 		for ( var j = 0; j < timeline[i].days.length; j++) {
 
-//			divElement = '#div_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day;
+			divElement = '#div_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day;
+			divElementDiv = '#div_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day + ' div';
 //			$(divElement).height($(divElement).parent().height());
 
 //			 newheight = (100 / timeline[i].days[j].tasks.length).toFixed(0);
@@ -443,11 +445,14 @@ function assignHeights() {
 			// $(divElement+" > table").height(newheight);
 			// $(divElement+" > table .taskName div").height(newheight);
 			
-			if(timeline[i].days[j].tasks.length > 2){
-				xtramargin = ' margin-top:4px; margin-bottom:4px; ';
+			if(timeline[i].days[j].tasks.length == 1){
+				xtramargin = 1;
 			}else{
-				xtramargin = '';
+				xtramargin = 0;
+				
 			}
+			
+			xtramargin = timeline[i].days[j].tasks.length;
 
 			for ( var k = 0; k < timeline[i].days[j].tasks.length; k++) {
 				// timeline[i].days[j].week;
@@ -462,11 +467,28 @@ function assignHeights() {
 				elename2 = '#tbl_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day + '_'
 						+ timeline[i].days[j].tasks[k].id + ' .finalCont';
 				
-//				if(xtramargin != ''){
-//					$(elename).css('overflow','hidden');
-//					$(elenameTaskName).css('margin-top','4px');
-//					$(elenameTaskName).css('margin-bottom','4px');	
+//				if(xtramargin == 1){
+////					$(elename).css('overflow','hidden');
+////					$(elenameTaskName).css('margin-top','4px');
+////					$(elenameTaskName).css('margin-bottom','4px');
+//					$(elename2).css('max-height','100%');
 //				}
+//				if(xtramargin == 2){
+//					$(elename2).css('max-height',$(elename2).parent().height() - 5);
+//				}
+//				if(xtramargin == 3){
+//					$(elename2).css('max-height',$(elename2).parent().height() - 5);
+//				}
+//				if(xtramargin == 4){
+//					$(elename2).css('max-height',$(divElementDiv).height());
+//					alert($(divElementDiv).height());
+//				}
+				
+				$(elename2).css('max-height',$(divElementDiv).height());
+				
+				
+				
+//				$(elename2).css('max-height','100%');
 				
 //				$(elename).parent();
 //				alert($(elename).height());
@@ -476,7 +498,8 @@ function assignHeights() {
 				
 //				$(elename2).height($(elename).parent().height());
 //				$(elename2).css('max-height',$(elename).parent().height() + 'px');
-				$(elename2).css('max-height','20px');
+
+//				$(elename2).css('max-height','20px');  /// CURRENTLY USED
 				
 //				alert($(elename2).height());
 

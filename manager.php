@@ -6,11 +6,11 @@ $semanas = 4;
 $startWeek = date("W",strtotime("$dateSt"));
 
 $timelines = Array(
-// 		Array("id" => 1,"name" => "Mario Luis", "team" => 1, "days" => Array(), "tasks" => Array()),
-// 		Array("id" => 2,"name" => "Mateo", "team" => 1, "days" => Array(), "tasks" => Array()),
+		Array("id" => 1,"name" => "Mario Luis", "team" => 1, "days" => Array(), "tasks" => Array()),
+		Array("id" => 2,"name" => "Mateo", "team" => 1, "days" => Array(), "tasks" => Array()),
 		Array("id" => 3, "name" => "Mariela", "team" => 1, "days" => Array(), "tasks" => Array()),
-// 		Array("id" => 4,"name" => "Alberto", "team" => 2, "days" => Array(), "tasks" => Array()),
-// 		Array("id" => 5,"name" => "Albaro", "team" => 2, "days" => Array(), "tasks" => Array()),
+		Array("id" => 4,"name" => "Alberto", "team" => 2, "days" => Array(), "tasks" => Array()),
+		Array("id" => 5,"name" => "Albaro", "team" => 2, "days" => Array(), "tasks" => Array()),
 		Array("id" => 6,"name" => "Alicia", "team" => 2, "days" => Array(), "tasks" => Array())
 );
 
@@ -60,11 +60,11 @@ $split = Array(
 
 $task1 = Array(
 		'id' => 1,
-		'name' => 'Lorem ipsum Lorem ipsum ',
+		'name' => 'Lorem ipsum Lorem ipsum a d fasdf asdf adfaf ',
 		'duration' => 12,
 		'assigned' => 0,
 		'closed' => 0,
-		'color' => '#066',
+		'color' => '#654789',
 		'splits' => Array(
 			Array(
 				'id' => 1,
@@ -180,11 +180,34 @@ $task5 = Array(
 			)
 		));
 
+$task6 = Array(
+		'id' => 6,
+		'name' => 'fixed for 4 tasks',
+		'duration' => 1,
+		'assigned' => 0,
+		'closed' => 0,
+		'color' => '#00ff00',
+		'splits' => Array(
+			Array(
+				'id' => 7,
+				'parentId' => 6,
+				'devId' => 0,
+				'assigned' => 0,
+				'closed' => 0,
+				'startDate' => '07/03/2012',
+				'originalDate' => '',
+				'delayBeginning' => 0,
+				'delay' => 0,
+				'duration' => 1
+			)
+		));
+
 $tasks[] = $task1;
 $tasks[] = $task2;
 $tasks[] = $task3;
 $tasks[] = $task4;
 $tasks[] = $task5;
+$tasks[] = $task6;
 
 //---------------------------
 
