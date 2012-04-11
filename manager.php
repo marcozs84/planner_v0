@@ -14,6 +14,14 @@ $timelines = Array(
 		Array("id" => 6,"name" => "Alicia", "team" => 2, "days" => Array(), "tasks" => Array())
 );
 
+$timelineId = 6;
+
+
+$teams = Array(
+		Array("id" => 1,"name" => "Team 1"),
+		Array("id" => 2,"name" => "Team 2")
+);
+
 // Array samples
 /*
 $day = Array(

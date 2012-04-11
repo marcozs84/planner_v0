@@ -30,10 +30,16 @@ include_once 'manager.php';
 	type="text/javascript"
 	src="js/jquery-ui-1.8.18.custom.min.js"
 ></script>
+<script
+	type="text/javascript"
+	src="js/jquery.ui.selectmenu.js"
+></script>
 <script type="text/javascript">
    var timeline = <?php print json_encode($timelines); ?>;
+   var timelineId = <?php print $timelineId; ?>;
    var tasks = <?php print json_encode($tasks); ?>;
    var startWeek = <?php print $startWeek; ?>;
+   var teams = <?php print $teams; ?>;
 </script>
 
 <script
@@ -46,22 +52,26 @@ include_once 'manager.php';
 ></script>
 <script
 	type="text/javascript"
+	src="js/developersList.js"
+></script>
+<script
+	type="text/javascript"
 	src="js/fixedTaskMove.js"
 ></script>
 
 <?php
-$path = "development-bundle/ui/minified/";
-$handle=opendir($path);
-while (($file = readdir($handle))!==false) {
-	if(($file != '.') &&
-		($file != '..')
-	){
-		if(is_file($path.$file)){
-			echo '<script type="text/javascript" src="'.$path.$file.'"></script>'."\r\n";
-		}
-	}
-}
-closedir($handle);
+// $path = "development-bundle/ui/minified/";
+// $handle=opendir($path);
+// while (($file = readdir($handle))!==false) {
+// 	if(($file != '.') &&
+// 		($file != '..')
+// 	){
+// 		if(is_file($path.$file)){
+// 			echo '<script type="text/javascript" src="'.$path.$file.'"></script>'."\r\n";
+// 		}
+// 	}
+// }
+// closedir($handle);
 ?>
 
 <?php
@@ -79,6 +89,12 @@ while (($file = readdir($handle))!==false) {
 closedir($handle);
 ?>
 
+<!-- <link -->
+<!-- 	href="css/eggplant/jquery-ui-1.8.18.custom.css" -->
+<!-- 	rel="stylesheet" -->
+<!-- 	type="text/css" -->
+<!-- /> -->
+
 <link
 	href="css/style.css"
 	rel="stylesheet"
@@ -86,6 +102,11 @@ closedir($handle);
 />
 <link
 	href="css/demo_table.css"
+	rel="stylesheet"
+	type="text/css"
+/>
+<link
+	href="css/jquery.ui.selectmenu.css"
 	rel="stylesheet"
 	type="text/css"
 />
@@ -100,9 +121,9 @@ closedir($handle);
 <div class="floating-menu">
 <h3>Planner</h3>
 
-<a href="javascript:;" onclick="openModal('taskList')">Add Developer</a>
+<a href="javascript:;" onclick="openModal('developersList')">Developers List</a>
 <a href="javascript:;" onclick="openModal('taskList')">Assign Tasks</a>
-<a href="javascript:;" onclick="openModal('taskList')">Display Tasks</a>
+<a href="javascript:;" onclick="openModal('taskList')">Tasks List</a>
 <a href="javascript:;" onclick="openModal('taskList')">Create Task</a>
 
 <script type="text/javascript">
@@ -118,112 +139,17 @@ function openModal(view){
 <div style="display:none;">		<!-- Div holder for all views -->
 <?php
 	include_once 'jsViews/taskList.php';
+	include_once 'jsViews/developersList.php';
 ?>
 </div>
 
 <div class="weeksWrapper">
+
 	<div>
 
-<div class="demo">
+	<h1>Planner</h1>
 
-<div id="dialog-form" title="Create new user" style="display:none;">
-	<p class="validateTips">All form fields are required.</p>
-
-	<form>
-	<fieldset>
-		<label for="name">Name</label>
-		<input type="text" name="name" id="name" class="text ui-widget-content ui-corner-all" />
-		<label for="email">Email</label>
-		<input type="text" name="email" id="email" value="" class="text ui-widget-content ui-corner-all" />
-		<label for="password">Password</label>
-		<input type="password" name="password" id="password" value="" class="text ui-widget-content ui-corner-all" />
-	</fieldset>
-	</form>
-</div>
-
-
-<div id="users-contain" class="ui-widget">
-	<h1>Existing Users:</h1>
-	<table id="users" class="ui-widget ui-widget-content">
-		<thead>
-			<tr class="ui-widget-header ">
-				<th>Name</th>
-				<th>Email</th>
-				<th>Password</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>John Doe</td>
-				<td>john.doe@example.com</td>
-				<td>johndoe1</td>
-			</tr>
-		</tbody>
-	</table>
-</div>
-<button id="create-user">Create new user</button>
-
-</div><!-- End demo -->
-
-<div class="demo">
-
-<div id="moveFTask" title="Move fixed tasks" style="display:none;">
-	<p class="validateTips">
-		La tarea getTaskName(task.parentId) no pudo ser asignado en la fecha
-		correspondiente, probablemente porque una tarea anterior esta retrasada.
-		Desea mover la tarea a la siguiente fecha disponible?
-	</p>
-
-	<form>
-	<table cellspacing="0" cellpadding="0" border="0">
-		<tr>
-			<td style="width:20px;"><input id="fTaskMoveNextAuto" type="radio" name="moveTask" value="automove"></td>
-			<td><label for="fTaskMoveNextAuto">Move to the next available space</label></td>
-		</tr>
-		<tr>
-			<td><input id="fTaskMoveNextDate" type="radio" name="moveTask" value="update"></td>
-			<td><label for="fTaskMoveNextDate">Move task to this date:</label> <input type="text" id="newdateFTask"> </td>
-		</tr>
-	</table>
-	</form>
-
-</div>
-
-<button id="openMoveFTask_2">Open modal for Moving FTask</button>
-
-<a href="javascript:;" id="openMoveFTask" >open link moving task</a>
-
-</div><!-- End demo -->
-
-
-
-<h1>Planner</h1>
-<?PHP
-
-
-// print json_encode($timelines);
-
-
-print $literal;
-
-// $date = date("Y-m-d");// current date
-// print("\$date = ". $date."<br />");
-// $date = date("d-m-Y",strtotime("03/08/2010 + 1 day"));// current date
-// print("\$date = ". $date."<br />");
-
-
-// $date = strtotime(date("Y-m-d", strtotime($date)) . " +1 day");
-// print("\$date = ". $date."<br />");
-// $date = strtotime(date("Y-m-d", strtotime($date)) . " +1 week");
-// print("\$date = ". $date."<br />");
-// $date = strtotime(date("Y-m-d", strtotime($date)) . " +2 week");
-// print("\$date = ". $date."<br />");
-// $date = strtotime(date("Y-m-d", strtotime($date)) . " +1 month");
-// print("\$date = ". $date."<br />");
-// $date = strtotime(date("Y-m-d", strtotime($date)) . " +30 days");
-// print("\$date = ". $date."<br />");
-
-?>
+	<?PHP print $literal; ?>
 
 	</div>
 

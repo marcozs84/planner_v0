@@ -14,7 +14,7 @@ $(document).ready(function() {
 
 	// assignTask(assignableTasks[0], 3);
 	assignTask(assignableTasks[1], 3);
-	assignTask(assignableTasks[2], 3);
+//	assignTask(assignableTasks[2], 3);
 	assignTask(assignableTasks[3], 6);
 	assignTask(assignableTasks[4], 6); // fixed
 	assignTask(assignableTasks[5], 6); // fixed
@@ -34,6 +34,8 @@ $(document).ready(function() {
 		wrap	: "word",
 		watch	: true
 	});
+	
+	$('select').selectmenu();
 
 	// $('.taskName').textOverFlow('...',true);
 	// $(".finalCont").dotdotdot();
@@ -187,7 +189,7 @@ function rgb2hex(color) {
 	return '#' + rgb.toString(16);
 };
 
-function setAssigned(parentId, id) {
+function setAssigned(parentId, id,devId) {
 
 	var assignations = 0;
 	var oTask = 0;
@@ -198,6 +200,7 @@ function setAssigned(parentId, id) {
 			for ( var j = 0; j < tasks[i].splits.length; j++) {
 				if (tasks[i].splits[j].id == id) {
 					tasks[i].splits[j].assigned = 1;
+					tasks[i].splits[j].devId = devId;
 				}
 			}
 
@@ -264,7 +267,7 @@ function assignTask(task, devId) {
 
 	dev.tasks.push(task);
 
-	setAssigned(task.parentId, task.id);
+	setAssigned(task.parentId, task.id,devId);
 
 	// generateTimeline(dev.id);
 
@@ -433,17 +436,6 @@ function assignHeights() {
 
 			divElement = '#div_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day;
 			divElementDiv = '#div_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day + ' div';
-//			$(divElement).height($(divElement).parent().height());
-
-//			 newheight = (100 / timeline[i].days[j].tasks.length).toFixed(0);
-//			 newheight = newheight + '%';
-//			 $(divElement+" > table").height(newheight);
-
-			// newheight = ($(divElement).parent().height() /
-			// timeline[i].days[j].tasks.length).toFixed(0);
-			// newheight = newheight + 'px';
-			// $(divElement+" > table").height(newheight);
-			// $(divElement+" > table .taskName div").height(newheight);
 			
 			if(timeline[i].days[j].tasks.length == 1){
 				xtramargin = 1;
@@ -458,55 +450,17 @@ function assignHeights() {
 				// timeline[i].days[j].week;
 				// timeline[i].days[j].tasks[k].duration;
 
-				elename = '#tbl_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day + '_'
-				+ timeline[i].days[j].tasks[k].id;
-				
-				elenameTaskName = '#tbl_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day + '_'
-				+ timeline[i].days[j].tasks[k].id + ' .taskName div';
+//				elename = '#tbl_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day + '_'
+//				+ timeline[i].days[j].tasks[k].id;
+//				
+//				elenameTaskName = '#tbl_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day + '_'
+//				+ timeline[i].days[j].tasks[k].id + ' .taskName div';
 				
 				elename2 = '#tbl_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day + '_'
 						+ timeline[i].days[j].tasks[k].id + ' .finalCont';
 				
-//				if(xtramargin == 1){
-////					$(elename).css('overflow','hidden');
-////					$(elenameTaskName).css('margin-top','4px');
-////					$(elenameTaskName).css('margin-bottom','4px');
-//					$(elename2).css('max-height','100%');
-//				}
-//				if(xtramargin == 2){
-//					$(elename2).css('max-height',$(elename2).parent().height() - 5);
-//				}
-//				if(xtramargin == 3){
-//					$(elename2).css('max-height',$(elename2).parent().height() - 5);
-//				}
-//				if(xtramargin == 4){
-//					$(elename2).css('max-height',$(divElementDiv).height());
-//					alert($(divElementDiv).height());
-//				}
-				
 				$(elename2).css('max-height',$(divElementDiv).height());
 				
-				
-				
-//				$(elename2).css('max-height','100%');
-				
-//				$(elename).parent();
-//				alert($(elename).height());
-//				$(elename + ' .taskName').height($(elename).parent());
-//				$(elename).css('margin',"0px");
-//				alert($(elename).parent().height());
-				
-//				$(elename2).height($(elename).parent().height());
-//				$(elename2).css('max-height',$(elename).parent().height() + 'px');
-
-//				$(elename2).css('max-height','20px');  /// CURRENTLY USED
-				
-//				alert($(elename2).height());
-
-				// $(elename).parent().height($(elename).parent().parent().height());
-//				newheight = 100 / timeline[i].days[j].tasks.length;
-//				newheight = newheight + '%';
-//				$(elename).height(newheight);
 			}
 		}
 	}

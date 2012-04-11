@@ -46,30 +46,30 @@ $(function() {
 		}
 	}
 
-	$("#moveFTask").dialog({
-		autoOpen : false,
-		height : 300,
-		width : 350,
-		modal : true,
-		buttons : [ {
-			text : "Create an account",
-			click : function() {
-				
-				alert($(this).data('link').id);
-				
-			}
-		}, {
-			text : "Cancel",
-			click : function() {
-				$(this).dialog("close");
-			}
-		} ],
-		close : function() {
-			allFields.val("").removeClass("ui-state-error");
-		}
-	});
-
-	$("#openMoveFTask").button().click(function() {
-		$("#moveFTask").data('link',{"id":123} ).dialog("open");
-	});
+//	$("#moveFTask").dialog({
+//		autoOpen : false,
+//		height : 300,
+//		width : 350,
+//		modal : true,
+//		buttons : [ {
+//			text : "Create an account",
+//			click : function() {
+//				
+//				alert($(this).data('link').id);
+//				
+//			}
+//		}, {
+//			text : "Cancel",
+//			click : function() {
+//				$(this).dialog("close");
+//			}
+//		} ],
+//		close : function() {
+//			allFields.val("").removeClass("ui-state-error");
+//		}
+//	});
+//
+//	$("#openMoveFTask").button().click(function() {
+//		$("#moveFTask").data('link',{"id":123} ).dialog("open");
+//	});
 });
