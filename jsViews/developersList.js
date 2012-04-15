@@ -56,6 +56,8 @@ $(function() {
 $(document).ready(function() {
 	oDevTable = $('#tblDevelopersList').dataTable({
 		"aaData" : timeline,
+		"bJQueryUI": true,
+		"sPaginationType": "full_numbers",
 		"aoColumns" : [
 				{
 					"mDataProp" : null,
@@ -100,6 +102,8 @@ $(document).ready(function() {
 		//		}
 
 		$('#frmAddDeveloper').toggle('slideDown');
+		$('#devName').focus();
+		
 	});
 	$('#btnAddDeveloper').button().click(function() {
 

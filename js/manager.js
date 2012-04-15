@@ -36,6 +36,11 @@ $(document).ready(function() {
 	});
 	
 	$('select').selectmenu();
+	
+	// ==================================================
+	
+	toolBarInit();
+
 
 	// $('.taskName').textOverFlow('...',true);
 	// $(".finalCont").dotdotdot();
@@ -409,7 +414,7 @@ function buildTask(task) {
 
 		$('#div_' + oDay.week + '_' + timeId + '_' + oDay.day).append(
 				'<div><table id="tbl_' + sufix + '" cellspacing="0" cellpadding="0" border="0" class="task ' + classes
-						+ '" style="' + '"><tr><td class="taskName" style="background-color:' + backColor + '; color:' + color
+						+ '" style="' + '"><tr><td class="taskName" style="background-color:' + backColor //+ '; color:' + color
 						+ '"><div class="finalCont">'
 						// + sufix + ':<br />' + name
 						+ name + '</div></td><td class="taskTime">' + assigned + '</td></table></div>');
@@ -495,4 +500,30 @@ function getFontColor(hexcode) {
 	// return Color.FromArgb(d, d, d);
 	rgbColor = Array(d, d, d);
 	return rgb2hex(rgbColor);
+}
+
+function openModal(view){
+	$("#"+view).dialog("open");
+}
+
+function toolBarInit(){
+	$( "#btnTBDevelopers" ).button({
+		text: "Developers"
+//		icons: {
+//			primary: "ui-icon-stop"
+//		}
+	})
+	.click(function() {
+		openModal('developersList');
+	});
+	
+	$( "#btnTBTasks" ).button({
+		text: "Tasks"
+//		icons: {
+//			primary: "ui-icon-seek-next"
+//		}
+	})
+	.click(function() {
+		openModal('taskList');
+	});
 }

@@ -67,6 +67,9 @@ $(function() {
 $(document).ready(function() {
 	oTable = $('#tblTaskList').dataTable({
 		"aaData" : tasks,
+		"bJQueryUI": true,
+//		"asStripeClasses": ["odd ui-widget-content","even ui-state-default"],
+		"sPaginationType": "full_numbers",
 		"aoColumns" : [
 				{
 					"mDataProp" : null,

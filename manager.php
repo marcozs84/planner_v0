@@ -233,14 +233,14 @@ for($w = 0; $w < $semanas ; $w++){
 	$weekN = date("W",strtotime("$dateSt"));
 
 	$literal .= <<<xxx
-<table class="weekTable" cellpadding="0" cellspacing="0" border="0">
+<table class="weekTable ui-widget" cellpadding="0" cellspacing="0" border="0">
 <caption>Week {$weekN}</caption>
-	<thead>
+	<thead class="ui-widget-header">
 	<tr>
 		<th></th><th>{$date1}</th><th>{$date2}</th><th>{$date3}</th><th>{$date4}</th><th>{$date5}</th>
 	</tr>
 	</thead>
-	<tbody>
+	<tbody class="ui-widget-content">
 xxx;
 
 	$teamSt = $timelines[0]["team"];

@@ -18,25 +18,28 @@
 }
 
 .weekTable > thead > tr > th{
-    background: url("../imgs/gradient/gradhead.png") repeat-x scroll 0 0 #B9C9FE;
-    border-bottom: 1px solid #FFFFFF;
-    border-top: 2px solid #D3DDFF;
-    color: #003399;
+/*     background: url("../imgs/gradient/gradhead.png") repeat-x scroll 0 0 #B9C9FE; */
+/*     border-bottom: 1px solid #FFFFFF; */
+/*     border-top: 2px solid #D3DDFF; */
+/*     color: #003399; */
     font-size: 13px;
     font-weight: normal;
     padding: 8px;
 	text-align:center;
+
+	color:#ddd;
+	text-shadow:1px 1px #000000;
 }
 
 .weekTable > tbody > tr:hover > td{
-    background: url("../imgs/gradient/gradhover.png") repeat-x scroll 0 0 #D0DAFD;
-    color: #333399;
+/*     background: url("../imgs/gradient/gradhover.png") repeat-x scroll 0 0 #D0DAFD; */
+/*     color: #333399; */
 }
 .weekTable > tbody > tr > td{
     /*background: url("../imgs/gradient/gradback.png") repeat-x scroll 0 0 #E8EDFF;*/
-    border-bottom: 1px solid #FFFFFF;
-    border-top: 1px solid #FFFFFF;
-    color: #666699;
+/*     border-bottom: 1px solid #FFFFFF; */
+/*     border-top: 1px solid #FFFFFF; */
+/*     color: #666699; */
     padding: 8px;
     padding: 5px 0px 5px 5px;
 	padding:0px;
@@ -48,19 +51,47 @@
 .weekTable > tbody > tr > .devName{
 	padding:5px;
 	vertical-align:middle;
-	font-weight:bold;
+/* 	font-weight:bold; */
+	color:#ddd;
+
+	text-shadow:1px 1px #000000;
 }
 
 .weekTable > tbody > .teamSeparator > td{
 	height:2px;
-	background-color:#6678B1;
+	background-color:#7E7783;
 	border:none;
 	padding:0px;
 }
 
+/************************************/
+
+.father{
+	border-color:#7E7783;
+	border-width:0px 0px 0px 1px;
+}
+
+.father > div{
+	border:none;
+}
+
+.teamSeparator > td{
+	background-color:#7E7783;
+}
+
+.task{
+	border:none;
+}
+
 .taskName{
-	/*background-image:url("../imgs/gradient/gradTask2.png");*/
+	background-image:url("../imgs/gradient/gradTask4.png");
 	background-repeat:repeat-x;
+	
+	color:#ddd;
+	text-shadow:1px 1px #333;
+}
+.taskTime{
+	border-right:1px solid #111;
 }
 
 /************************************/

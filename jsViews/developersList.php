@@ -22,6 +22,6 @@
 
 		</div>
 	</div>
-	<table id="tblDevelopersList" class="display">
+	<table id="tblDevelopersList" class="display" cellspacing="0" cellpadding="0">
 	</table>
 </div>

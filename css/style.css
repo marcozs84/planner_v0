@@ -3,8 +3,7 @@
 * {
 	margin: 0px;
 	padding: 0px;
-	font-family: arial;
-	font-size: 12px;
+/* 	font-family: arial; */
 }
 
 html,body {
@@ -15,10 +14,11 @@ html,body {
 .weeksWrapper {
 	width: 100%;
 	overflow: auto;
+	font-size:12px;
 }
 
 .weeksWrapper>div {
-	margin: 10px;
+/* 	margin: 10px; */
 	margin-top: 40px;
 }
 
@@ -74,7 +74,7 @@ h1 {
 
 	vertical-align:middle;
 	height:100%;
-	border-left:1px solid #ccc;
+/* 	border-left:1px solid #ccc; */
 	background-color:#e5e5e5;
 }
 
@@ -82,7 +82,7 @@ h1 {
 	width:20px;
 	color:#fff;
 	text-align:center;
-	border-left:1px solid #ccc;
+	border-left:1px solid #000;
 	background-color:#333;
 	background-image:url(../imgs/gradient/taskTime_back.png);
 
@@ -94,8 +94,8 @@ h1 {
 /************************************/
 div.floating-menu {
 	position: fixed;
-	background: #fff4c8;
-	border: 1px solid #ffcc00;
+/* 	background: #fff4c8; */
+/* 	border: 1px solid #ffcc00; */
 	width: 100%;
 	z-index: 100;
 }
