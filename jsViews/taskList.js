@@ -59,7 +59,10 @@ $(function() {
 					$(this).dialog("close");
 				}
 			}
-		]
+		],
+		close:	function(){
+//			saveTasks();
+		}
 	});
 
 });

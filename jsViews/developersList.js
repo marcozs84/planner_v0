@@ -127,6 +127,8 @@ $(document).ready(function() {
 		$('#devName').val('');
 
 		$('#frmAddDeveloper').toggle('slideDown');
+		
+		saveDevelopers();
 
 		// var oSettings = oDevTable.fnSettings();
 		// oSettings.aaData = timeline;

@@ -14,7 +14,7 @@ $(document).ready(function() {
 
 	// assignTask(assignableTasks[0], 3);
 	assignTask(assignableTasks[1], 3);
-//	assignTask(assignableTasks[2], 3);
+	// assignTask(assignableTasks[2], 3);
 	assignTask(assignableTasks[3], 6);
 	assignTask(assignableTasks[4], 6); // fixed
 	assignTask(assignableTasks[5], 6); // fixed
@@ -28,19 +28,18 @@ $(document).ready(function() {
 	$('.father > div').grrrid('justify', 'height');
 
 	assignHeights();
-	
-	$('.finalCont').dotdotdot({
-		wrapper	: 'div',
-		wrap	: "word",
-		watch	: true
-	});
-	
-	$('select').selectmenu();
-	
-	// ==================================================
-	
-	toolBarInit();
 
+	$('.finalCont').dotdotdot({
+		wrapper : 'div',
+		wrap : "word",
+		watch : true
+	});
+
+	$('select').selectmenu();
+
+	// ==================================================
+
+	toolBarInit();
 
 	// $('.taskName').textOverFlow('...',true);
 	// $(".finalCont").dotdotdot();
@@ -194,7 +193,7 @@ function rgb2hex(color) {
 	return '#' + rgb.toString(16);
 };
 
-function setAssigned(parentId, id,devId) {
+function setAssigned(parentId, id, devId) {
 
 	var assignations = 0;
 	var oTask = 0;
@@ -272,7 +271,7 @@ function assignTask(task, devId) {
 
 	dev.tasks.push(task);
 
-	setAssigned(task.parentId, task.id,devId);
+	setAssigned(task.parentId, task.id, devId);
 
 	// generateTimeline(dev.id);
 
@@ -414,7 +413,10 @@ function buildTask(task) {
 
 		$('#div_' + oDay.week + '_' + timeId + '_' + oDay.day).append(
 				'<div><table id="tbl_' + sufix + '" cellspacing="0" cellpadding="0" border="0" class="task ' + classes
-						+ '" style="' + '"><tr><td class="taskName" style="background-color:' + backColor //+ '; color:' + color
+						+ '" style="' + '"><tr><td class="taskName" style="background-color:' + backColor // + ';
+						// color:'
+						// +
+						// color
 						+ '"><div class="finalCont">'
 						// + sufix + ':<br />' + name
 						+ name + '</div></td><td class="taskTime">' + assigned + '</td></table></div>');
@@ -435,37 +437,40 @@ function buildTask(task) {
 function assignHeights() {
 
 	var elename = 0;
+	var elename2 = 0;
 	var divElement = 0;
 	for ( var i = 0; i < timeline.length; i++) {
 		for ( var j = 0; j < timeline[i].days.length; j++) {
 
 			divElement = '#div_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day;
 			divElementDiv = '#div_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day + ' div';
-			
-			if(timeline[i].days[j].tasks.length == 1){
+
+			if (timeline[i].days[j].tasks.length == 1) {
 				xtramargin = 1;
-			}else{
+			} else {
 				xtramargin = 0;
-				
+
 			}
-			
+
 			xtramargin = timeline[i].days[j].tasks.length;
 
 			for ( var k = 0; k < timeline[i].days[j].tasks.length; k++) {
 				// timeline[i].days[j].week;
 				// timeline[i].days[j].tasks[k].duration;
 
-//				elename = '#tbl_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day + '_'
-//				+ timeline[i].days[j].tasks[k].id;
-//				
-//				elenameTaskName = '#tbl_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day + '_'
-//				+ timeline[i].days[j].tasks[k].id + ' .taskName div';
-				
+				// elename = '#tbl_' + timeline[i].days[j].week + '_' + i + '_'
+				// + timeline[i].days[j].day + '_'
+				// + timeline[i].days[j].tasks[k].id;
+				//				
+				// elenameTaskName = '#tbl_' + timeline[i].days[j].week + '_' +
+				// i + '_' + timeline[i].days[j].day + '_'
+				// + timeline[i].days[j].tasks[k].id + ' .taskName div';
+
 				elename2 = '#tbl_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day + '_'
 						+ timeline[i].days[j].tasks[k].id + ' .finalCont';
-				
-				$(elename2).css('max-height',$(divElementDiv).height());
-				
+
+				$(elename2).css('max-height', $(divElementDiv).height());
+
 			}
 		}
 	}
@@ -502,28 +507,73 @@ function getFontColor(hexcode) {
 	return rgb2hex(rgbColor);
 }
 
-function openModal(view){
-	$("#"+view).dialog("open");
+function openModal(view) {
+	$("#" + view).dialog("open");
 }
 
-function toolBarInit(){
-	$( "#btnTBDevelopers" ).button({
-		text: "Developers"
-//		icons: {
-//			primary: "ui-icon-stop"
-//		}
-	})
-	.click(function() {
+function toolBarInit() {
+	$("#btnTest").button({
+		text : "Test Ajax"
+	// icons: {
+	// primary: "ui-icon-stop"
+	// }
+	}).click(function() {
+	// saveTasks();
+	});
+
+	$("#btnTBDevelopers").button({
+		text : "Developers"
+	// icons: {
+	// primary: "ui-icon-stop"
+	// }
+	}).click(function() {
 		openModal('developersList');
 	});
-	
-	$( "#btnTBTasks" ).button({
-		text: "Tasks"
-//		icons: {
-//			primary: "ui-icon-seek-next"
-//		}
-	})
-	.click(function() {
+
+	$("#btnTBTasks").button({
+		text : "Tasks"
+	// icons: {
+	// primary: "ui-icon-seek-next"
+	// }
+	}).click(function() {
 		openModal('taskList');
+	});
+
+	$("#btnLogOut").button({
+		text : "Log Out"
+	}).click(function() {
+		window.location.replace("logout.php");
+	});
+}
+
+function saveTasks() {
+
+	strTasks = JSON.stringify(tasks);
+
+	$.ajax({
+		type : "POST",
+		url : "manager.php",
+		data : {
+			type : 'tasks',
+			content : strTasks
+		}
+	}).done(function(msg) {
+		tasks = JSON.parse(msg);
+	});
+}
+
+function saveDevelopers() {
+
+	strDevs = JSON.stringify(timeline);
+
+	$.ajax({
+		type : "POST",
+		url : "manager.php",
+		data : {
+			type : 'developers',
+			content : strDevs
+		}
+	}).done(function(msg) {
+		tasks = JSON.parse(msg);
 	});
 }

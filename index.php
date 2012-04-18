@@ -12,6 +12,7 @@ include_once 'manager.php';
 <script type="text/javascript" src="js/jquery.grrrid-1.0.0.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.18.custom.min.js"></script>
 <script type="text/javascript" src="js/jquery.ui.selectmenu.js"></script>
+<script type="text/javascript" src="js/json2.js"></script>
 <script type="text/javascript">
    var timeline = <?php print json_encode($timelines); ?>;
    var timelineId = <?php print $timelineId; ?>;
@@ -122,7 +123,11 @@ ul#icons span.ui-icon {
 </head>
 <body>
 	<div class="floating-menu ui-widget-header">
-		<span id="toolbar" class="ui-corner-all" style="float: right;">
+		<span id="toolbar" class="ui-corner-all" style="float:right; clear:none;">
+			<button id="btnLogOut">Salir</button>
+		</span>
+		<span id="toolbar" class="ui-corner-all" style="/* float:right; */ float:none; margin:0px auto 0px auto; width:auto; display:table; clear:none;">
+			<button id="btnTest">Test Ajax</button>
 			<button id="btnTBDevelopers">Developers</button>
 			<button id="btnTBTasks">Tasks</button>
 		</span>
