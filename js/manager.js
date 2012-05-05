@@ -277,6 +277,17 @@ function assignTask(task, devId) {
 
 }
 
+function removeTaskFromTimeline(taskId, devId) {
+	dev = getTimelineById(devId);
+
+	for ( var i = 0; i < dev.tasks.length; i++) {
+		if (dev.tasks[i].id == taskId) {
+			dev.tasks[i] = null;
+			dev.tasks.splice(i, 1);
+		}
+	}
+}
+
 function generateAll() {
 	for ( var i = 0; i < timeline.length; i++) {
 		generateTimeline(timeline[i].id);
