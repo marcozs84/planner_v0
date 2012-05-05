@@ -1,6 +1,10 @@
 <?php
 session_start();
 
+function __autoload($class_name) {
+	include 'classes/'.$class_name . '.php';
+}
+
 if(!isset($_SESSION['clientId'])){
 	print "Usuario desconocido.";
 	header('Location: login.php');
