@@ -81,10 +81,10 @@ var Task = function(task) {
 			this.color = task.color;
 			this.splits = task.splits;
 		}
-	}
+	};
 
 	this.construct();
-}
+};
 
 var Split = function(split) {
 	this.id = 0;
@@ -111,10 +111,10 @@ var Split = function(split) {
 			this.delay = split.delay;
 			this.duration = split.duration;
 		}
-	}
+	};
 
 	this.construct();
-}
+};
 
 function getTimelineById(devId) {
 	// Searching Developers timeline
@@ -196,10 +196,8 @@ function rgb2hex(color) {
 function setAssigned(parentId, id, devId) {
 
 	var assignations = 0;
-	var oTask = 0;
 	for ( var i = 0; i < tasks.length; i++) {
 		if (tasks[i].id == parentId) {
-			oTask = tasks[i];
 			color = tasks[i].color;
 			for ( var j = 0; j < tasks[i].splits.length; j++) {
 				if (tasks[i].splits[j].id == id) {
@@ -228,10 +226,8 @@ function setAssigned(parentId, id, devId) {
 function setClosed(parentId, id) {
 
 	var assignations = 0;
-	var oTask = 0;
 	for ( var i = 0; i < tasks.length; i++) {
 		if (tasks[i].id == parentId) {
-			oTask = tasks[i];
 			color = tasks[i].color;
 			for ( var j = 0; j < tasks[i].splits.length; j++) {
 				if (tasks[i].splits[j].id == id) {
@@ -265,8 +261,6 @@ function assignTask(task, devId) {
 		return false;
 	}
 
-	var timeId = 0; // represents Developers timeline.
-
 	dev = getTimelineById(devId);
 
 	dev.tasks.push(task);
@@ -286,6 +280,8 @@ function removeTaskFromTimeline(taskId, devId) {
 			dev.tasks.splice(i, 1);
 		}
 	}
+
+	generateTimeline(devId);
 }
 
 function generateAll() {
@@ -301,8 +297,6 @@ function generateTimeline(devId) {
 	var tasks = dev.tasks;
 	var dTasks = Array();
 	var fTasks = Array();
-
-	var dCount = 0;
 
 	for ( var i = 0; i < tasks.length; i++) {
 		if (tasks[i].startDate != '') {
@@ -330,7 +324,6 @@ function generateTimeline(devId) {
 
 	// return false;
 
-	var available = 0;
 	var task = null;
 
 	for ( var k = 0; k < fTasks.length; k++) {
@@ -374,7 +367,7 @@ function buildTask(task) {
 	}
 
 	var dayCounter = objI;
-	var dayAvailable = 0
+	var dayAvailable = 0;
 	var unassigned = task.duration;
 	var delayHrs = task.delay;
 
@@ -447,14 +440,9 @@ function buildTask(task) {
 
 function assignHeights() {
 
-	var elename = 0;
 	var elename2 = 0;
-	var divElement = 0;
 	for ( var i = 0; i < timeline.length; i++) {
 		for ( var j = 0; j < timeline[i].days.length; j++) {
-
-			divElement = '#div_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day;
-			divElementDiv = '#div_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day + ' div';
 
 			if (timeline[i].days[j].tasks.length == 1) {
 				xtramargin = 1;
