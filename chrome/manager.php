@@ -6,7 +6,7 @@ function __autoload($class_name) {
 }
 
 if(!isset($_SESSION['clientId'])){
-	print "Usuario desconocido.";
+// 	print "Usuario desconocido.";
 	header('Location: login.php');
 	die();
 }
