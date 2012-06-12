@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+<script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="soapclient.js"></script>
+
+<title>Demo</title>
+</head>
+<body>
+
+<div id="info">
+</div>
+
+<script type="text/javascript">
+	function HelloWorld() {
+		var pl = new SOAPClientParameters();
+		pl.add("username", "marco.zeballos");
+		pl.add("password", "fregadera");
+		
+		var prop = Array();
+// 		                  ("http://localhost:8090/rpc/soap/jirasoapservice-v2?wsdl");
+// 		prop['url'] = 'http://tools.emini.dk/jira/rpc/soap/jirasoapservice-v2';
+// 		prop['url'] = 'http://tools.emini.dk/jira';
+		prop['url'] = 'http://planner/chrome/demo/proxy_wsdl.php';
+		prop['username'] = 'marco.zeballos';
+		prop['password'] = 'fregadera';
+		prop['method'] = 'login';
+		prop['parameters'] = pl;
+		prop['async'] = true;
+		prop['callback'] = HelloWorld_callBack;
+		prop['error'] = HelloWorld_error;
+		
+// 		SOAPClient.invoke("http://tools.emini.dk/jira/rpc/soap/jirasoapservice-v2", "login", pl, true, HelloWorld_callBack);
+		SOAPClient.invoke(prop);
+	}
+	function HelloWorld_callBack(r) {
+		alert(r);
+	}
+	function HelloWorld_error(r) {
+		alert(r);
+		$("#info").append(r);
+	}
+	
+	HelloWorld();
+</script>
+
+</body>
+</html>
