@@ -107,7 +107,7 @@ SOAPClient._loadWsdl = function (url, method, parameters, async, callback, error
 	var wsdl = SOAPClient_cacheWsdl[url];
 	if (wsdl + "" != "" && wsdl + "" != "undefined")
 		return SOAPClient._sendSoapRequest(url, method, parameters, async, callback, error, wsdl);
-		
+	console.log("SOAPClient._loadWsdl");
 	var xhr = $.ajax({
 		'username': SOAPClient_cacheAuth[url]['u'],
 		'password': SOAPClient_cacheAuth[url]['p'],	
@@ -144,6 +144,7 @@ SOAPClient._sendSoapRequest = function (url, method, parameters, async, callback
 				"<" + method + " xmlns=\"" + ns + "\">" +
 				parameters.toXml() + "</" + method + "></soap:Body></soap:Envelope>",
 		soapaction = ((ns.lastIndexOf("/") != ns.length - 1) ? ns + "/" : ns) + method;
+	console.log("SOAPClient._sendSoapRequest");
 	var	xhr = $.ajax({
 			'username': SOAPClient_cacheAuth[url]['u'],
 			'password': SOAPClient_cacheAuth[url]['p'],
