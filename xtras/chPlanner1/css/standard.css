@@ -1,0 +1,15 @@
+@CHARSET "ISO-8859-1";
+
+*{
+	font-family:Arial;
+	font-size:11px;
+}
+
+.issuesList{
+	width:400px;
+}
+
+.issuesList td{
+	padding:4px;
+	border-top:1px solid #e5e5e5;
+}

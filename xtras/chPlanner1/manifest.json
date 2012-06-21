@@ -1,0 +1,15 @@
+{
+  "name": "chPlanner1",
+  "version": "1.0",
+  "manifest_version": 1,
+  "description": "chrome planner 1",
+  "browser_action": {
+    "default_icon": "images/icon.png",
+    "default_popup": "demo.html"
+  },
+  "permissions": [
+		"tabs",
+		"notifications",
+		"<all_urls>"
+	]
+}
