@@ -135,8 +135,8 @@ ul#icons span.ui-icon {
 	<div style="display: none;">
 		<!-- Div holder for all views -->
 <?php
-include_once 'jsViews/taskList.php';
-include_once 'jsViews/developersList.php';
+include_once 'jsViews/taskList.html.php';
+include_once 'jsViews/developersList.html.php';
 ?>
 	</div>
 	<div class="weeksWrapper">

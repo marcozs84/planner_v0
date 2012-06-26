@@ -35,9 +35,13 @@ $(document).ready(function() {
 //			  alert(myData.loginResult);
 			  
 			  if(myData.loginResult == "TRUE"){
-				  localStorage.setItem('localSession',username);
-//				  window.location.href = 'manager.html';
-				  chrome.extension.sendRequest({redirect: "manager.html"});
+				  
+				  localStorage.setItem('localSession',myData.token);
+				  
+				  window.location.href = 'manager.html';
+//				  chrome.extension.sendRequest({redirect: "manager.html"});
+			  }else{
+				  alert("wrong data");
 			  };
 			  
 			});

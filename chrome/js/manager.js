@@ -2,17 +2,26 @@ var assignableTasks = Array();
 
 $(document).ready(function() {
 	
-	var localSession = localStorage.getItem('localSession');
-	if(localSession == null || localSession == ''){
+//	var localSession = localStorage.getItem('localSession');
+//	if(localSession == null || localSession == ''){
 //		window.location.href = 'login.html';
-		chrome.extension.sendRequest({redirect: "login.html"});
-	}else{
-		alert(localSession);
-	}
-	
-	initDemoButtons();
-	
-	return false;
+////		chrome.extension.sendRequest({redirect: "login.html"});
+//	}else{
+//		if(location.search != '?detached'){
+//			chrome.extension.getBackgroundPage().detachWindow('manager.html');
+//		}else{
+//			alert("detached already");
+//		}
+//	}
+//	
+//	
+//	
+////	initTaskList();
+////	initDevelopersList();
+//	
+//	initDemoButtons();
+//	
+//	return false;
 
 	assignableTasks = Array();
 
@@ -82,6 +91,24 @@ function initDemoButtons(){
 		window.location.href = window.location.href;
 	});
 		
+}
+
+function initModalWindows() {
+	// modalsHolder
+	$.ajax({
+		type : "POST",
+		url : "jsViews/developersList.html"
+	}).done(function(msg) {
+		alert("Modal loaded: " + msg);
+		$('#modalsHolder').append(msg);
+	});
+	$.ajax({
+		type : "POST",
+		url : "jsViews/tasksList.html"
+	}).done(function(msg) {
+		alert("Modal loaded: " + msg);
+		$('#modalsHolder').append(msg);
+	});
 }
 
 var Task = function(task) {
@@ -601,16 +628,3 @@ function saveDevelopers() {
 		tasks = JSON.parse(msg);
 	});
 }
-
-function detachWindow(){
-	var detachedPos = {
-		top: 100,
-		left: 100,
-		width: window.innerWidth,
-		height: window.innerHeight + 20
-	};
-	window.open(chrome.extension.getURL('manager.html?detached'), 'jira_popup_window',
-	  'left=' + detachedPos.left + ',top=' + (detachedPos.top - 22) + // Magic 22...
-	  ',width=' + detachedPos.width + ',height=' + detachedPos.height +
-	  'location=no,menubar=no,resizable=yes,status=no,titlebar=yes,toolbar=no');
-};

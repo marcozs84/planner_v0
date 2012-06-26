@@ -67,7 +67,8 @@ $(function() {
 
 });
 
-$(document).ready(function() {
+function initTaskList(){
+//$(document).ready(function() {
 	oTable = $('#tblTaskList').dataTable({
 		"aaData" : tasks,
 		"bJQueryUI": true,
@@ -109,4 +110,5 @@ $(document).ready(function() {
 			oTable.fnOpen(nTr, taskDetails(nTr), 'details');
 		}
 	});
-});
+//});
+};

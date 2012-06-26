@@ -53,7 +53,8 @@ $(function() {
 
 });
 
-$(document).ready(function() {
+function initDevelopersList(){
+//$(document).ready(function() {
 	oDevTable = $('#tblDevelopersList').dataTable({
 		"aaData" : timeline,
 		"bJQueryUI": true,
@@ -146,4 +147,5 @@ $(document).ready(function() {
 	// $("#create-user").button().click(function() {
 	// $("#dialog-form").dialog("open");
 	// });
-});
+//});
+};
