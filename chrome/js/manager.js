@@ -1,6 +1,18 @@
 var assignableTasks = Array();
 
 $(document).ready(function() {
+	
+	var localSession = localStorage.getItem('localSession');
+	if(localSession == null || localSession == ''){
+//		window.location.href = 'login.html';
+		chrome.extension.sendRequest({redirect: "login.html"});
+	}else{
+		alert(localSession);
+	}
+	
+	initDemoButtons();
+	
+	return false;
 
 	assignableTasks = Array();
 
@@ -61,6 +73,16 @@ $(document).ready(function() {
 	// $('.taskName').css("color","red");
 
 });
+
+function initDemoButtons(){
+//	alert("initint");
+	$("#btnKillSession").button().click(function() {
+		// saveTasks();
+		localStorage.setItem('localSession','');
+		window.location.href = window.location.href;
+	});
+		
+}
 
 var Task = function(task) {
 	this.id = 0;
@@ -513,6 +535,7 @@ function openModal(view) {
 }
 
 function toolBarInit() {
+
 	$("#btnTest").button({
 		text : "Test Ajax"
 	// icons: {
@@ -578,3 +601,16 @@ function saveDevelopers() {
 		tasks = JSON.parse(msg);
 	});
 }
+
+function detachWindow(){
+	var detachedPos = {
+		top: 100,
+		left: 100,
+		width: window.innerWidth,
+		height: window.innerHeight + 20
+	};
+	window.open(chrome.extension.getURL('manager.html?detached'), 'jira_popup_window',
+	  'left=' + detachedPos.left + ',top=' + (detachedPos.top - 22) + // Magic 22...
+	  ',width=' + detachedPos.width + ',height=' + detachedPos.height +
+	  'location=no,menubar=no,resizable=yes,status=no,titlebar=yes,toolbar=no');
+};

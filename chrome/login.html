@@ -3,24 +3,56 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<link href="../css/standard.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.18.custom.min.js"></script>
+<script type="text/javascript" src="js/json2.js"></script>
+
+<script type="text/javascript" src="js/login.js"></script>
+
+<!--  link href="css/style.css" rel="stylesheet" type="text/css" /> -->
+<link href="css/jquery-ui-1.8.18.custom.css" rel="stylesheet" type="text/css" />
 
 <title>Insert title here</title>
+
+<style type="text/css">
+.loginForm{
+	width:300px;
+	margin:0px auto;
+	font-size:12px;
+}
+.loginForm table tr td.input{
+	text-align:left;
+	font-size:10px;
+}
+.loginForm table tr td.label{
+	color:#777;
+	text-align:right;
+}
+.loginForm table tr td{
+	padding:5px;
+}
+</style>
+
 </head>
 <body>
-
-<div class="loginForm">
-	<table class="" cellspacing="0" cellpadding="0" border="0">
-		<tr>
-			<td>User</td>
-			<td><input type="text" /></td>
-		</tr>
-		<tr>
-			<td>Password</td>
-			<td><input type="password" /></td>
-		</tr>
-	</table>
-</div>
+<fieldset>
+	<legend>Login</legend>
+	<div class="loginForm">
+		<table class="" cellspacing="0" cellpadding="0" border="0">
+			<tr>
+				<td class="label">User</td>
+				<td class="input"><input type="text" id="username" value="username" /></td>
+			</tr>
+			<tr>
+				<td class="label">Password</td>
+				<td class="input"><input type="password" id="password" value="password" /></td>
+			</tr>
+		</table>
+		
+		<a href="javascript:;" id="btnOpenDeveloperForm">New Developer</a>
+		
+	</div>
+</fieldset>
 
 </body>
 </html>
