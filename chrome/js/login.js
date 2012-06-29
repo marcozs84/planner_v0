@@ -37,6 +37,12 @@ $(document).ready(function() {
 			  if(myData.loginResult == "TRUE"){
 				  
 				  localStorage.setItem('localSession',myData.token);
+				  tasksString = myData.tasks;
+  				  taskOStringify = JSON.stringify(myData.tasks);
+//  				  taskObject = JSON.parse(myData.tasks);
+  				  
+				  localStorage.setItem('backTasks',taskOStringify);
+				  chrome.extension.getBackgroundPage().backTasks = myData.tasks;
 				  
 				  window.location.href = 'manager.html';
 //				  chrome.extension.sendRequest({redirect: "manager.html"});

@@ -3,9 +3,11 @@ chrome.extension.onRequest.addListener(function(request, sender) {
     chrome.tabs.update(sender.tab.id, {url: request.redirect});
 });
 
+window['backTasks'] = '';
+
 
 window['detachWindow'] = function(url){
-	alert("detaching" + url);
+	console.log("detaching" + url);
 	var detachedPos = {
 		top: 100,
 		left: 100,

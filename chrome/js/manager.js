@@ -2,26 +2,35 @@ var assignableTasks = Array();
 
 $(document).ready(function() {
 	
-//	var localSession = localStorage.getItem('localSession');
-//	if(localSession == null || localSession == ''){
-//		window.location.href = 'login.html';
-////		chrome.extension.sendRequest({redirect: "login.html"});
-//	}else{
-//		if(location.search != '?detached'){
-//			chrome.extension.getBackgroundPage().detachWindow('manager.html');
-//		}else{
-//			alert("detached already");
-//		}
-//	}
-//	
-//	
-//	
-////	initTaskList();
-////	initDevelopersList();
-//	
-//	initDemoButtons();
-//	
-//	return false;
+	var localSession = localStorage.getItem('localSession');
+	if(localSession == null || localSession == ''){
+		window.location.href = 'login.html';
+//		chrome.extension.sendRequest({redirect: "login.html"});
+	}else{
+		if(location.search != '?detached'){
+			chrome.extension.getBackgroundPage().detachWindow('manager.html');
+			return false;
+		}else{
+			console.log("detached already");
+		}
+	}
+	
+//	alert(chrome.extension.getBackgroundPage().backTasks);
+	
+	tasks = JSON.parse(localStorage.getItem('backTasks'));
+	
+//	alert(tasks);
+
+	loadView('taskList',initTaskList);
+
+//	initTaskList();
+//	initDevelopersList();
+	
+	initDemoButtons();
+	
+	toolBarInit();
+	
+	return false;
 
 	assignableTasks = Array();
 
@@ -60,7 +69,7 @@ $(document).ready(function() {
 
 	// ==================================================
 
-	toolBarInit();
+//	toolBarInit();
 
 	// $('.taskName').textOverFlow('...',true);
 	// $(".finalCont").dotdotdot();
@@ -82,6 +91,16 @@ $(document).ready(function() {
 	// $('.taskName').css("color","red");
 
 });
+
+function loadView(viewName,callbackFunc){
+	$.ajax({
+		  type: "POST",
+		  url: "jsViews/"+viewName+".html"
+		}).done(function( msg ) {
+			$('#modalsHolder').append(msg);
+			callbackFunc();
+		});
+}
 
 function initDemoButtons(){
 //	alert("initint");
@@ -558,6 +577,8 @@ function getFontColor(hexcode) {
 }
 
 function openModal(view) {
+	console.log("opening modal: " + view);
+	console.log($("#" + view));
 	$("#" + view).dialog("open");
 }
 

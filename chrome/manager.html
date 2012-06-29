@@ -17,6 +17,11 @@
 //    var tasks = <?php print json_encode($tasks); ?>;
 //    var startWeek = <?php print $startWeek; ?>;
 //    var teams = <?php print $teams; ?>;
+   var timeline = '';
+   var timelineId = '';
+   var tasks = '';
+   var startWeek = '';
+   var teams = '';
 </script>
 <script type="text/javascript" src="js/manager.js"></script>
 <script type="text/javascript" src="jsViews/taskList.js"></script>
@@ -61,9 +66,11 @@ ul#icons span.ui-icon { float: left; margin: 0 4px; }
 			<button id="btnTest">Test Ajax</button>
 			<button id="btnTBDevelopers">Developers</button>
 			<button id="btnTBTasks">Tasks</button>
+			<button id="btnKillSession">Kill Session</button>
+			
 		</span>
 	</div>
-	<div id="modalsHolder" style="display: none;">
+	<div id="modalsHolder" style="/*display: none;*/">
 		<!-- Div holder for all views -->
 	</div>
 	<div class="weeksWrapper">

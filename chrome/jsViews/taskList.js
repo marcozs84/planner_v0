@@ -46,8 +46,10 @@ function taskDetails(nTr) {
 	return sOut;
 }
 
-$(function() {
-
+function initTaskList(){
+	
+	console.log("initing taskList");
+	
 	$("#taskList").dialog({
 		width : '70%',
 		autoOpen : false,
@@ -65,9 +67,7 @@ $(function() {
 		}
 	});
 
-});
-
-function initTaskList(){
+	
 //$(document).ready(function() {
 	oTable = $('#tblTaskList').dataTable({
 		"aaData" : tasks,
