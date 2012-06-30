@@ -1,7 +1,7 @@
 var assignableTasks = Array();
 
 $(document).ready(function() {
-	
+
 	var localSession = localStorage.getItem('localSession');
 	if(localSession == null || localSession == ''){
 		window.location.href = 'login.html';
@@ -14,22 +14,20 @@ $(document).ready(function() {
 			console.log("detached already");
 		}
 	}
-	
-//	alert(chrome.extension.getBackgroundPage().backTasks);
-	
+
 	tasks = JSON.parse(localStorage.getItem('backTasks'));
-	
-//	alert(tasks);
+	timeline = JSON.parse(localStorage.getItem('backTimelines'));
 
 	loadView('taskList',initTaskList);
+	loadView('developersList',initDevelopersList);
 
 //	initTaskList();
 //	initDevelopersList();
-	
+
 	initDemoButtons();
-	
+
 	toolBarInit();
-	
+
 	return false;
 
 	assignableTasks = Array();
@@ -109,7 +107,7 @@ function initDemoButtons(){
 		localStorage.setItem('localSession','');
 		window.location.href = window.location.href;
 	});
-		
+
 }
 
 function initModalWindows() {
@@ -243,7 +241,7 @@ function hex2rgb(hexStr) {
 
 /**
  * http://haacked.com/archive/2009/12/29/convert-rgb-to-hex.aspx
- * 
+ *
  * @param color
  * @returns
  */
@@ -530,7 +528,7 @@ function assignHeights() {
 				// elename = '#tbl_' + timeline[i].days[j].week + '_' + i + '_'
 				// + timeline[i].days[j].day + '_'
 				// + timeline[i].days[j].tasks[k].id;
-				//				
+				//
 				// elenameTaskName = '#tbl_' + timeline[i].days[j].week + '_' +
 				// i + '_' + timeline[i].days[j].day + '_'
 				// + timeline[i].days[j].tasks[k].id + ' .taskName div';

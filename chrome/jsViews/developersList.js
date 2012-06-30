@@ -35,7 +35,7 @@ function developerDetails(nTr) {
 	return sOut;
 }
 
-$(function() {
+function initDevelopersList(){
 
 	$("#developersList").dialog({
 		width : '70%',
@@ -51,10 +51,8 @@ $(function() {
 		]
 	});
 
-});
-
-function initDevelopersList(){
 //$(document).ready(function() {
+	console.log(timeline);
 	oDevTable = $('#tblDevelopersList').dataTable({
 		"aaData" : timeline,
 		"bJQueryUI": true,
@@ -104,7 +102,7 @@ function initDevelopersList(){
 
 		$('#frmAddDeveloper').toggle('slideDown');
 		$('#devName').focus();
-		
+
 	});
 	$('#btnAddDeveloper').button().click(function() {
 
@@ -128,7 +126,7 @@ function initDevelopersList(){
 		$('#devName').val('');
 
 		$('#frmAddDeveloper').toggle('slideDown');
-		
+
 		saveDevelopers();
 
 		// var oSettings = oDevTable.fnSettings();
