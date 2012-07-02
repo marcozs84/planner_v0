@@ -632,18 +632,3 @@ function saveTasks() {
 	});
 }
 
-function saveDevelopers() {
-
-	strDevs = JSON.stringify(timeline);
-
-	$.ajax({
-		type : "POST",
-		url : "manager.php",
-		data : {
-			type : 'developers',
-			content : strDevs
-		}
-	}).done(function(msg) {
-		tasks = JSON.parse(msg);
-	});
-}

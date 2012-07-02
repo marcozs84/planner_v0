@@ -1,4 +1,4 @@
-<?php 
+<?php
 $con = mysqli_connect('localhost','root','');
 $mysqli = new mysqli('localhost', 'root', '', 'weekplanner');
 
@@ -7,13 +7,14 @@ if ($mysqli->connect_errno) {
 	die();
 }
 
-if($_POST){
+$go = '';
+
+if($go == 'go'){
 
 	if(isset($_POST['content'])){
 
 		$type = @trim($_POST['type']);
 		$content = @trim($_POST['content']);
-
 
 		$query = "select dataId as dataCount from tblData where clientId = $clientId and key = '$type'";
 

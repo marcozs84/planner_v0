@@ -35,6 +35,39 @@ function developerDetails(nTr) {
 	return sOut;
 }
 
+function saveDeveloper() {
+
+	strDevs = JSON.stringify(timeline);
+
+	$.ajax({
+		type : "POST",
+		url : "http://planner/www/saveTimeline.php",
+		data : {
+			name : $.trim($('#devName').val()),
+			teamId : $.trim($('#devTeam').val())
+		}
+	}).done(function(msg) {
+		var answer = JSON.parse(msg);
+
+		if(answer.result == 'TRUE'){
+
+			notice('msgError','A new developer was created.',true,function(){
+				$('#devName').val('');
+				$('#frmAddDeveloper').slideUp();
+
+				timeline.push(answer.package);
+
+				oDevTable.fnClearTable(0);
+				oDevTable.fnAddData(timeline);
+				oDevTable.fnDraw();
+				return true;
+			});
+		}else{
+			chrome.extension.getBackgroundPage().error('msgError','An error has ocurred trying to save the Developer.');
+		}
+	});
+}
+
 function initDevelopersList(){
 
 	$("#developersList").dialog({
@@ -66,6 +99,14 @@ function initDevelopersList(){
 					"fnRender" : function(obj) {
 						return '<img src="imgs/details_open.png" />';
 					}
+				},{
+					"mDataProp" : null,
+					"sTitle" : "Actions",
+					"sClass" : "center",
+					"bSortable" : false,
+					"fnRender" : function(obj) {
+						return '<a href="javascript:;" class="btnTableIn">Delete</a>';
+					}
 				}, {
 					"mDataProp" : "id",
 					"sTitle" : "Id",
@@ -95,12 +136,42 @@ function initDevelopersList(){
 		}
 	});
 
-	$('#btnOpenDeveloperForm').button().click(function() {
+	$('#tblDevelopersList tbody td a.btnTableIn').button({icons:{primary: "ui-icon-minusthick"},text: false}).click(function(){
+
+//		CONTINUE HERE!!
+//		$( "#timeline-confirm-deletion" ).dialog({
+//			resizable: false,
+//			height:140,
+//			modal: true,
+//			buttons: {
+//				"Delete all items": function() {
+//					$( this ).dialog( "close" );
+//				},
+//				Cancel: function() {
+//					$( this ).dialog( "close" );
+//				}
+//			}
+//		});
+	});
+//	live('click', function() {
+//		var nTr = $(this).parents('tr')[0];
+//		if (oDevTable.fnIsOpen(nTr)) {
+//			/* This row is already open - close it */
+//			// this.src = "../examples_support/details_open.png";
+//			oDevTable.fnClose(nTr);
+//		} else {
+//			/* Open this row */
+//			// this.src = "../examples_support/details_close.png";
+//			oDevTable.fnOpen(nTr, developerDetails(nTr), 'details');
+//		}
+//	});
+
+	$('#btnOpenDeveloperForm').button({icons:{primary: "ui-icon-plusthick"}}).click(function() {
 		// if (!$('#frmAddDeveloper').is(':visible')) {
 		// $('#devName').val('');
 		//		}
 
-		$('#frmAddDeveloper').toggle('slideDown');
+		$('#frmAddDeveloper').slideDown();
 		$('#devName').focus();
 
 	});
@@ -111,39 +182,19 @@ function initDevelopersList(){
 			return false;
 		}
 
-		timelineId++
+//		timelineId++;
+//
+//		var newElement = {
+//			"id" : timelineId,
+//			"name" : $('#devName').val(),
+//			"team" : $('#devTeam').val(),
+//			"days" : new Array(),
+//			"tasks" : new Array()
+//		};
+//
+//		timeline.push(newElement);
 
-		var newElement = {
-			"id" : timelineId,
-			"name" : $('#devName').val(),
-			"team" : $('#devTeam').val(),
-			"days" : new Array(),
-			"tasks" : new Array()
-		};
+		saveDeveloper();
 
-		timeline.push(newElement);
-
-		$('#devName').val('');
-
-		$('#frmAddDeveloper').toggle('slideDown');
-
-		saveDevelopers();
-
-		// var oSettings = oDevTable.fnSettings();
-		// oSettings.aaData = timeline;
-		// oDevTable.fnDraw(oSettings);
-
-		oDevTable.fnClearTable(0);
-		oDevTable.fnAddData(timeline);
-		oDevTable.fnDraw();
-
-		// oDevTable.fnAddData({
-		// "id": timelineId,
-		// "name": $('#devName').val(),
-		// "team": 1});
 	});
-	// $("#create-user").button().click(function() {
-	// $("#dialog-form").dialog("open");
-	// });
-//});
 };
