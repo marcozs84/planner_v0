@@ -35,6 +35,20 @@ function developerDetails(nTr) {
 	return sOut;
 }
 
+var isEditingDeveloper = 0;
+
+function editDeveloper(developerId) {
+	isEditingDeveloper = developerId;
+
+	var objD = getTimelineById(isEditingDeveloper);
+	$('#devName').val(objD.name);
+	$('#devTeam').val(objD.team);
+
+	$('#frmAddDeveloper').slideDown();
+	$('#devName').focus();
+
+}
+
 function saveDeveloper() {
 
 	strDevs = JSON.stringify(timeline);
@@ -43,87 +57,157 @@ function saveDeveloper() {
 		type : "POST",
 		url : "http://planner/www/saveTimeline.php",
 		data : {
+			devId : isEditingDeveloper,
 			name : $.trim($('#devName').val()),
 			teamId : $.trim($('#devTeam').val())
 		}
 	}).done(function(msg) {
 		var answer = JSON.parse(msg);
 
-		if(answer.result == 'TRUE'){
+		if (answer.result == 'TRUE') {
 
-			notice('msgError','A new developer was created.',true,function(){
-				$('#devName').val('');
-				$('#frmAddDeveloper').slideUp();
+			$("#btnAddDeveloper").button("option", "disabled", false);
 
-				timeline.push(answer.package);
+			if (isEditingDeveloper == 0) {
+				notice('msgError', 'Created.', true, function() {
+					$('#devName').val('');
+					$('#frmAddDeveloper').slideUp();
 
-				oDevTable.fnClearTable(0);
-				oDevTable.fnAddData(timeline);
-				oDevTable.fnDraw();
-				return true;
-			});
-		}else{
-			chrome.extension.getBackgroundPage().error('msgError','An error has ocurred trying to save the Developer.');
+					timeline.push(answer.package);
+
+					oDevTable.fnClearTable(0);
+					oDevTable.fnAddData(timeline);
+					oDevTable.fnDraw();
+					return true;
+				});
+			} else {
+				notice('msgError', 'Saved.', true, function() {
+
+					var objD = getTimelineById(isEditingDeveloper);
+					objD.name = $('#devName').val();
+					objD.team = $('#devTeam').val();
+
+					stringTimelines = JSON.stringify(timeline);
+					localStorage.setItem('backTimelines', stringTimelines);
+					timeline = JSON.parse(localStorage.getItem('backTimelines'));
+
+					oDevTable.fnClearTable(0);
+					oDevTable.fnAddData(timeline);
+					oDevTable.fnDraw();
+
+					$('#devName').val('');
+					$('#frmAddDeveloper').slideUp();
+
+					isEditingDeveloper = 0;
+
+					return true;
+				});
+			}
+
+		} else {
+			error('msgError', 'Error trying to save.');
 		}
 	});
 }
 
-function initDevelopersList(){
+function deleteDeveloper(devId) {
+
+	$.ajax({
+		type : "POST",
+		url : "http://planner/www/removeTimeline.php",
+		data : {
+			devId : devId
+		}
+	}).done(function(msg) {
+		var answer = JSON.parse(msg);
+
+		if (answer.result == 'TRUE') {
+
+			notice('msgError', 'Removed.', true, function() {
+
+				findAndRemove(timeline,'id',devId);
+
+				stringTimelines = JSON.stringify(timeline);
+				localStorage.setItem('backTimelines', stringTimelines);
+				timeline = JSON.parse(localStorage.getItem('backTimelines'));
+
+				oDevTable.fnClearTable(0);
+				oDevTable.fnAddData(timeline);
+				oDevTable.fnDraw();
+
+				$('#devName').val('');
+				$('#frmAddDeveloper').slideUp();
+
+				return true;
+			});
+
+		} else {
+			error('msgError', 'Error trying to save.');
+		}
+	});
+}
+
+function initDevelopersList() {
 
 	$("#developersList").dialog({
 		width : '70%',
 		autoOpen : false,
 		modal : true,
-		buttons : [
-			{
-				text : "Close",
-				click : function() {
-					$(this).dialog("close");
-				}
+		buttons : [ {
+			text : "Close",
+			click : function() {
+				$(this).dialog("close");
 			}
-		]
+		} ]
 	});
 
-//$(document).ready(function() {
-	console.log(timeline);
 	oDevTable = $('#tblDevelopersList').dataTable({
 		"aaData" : timeline,
-		"bJQueryUI": true,
-		"sPaginationType": "full_numbers",
-		"aoColumns" : [
-				{
-					"mDataProp" : null,
-					"sTitle" : "",
-					"sClass" : "center",
-					"bSortable" : false,
-					"fnRender" : function(obj) {
-						return '<img src="imgs/details_open.png" />';
-					}
-				},{
-					"mDataProp" : null,
-					"sTitle" : "Actions",
-					"sClass" : "center",
-					"bSortable" : false,
-					"fnRender" : function(obj) {
-						return '<a href="javascript:;" class="btnTableIn">Delete</a>';
-					}
-				}, {
-					"mDataProp" : "id",
-					"sTitle" : "Id",
-					"bSortable" : true,
-				}, {
-					"mDataProp" : "name",
-					"sTitle" : "Name",
-					"bSortable" : false
-				}, {
-					"mDataProp" : "team",
-					"sTitle" : "Team",
-					"bSortable" : true
-				}
-		]
+		"bJQueryUI" : true,
+		"sPaginationType" : "full_numbers",
+		"aoColumns" : [ {
+			"mDataProp" : null,
+			"sTitle" : "",
+			"sClass" : "center",
+			"bSortable" : false,
+			"fnRender" : function(obj) {
+				return '<img class="btnDevOpenTbl" src="imgs/icon-add.png" />';
+			}
+		}, {
+			"mDataProp" : "id",
+			"sTitle" : "Id",
+			"bSortable" : true,
+			"bVisible" : false
+		}, {
+			"mDataProp" : null,
+			"sTitle" : "Name",
+			"sClass" : "left",
+			"bSortable" : true,
+			"fnRender" : function(obj) {
+				return '<a href="javascript:;" onclick="editDeveloper(' + obj.aData.id + ')">' + obj.aData.name + '</a>';
+			}
+		}, {
+			"mDataProp" : "name",
+			"sTitle" : "Name",
+			"bSortable" : false
+		}, {
+			"mDataProp" : "team",
+			"sTitle" : "Team",
+			"bSortable" : true
+		}, {
+			"mDataProp" : null,
+			"sTitle" : "Actions",
+			"sClass" : "center",
+			"bSortable" : false,
+			"fnRender" : function(obj) {
+				var btnsDevActions = '<img class="btnDevRemoveTbl" src="imgs/icon-remove.png" />';
+				return btnsDevActions;
+			}
+		} ]
 	});
 
-	$('#tblDevelopersList tbody td img').live('click', function() {
+	$('#tblDevelopersList tbody tr td img.btnDevOpenTbl').live('click', function() {
+
 		var nTr = $(this).parents('tr')[0];
 		if (oDevTable.fnIsOpen(nTr)) {
 			/* This row is already open - close it */
@@ -136,63 +220,65 @@ function initDevelopersList(){
 		}
 	});
 
-	$('#tblDevelopersList tbody td a.btnTableIn').button({icons:{primary: "ui-icon-minusthick"},text: false}).click(function(){
+	$('#tblDevelopersList tbody tr td img.btnDevRemoveTbl').live('click', function() {
 
-//		CONTINUE HERE!!
-//		$( "#timeline-confirm-deletion" ).dialog({
-//			resizable: false,
-//			height:140,
-//			modal: true,
-//			buttons: {
-//				"Delete all items": function() {
-//					$( this ).dialog( "close" );
-//				},
-//				Cancel: function() {
-//					$( this ).dialog( "close" );
-//				}
-//			}
-//		});
+		var aData = oDevTable.fnGetData(this.parentNode.parentNode); // get
+		// datarow
+		if (null != aData) { // null if we clicked on title row
+			console.log("remove: " + aData.id);
+			$("#timeline-confirm-deletion").dialog({
+				resizable : false,
+				height : 100,
+				modal : true,
+				buttons : {
+					Cancel : function() {
+						$(this).dialog("close");
+					},
+					"Accept" : function() {
+						$(this).dialog("close");
+						deleteDeveloper(aData.id);
+					}
+				}
+			});
+		}
+
 	});
-//	live('click', function() {
-//		var nTr = $(this).parents('tr')[0];
-//		if (oDevTable.fnIsOpen(nTr)) {
-//			/* This row is already open - close it */
-//			// this.src = "../examples_support/details_open.png";
-//			oDevTable.fnClose(nTr);
-//		} else {
-//			/* Open this row */
-//			// this.src = "../examples_support/details_close.png";
-//			oDevTable.fnOpen(nTr, developerDetails(nTr), 'details');
-//		}
-//	});
 
-	$('#btnOpenDeveloperForm').button({icons:{primary: "ui-icon-plusthick"}}).click(function() {
-		// if (!$('#frmAddDeveloper').is(':visible')) {
-		// $('#devName').val('');
-		//		}
 
+		// CONTINUE HERE!!
+	$('#tblDevelopersList tbody tr td img.btnDevEditTbl').live('click', function() {
+
+		var aData = oDevTable.fnGetData(this.parentNode.parentNode); // get
+		// datarow
+		if (null != aData) { // null if we clicked on title row
+			console.log("edit: " + aData.id);
+		}
+	});
+
+	$('#btnOpenDeveloperForm').button({
+		icons : {
+			primary : "ui-icon-plus"
+		}
+	}).click(function() {
 		$('#frmAddDeveloper').slideDown();
+		$('#devName').val('');
+		$('#devTeam').val('');
 		$('#devName').focus();
 
+		$("#btnAddDeveloper").button("option", "disabled", false);
 	});
-	$('#btnAddDeveloper').button().click(function() {
+	$('#btnAddDeveloper').button({
+		icons : {
+			primary : "ui-icon-disk"
+		}
+	}).click(function() {
 
 		if ($('#devName').val() == '') {
 			alert("Please provide a valid name.");
 			return false;
 		}
 
-//		timelineId++;
-//
-//		var newElement = {
-//			"id" : timelineId,
-//			"name" : $('#devName').val(),
-//			"team" : $('#devTeam').val(),
-//			"days" : new Array(),
-//			"tasks" : new Array()
-//		};
-//
-//		timeline.push(newElement);
+		$("#btnAddDeveloper").button("option", "disabled", true);
 
 		saveDeveloper();
 

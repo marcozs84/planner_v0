@@ -9,7 +9,7 @@ $res = $mysqli->query($query);
 if($res->num_rows > 0){
 	$addTimelines = Array();
 	while ($row = $res->fetch_assoc()) {
-		$addTimelines[] = "{\"id\" : 1,\"name\" : \"".$row['name']."\",\"team\" : ".$row['teamId'].",\"days\" : [],\"tasks\" : []}";
+		$addTimelines[] = "{\"id\" : ".$row['id'].",\"name\" : \"".$row['name']."\",\"team\" : ".$row['teamId'].",\"days\" : [],\"tasks\" : []}";
 	}
 }
 /***************************************************************************/
