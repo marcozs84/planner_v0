@@ -18,9 +18,27 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['teamId'] )) {
 
 		if ($res) {
 			$timelineId = $mysqli->insert_id;
-			print "{\"result\":\"TRUE\",\"message\":\"Timeline was saved succesfully.\",\"package\":{\"id\" : $timelineId,\"name\" : \"" . $name . "\",\"team\" : $teamId,\"days\" : [],\"tasks\" : []}}";
+
+			$resultJSON = Array("result" => "TRUE",
+					"message" => "Timeline was saved succesfully",
+					"package" => Array(
+							"id" => $timelineId,
+							"name" => $name,
+							"team" => $teamId,
+							"days" => Array(),
+							"tasks" => Array()
+							)
+					);
+
+			print json_encode($resultJSON);
 		} else {
-			print "{\"result\":\"FALSE\",\"message\":\"Insertion query failed.\",\"package\":\"null\"}";
+// 			print "{\"result\":\"FALSE\",\"message\":\"Insertion query failed.\",\"package\":\"null\"}";
+			$resultJSON = Array(
+					"result" => "FALSE",
+					"message" => "Insertion query failed.",
+					"package" => "null"
+					);
+			print json_encode($resultJSON);
 		}
 	} else {
 		$query = "UPDATE
@@ -29,15 +47,39 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['teamId'] )) {
 		$res = $mysqli->query ( $query );
 
 		if ($res) {
-			print "{\"result\":\"TRUE\",\"message\":\"Timeline was saved succesfully.\",\"package\":{\"id\" : $teamId,\"name\" : \"" . $name . "\",\"team\" : $teamId,\"days\" : [],\"tasks\" : []}}";
+// 			print "{\"result\":\"TRUE\",\"message\":\"Timeline was saved succesfully.\",\"package\":{\"id\" : $teamId,\"name\" : \"" . $name . "\",\"team\" : $teamId,\"days\" : [],\"tasks\" : []}}";
+			$resultJSON = Array("result" => "TRUE",
+					"message" => "Timeline was saved succesfully",
+					"package" => Array(
+							"id" => $devId,
+							"name" => $name,
+							"team" => $teamId,
+							"days" => Array(),
+							"tasks" => Array()
+					)
+			);
+
+			print json_encode($resultJSON);
 		} else {
-			print "{\"result\":\"FALSE\",\"message\":\"Update query failed.\",\"package\":\"null\"}";
+// 			print "{\"result\":\"FALSE\",\"message\":\"Update query failed.\",\"package\":\"null\"}";
+			$resultJSON = Array("result" => "FALSE",
+					"message" => "Update query failed.",
+					"package" => "null"
+			);
+
+			print json_encode($resultJSON);
 		}
 	}
 
 	$mysqli->close ();
 
 } else {
-	print "{\"result\":\"FALSE\",\"message\":\"Incomming variables failed.\",\"package\":\"null\"}";
+// 	print "{\"result\":\"FALSE\",\"message\":\"Incomming variables failed.\",\"package\":\"null\"}";
+	$resultJSON = Array("result" => "FALSE",
+			"message" => "Incomming variables failed.",
+			"package" => "null"
+	);
+
+	print json_encode($resultJSON);
 }
 ?>

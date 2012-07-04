@@ -62,7 +62,15 @@ function saveDeveloper() {
 			teamId : $.trim($('#devTeam').val())
 		}
 	}).done(function(msg) {
+
+//		console.log("msg: " + msg);
+//		var n = msg.replace("\'","\\\'");
+//		console.log("n: " + n);
+//		var answer = JSON.parse(n);
+
 		var answer = JSON.parse(msg);
+
+		console.log("answer: " + answer);
 
 		if (answer.result == 'TRUE') {
 
@@ -173,11 +181,6 @@ function initDevelopersList() {
 			"fnRender" : function(obj) {
 				return '<img class="btnDevOpenTbl" src="imgs/icon-add.png" />';
 			}
-		}, {
-			"mDataProp" : "id",
-			"sTitle" : "Id",
-			"bSortable" : true,
-			"bVisible" : false
 		}, {
 			"mDataProp" : null,
 			"sTitle" : "Name",
