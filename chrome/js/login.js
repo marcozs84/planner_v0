@@ -1,19 +1,4 @@
 $(document).ready(function() {
-//	var xhr2 = $.ajax({
-//		'username': 'usuario',
-//		'password': 'password',
-//		'url': "http://planner/www/jsonLogin.php",
-//		'async': async,
-//		'type': "GET",
-//		'success': function(data, status, xhr){
-//
-//		},
-//		'error': function(xhr, textStatus, errorThrown){
-//			if(error)
-//				error(errorThrown);
-//		}
-//	});
-
 	$('#btnOpenDeveloperForm').button().click(function() {
 
 		var username = $.trim($('#username').val());

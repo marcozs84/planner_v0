@@ -115,43 +115,49 @@ function saveDeveloper() {
 		} else {
 			error('msgError', 'Error trying to save.');
 		}
+	}).fail(function(){
+		notice('msgError', 'Couldn\'t connect with server.', true);
 	});
 }
 
 function deleteDeveloper(devId) {
 
+//	if(devId instanceof Array){
+//	}else{
+//		devId = Array(devId);
+//	}
+
 	$.ajax({
 		type : "POST",
 		url : "http://planner/www/removeTimeline.php",
 		data : {
-			devId : devId
+			devId : JSON.stringify(devId)
 		}
 	}).done(function(msg) {
 		var answer = JSON.parse(msg);
 
 		if (answer.result == 'TRUE') {
 
-			notice('msgError', 'Removed.', true, function() {
+			findAndRemove(timeline,'id',devId);
 
-				findAndRemove(timeline,'id',devId);
+			stringTimelines = JSON.stringify(timeline);
+			localStorage.setItem('backTimelines', stringTimelines);
+			timeline = JSON.parse(localStorage.getItem('backTimelines'));
 
-				stringTimelines = JSON.stringify(timeline);
-				localStorage.setItem('backTimelines', stringTimelines);
-				timeline = JSON.parse(localStorage.getItem('backTimelines'));
+			oDevTable.fnClearTable(0);
+			oDevTable.fnAddData(timeline);
+			oDevTable.fnDraw();
 
-				oDevTable.fnClearTable(0);
-				oDevTable.fnAddData(timeline);
-				oDevTable.fnDraw();
+			$('#devName').val('');
+			$('#frmAddDeveloper').slideUp();
 
-				$('#devName').val('');
-				$('#frmAddDeveloper').slideUp();
-
-				return true;
-			});
+			notice('msgError', 'Removed.', true);
 
 		} else {
 			error('msgError', 'Error trying to save.');
 		}
+	}).fail(function(){
+		notice('msgError', 'Couldn\'t connect with server.', true);
 	});
 }
 
@@ -165,6 +171,11 @@ function initDevelopersList() {
 			text : "Close",
 			click : function() {
 				$(this).dialog("close");
+			}
+		},{
+			text : "Delete",
+			click : function(){
+
 			}
 		} ]
 	});
@@ -182,6 +193,10 @@ function initDevelopersList() {
 				return '<img class="btnDevOpenTbl" src="imgs/icon-add.png" />';
 			}
 		}, {
+			"mDataProp" : "id",
+			"sTitle" : "Id",
+			"bSortable" : true
+		}, {
 			"mDataProp" : null,
 			"sTitle" : "Name",
 			"sClass" : "left",
@@ -189,10 +204,6 @@ function initDevelopersList() {
 			"fnRender" : function(obj) {
 				return '<a href="javascript:;" onclick="editDeveloper(' + obj.aData.id + ')">' + obj.aData.name + '</a>';
 			}
-		}, {
-			"mDataProp" : "name",
-			"sTitle" : "Name",
-			"bSortable" : false
 		}, {
 			"mDataProp" : "team",
 			"sTitle" : "Team",
@@ -206,7 +217,15 @@ function initDevelopersList() {
 				var btnsDevActions = '<img class="btnDevRemoveTbl" src="imgs/icon-remove.png" />';
 				return btnsDevActions;
 			}
-		} ]
+		}, {
+			"mDataProp" : null,
+			"sTitle" : "",
+			"sClass" : "left",
+			"bSortable" : false,
+			"fnRender" : function(obj) {
+				return '<input type="checkbox" value="' + obj.aData.id + '" name="developerIds[]" />';
+			}
+		}]
 	});
 
 	$('#tblDevelopersList tbody tr td img.btnDevOpenTbl').live('click', function() {
