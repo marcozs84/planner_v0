@@ -144,48 +144,25 @@ function deleteDeveloper(devId) {
 
 		if (answer.result == 'TRUE') {
 
-//			$.ajax({
-//				type : "POST",
-//				url : "http://planner/www/getTimelines.php"
-//			}).done(function(msg) {
-//
-//			}
+			$.ajax({
+				type : "POST",
+				url : "http://planner/www/getTimelines.php"
+			}).done(function(resultTimelines) {
+				var jsonTimelinesResult = JSON.parse(resultTimelines);
 
+				stringTimelines = JSON.stringify(jsonTimelinesResult.package.timelines);
+				localStorage.setItem('backTimelines', stringTimelines);
+				timeline = JSON.parse(localStorage.getItem('backTimelines'));
 
-			var delResult = true;
-			var idND = new Array();
+				oDevTable.fnClearTable(0);
+				oDevTable.fnAddData(timeline);
+				oDevTable.fnDraw();
 
-			for ( var i = 0; i < devId.length; i++) {
-				delResult = findAndRemove(timeline,'id',devId[i]);
-				if(delResult == false){
-					idND.push(devId[i]);
-				}
-			}
+				$('#devName').val('');
+				$('#frmAddDeveloper').slideUp();
 
-			if(idND.length > 0){
-				console.log("Not deleted: " + idND);
-				error('msgError', 'Error trying to remove.');
-			}
-
-
-//			var result = findAndRemove(timeline,'id',devId);
-//
-//			if(result == false){
-//				error('msgError', 'JS Error trying to remove.');
-//			}
-
-			stringTimelines = JSON.stringify(timeline);
-			localStorage.setItem('backTimelines', stringTimelines);
-			timeline = JSON.parse(localStorage.getItem('backTimelines'));
-
-			oDevTable.fnClearTable(0);
-			oDevTable.fnAddData(timeline);
-			oDevTable.fnDraw();
-
-			$('#devName').val('');
-			$('#frmAddDeveloper').slideUp();
-
-			notice('msgError', 'Removed.', true);
+				notice('msgError', 'Removed.', true);
+			});
 
 		} else {
 			error('msgError', 'Error trying to remove.');
