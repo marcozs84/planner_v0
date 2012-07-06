@@ -65,11 +65,6 @@ function saveDeveloper() {
 		}
 	}).done(function(msg) {
 
-//		console.log("msg: " + msg);
-//		var n = msg.replace("\'","\\\'");
-//		console.log("n: " + n);
-//		var answer = JSON.parse(n);
-
 		var answer = JSON.parse(msg);
 
 		console.log("answer: " + answer);

@@ -40,7 +40,7 @@ if ($res) {
 		print json_encode($resultJSON);
 
 	}else{
-		print "nada";
+		print "{\"result\":\"FALSE\",\"message\":\"There is no data to show.\",\"package\":\"null\"}";
 	}
 
 }else{

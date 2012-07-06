@@ -46,10 +46,97 @@ function taskDetails(nTr) {
 	return sOut;
 }
 
+var isEditingTask = 0;
+
+function editTask(taskId) {
+	isEditingTask = taskId;
+
+	var objT = getTaskById(isEditingTask);
+	$('#tskName').val(objT.name);
+	$('#tskDuration').val(objT.duration);
+	$('#tskDescription').val(objT.description);
+
+	$('#frmAddTask').slideDown();
+	$('#tskName').focus();
+
+	$("#btnAddTask").button("option", "disabled", false);
+
+}
+
+function saveTask() {
+
+	strTsks = JSON.stringify(tasks);
+
+	$.ajax({
+		type : "POST",
+		url : "http://planner/www/saveTask.php",
+		data : {
+			tskId : isEditingTask,
+			name : $.trim($('#tskName').val()),
+			duration : $.trim($('#tskDuration').val()),
+			description : $.trim($('#tskDescription').val())
+		}
+	}).done(function(msg) {
+
+		var answer = JSON.parse(msg);
+
+		console.log("answer: " + answer);
+
+		if (answer.result == 'TRUE') {
+
+			if (isEditingDeveloper == 0) {
+				notice('msgError', 'Created.', true, function() {
+					$('#devName').val('');
+					$('#frmAddDeveloper').slideUp();
+
+					timeline.push(answer.package);
+
+					stringTimelines = JSON.stringify(timeline);
+					localStorage.setItem('backTimelines', stringTimelines);
+					timeline = JSON.parse(localStorage.getItem('backTimelines'));
+
+					oDevTable.fnClearTable(0);
+					oDevTable.fnAddData(timeline);
+					oDevTable.fnDraw();
+				});
+			} else {
+				notice('msgError', 'Saved.', true, function() {
+
+					var objD = getTimelineById(isEditingDeveloper);
+					objD.name = $('#devName').val();
+					objD.team = $('#devTeam').val();
+
+					stringTimelines = JSON.stringify(timeline);
+					localStorage.setItem('backTimelines', stringTimelines);
+					timeline = JSON.parse(localStorage.getItem('backTimelines'));
+
+					oDevTable.fnClearTable(0);
+					oDevTable.fnAddData(timeline);
+					oDevTable.fnDraw();
+
+					$('#devName').val('');
+					$('#frmAddDeveloper').slideUp();
+
+					isEditingDeveloper = 0;
+
+					return true;
+				});
+			}
+
+		} else {
+			$("#btnAddDeveloper").button("option", "disabled", false);
+			error('msgError', 'Error trying to save.');
+		}
+	}).fail(function(){
+		notice('msgError', 'Couldn\'t connect with server.', true);
+	});
+}
+
+
 function initTaskList(){
-	
+
 	console.log("initing taskList");
-	
+
 	$("#taskList").dialog({
 		width : '70%',
 		autoOpen : false,
@@ -67,7 +154,7 @@ function initTaskList(){
 		}
 	});
 
-	
+
 //$(document).ready(function() {
 	oTable = $('#tblTaskList').dataTable({
 		"aaData" : tasks,
