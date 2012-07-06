@@ -47,6 +47,8 @@ function editDeveloper(developerId) {
 	$('#frmAddDeveloper').slideDown();
 	$('#devName').focus();
 
+	$("#btnAddDeveloper").button("option", "disabled", false);
+
 }
 
 function saveDeveloper() {
@@ -74,8 +76,6 @@ function saveDeveloper() {
 
 		if (answer.result == 'TRUE') {
 
-			$("#btnAddDeveloper").button("option", "disabled", false);
-
 			if (isEditingDeveloper == 0) {
 				notice('msgError', 'Created.', true, function() {
 					$('#devName').val('');
@@ -83,10 +83,13 @@ function saveDeveloper() {
 
 					timeline.push(answer.package);
 
+					stringTimelines = JSON.stringify(timeline);
+					localStorage.setItem('backTimelines', stringTimelines);
+					timeline = JSON.parse(localStorage.getItem('backTimelines'));
+
 					oDevTable.fnClearTable(0);
 					oDevTable.fnAddData(timeline);
 					oDevTable.fnDraw();
-					return true;
 				});
 			} else {
 				notice('msgError', 'Saved.', true, function() {
@@ -113,6 +116,7 @@ function saveDeveloper() {
 			}
 
 		} else {
+			$("#btnAddDeveloper").button("option", "disabled", false);
 			error('msgError', 'Error trying to save.');
 		}
 	}).fail(function(){
@@ -122,23 +126,53 @@ function saveDeveloper() {
 
 function deleteDeveloper(devId) {
 
-//	if(devId instanceof Array){
-//	}else{
-//		devId = Array(devId);
-//	}
+	if(devId instanceof Array){
+	}else{
+		devId = Array(devId);
+	}
+
+	var strDevs = "[" + devId.join(",") + "]";
 
 	$.ajax({
 		type : "POST",
 		url : "http://planner/www/removeTimeline.php",
 		data : {
-			devId : JSON.stringify(devId)
+			devId : strDevs
 		}
 	}).done(function(msg) {
 		var answer = JSON.parse(msg);
 
 		if (answer.result == 'TRUE') {
 
-			findAndRemove(timeline,'id',devId);
+//			$.ajax({
+//				type : "POST",
+//				url : "http://planner/www/getTimelines.php"
+//			}).done(function(msg) {
+//
+//			}
+
+
+			var delResult = true;
+			var idND = new Array();
+
+			for ( var i = 0; i < devId.length; i++) {
+				delResult = findAndRemove(timeline,'id',devId[i]);
+				if(delResult == false){
+					idND.push(devId[i]);
+				}
+			}
+
+			if(idND.length > 0){
+				console.log("Not deleted: " + idND);
+				error('msgError', 'Error trying to remove.');
+			}
+
+
+//			var result = findAndRemove(timeline,'id',devId);
+//
+//			if(result == false){
+//				error('msgError', 'JS Error trying to remove.');
+//			}
 
 			stringTimelines = JSON.stringify(timeline);
 			localStorage.setItem('backTimelines', stringTimelines);
@@ -154,7 +188,7 @@ function deleteDeveloper(devId) {
 			notice('msgError', 'Removed.', true);
 
 		} else {
-			error('msgError', 'Error trying to save.');
+			error('msgError', 'Error trying to remove.');
 		}
 	}).fail(function(){
 		notice('msgError', 'Couldn\'t connect with server.', true);
@@ -168,14 +202,21 @@ function initDevelopersList() {
 		autoOpen : false,
 		modal : true,
 		buttons : [ {
-			text : "Close",
+			text : "Delete",
 			click : function() {
-				$(this).dialog("close");
+				var deletes = new Array();
+				$('input:checkbox[name=developerIds]:checked').each(function() {
+					deletes.push($(this).attr('value'));
+				});
+
+				deleteDeveloper(deletes);
+
+				console.log(deletes);
 			}
 		},{
-			text : "Delete",
+			text : "Close",
 			click : function(){
-
+				$(this).dialog("close");
 			}
 		} ]
 	});
@@ -195,6 +236,7 @@ function initDevelopersList() {
 		}, {
 			"mDataProp" : "id",
 			"sTitle" : "Id",
+			"sClass" : "center",
 			"bSortable" : true
 		}, {
 			"mDataProp" : null,
@@ -207,23 +249,15 @@ function initDevelopersList() {
 		}, {
 			"mDataProp" : "team",
 			"sTitle" : "Team",
+			"sClass" : "center",
 			"bSortable" : true
 		}, {
 			"mDataProp" : null,
-			"sTitle" : "Actions",
+			"sTitle" : "",
 			"sClass" : "center",
 			"bSortable" : false,
 			"fnRender" : function(obj) {
-				var btnsDevActions = '<img class="btnDevRemoveTbl" src="imgs/icon-remove.png" />';
-				return btnsDevActions;
-			}
-		}, {
-			"mDataProp" : null,
-			"sTitle" : "",
-			"sClass" : "left",
-			"bSortable" : false,
-			"fnRender" : function(obj) {
-				return '<input type="checkbox" value="' + obj.aData.id + '" name="developerIds[]" />';
+				return '<input type="checkbox" value="' + obj.aData.id + '" name="developerIds" />';
 			}
 		}]
 	});
@@ -289,6 +323,7 @@ function initDevelopersList() {
 
 		$("#btnAddDeveloper").button("option", "disabled", false);
 	});
+
 	$('#btnAddDeveloper').button({
 		icons : {
 			primary : "ui-icon-disk"

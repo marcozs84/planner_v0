@@ -22,7 +22,8 @@ window['detachWindow'] = function(url) {
 
 function notice(obj, message, autoclose, callback) {
 	obj = $('#' + obj);
-	// obj.css('display','none');
+	obj.css('display','none');
+	obj.css('margin', '4px');
 	obj.css('padding', '4px');
 	obj.hide();
 	obj.addClass('ui-state-highlight ui-corner-all');
@@ -50,6 +51,7 @@ window['notice'] = notice;
 function error(obj, message, autoclose, callback) {
 	obj = $('#' + obj);
 	obj.css('display', 'none');
+	obj.css('margin', '4px');
 	obj.css('padding', '4px');
 	obj.addClass('ui-state-error ui-corner-all');
 	obj.html('<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right:3px;"></span>' + message + '</p>');
@@ -74,9 +76,14 @@ window['error'] = error;
 
 function findAndRemove(array, property, value) {
 	$.each(array, function(index, result) {
-		if (result[property] == value) {
-			// Remove from array
-			array.splice(index, 1);
-		}
+		try{
+			if (result[property] == value) {
+				// Remove from array
+				array.splice(index, 1);
+			}
+		}catch(err){
+//			error('msgError', err, true);
+			return false;
+ 		}
 	});
 }

@@ -3,16 +3,16 @@
 
 	if(isset($_POST['devId'])){
 
-		$timelineId = trim($_POST['devId']);
+		$timelineId = json_decode($_POST['devId']);
 
-		$query = "DELETE FROM tbltimeline WHERE id = ".$timelineId;
+		$query = "DELETE FROM tbltimeline WHERE id IN (".@implode(",",$timelineId).")";
 
 		$res = $mysqli->query($query);
 
 		if($res){
-			print "{\"result\":\"TRUE\",\"message\":\"Removed.\",\"package\":{\"id\" : $timelineId}}";
+			print "{\"result\":\"TRUE\",\"message\":\"Removed.\",\"package\":{\"id\" : ".json_encode($timelineId)."}}";
 		}else{
-			print "{\"result\":\"FALSE\",\"message\":\"Deletion query failed.\",\"package\":\"null\"}";
+			print "{\"result\":\"FALSE\",\"message\":\"Deletion query failed. Error: ".$mysqli->errno." - ".$mysqli->error."<br />Query: ".$query."\",\"package\":\"null\"}";
 		}
 
 		$mysqli->close();
