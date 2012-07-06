@@ -85,104 +85,161 @@ function saveTask() {
 		if (answer.result == 'TRUE') {
 
 			if (isEditingDeveloper == 0) {
-				notice('msgError', 'Created.', true, function() {
-					$('#devName').val('');
-					$('#frmAddDeveloper').slideUp();
+				notice('msgErrorTask', 'Created.', true, function() {
+					$('#tskName').val('');
+					$('#tskDuration').val('');
+					$('#tskDescription').val('');
+					$('#frmAddTask').slideUp();
 
-					timeline.push(answer.package);
+					tasks.push(answer.package);
 
-					stringTimelines = JSON.stringify(timeline);
-					localStorage.setItem('backTimelines', stringTimelines);
-					timeline = JSON.parse(localStorage.getItem('backTimelines'));
+					stringTasks = JSON.stringify(tasks);
+					localStorage.setItem('backTasks', stringTasks);
+					tasks = JSON.parse(localStorage.getItem('backTasks'));
 
-					oDevTable.fnClearTable(0);
-					oDevTable.fnAddData(timeline);
-					oDevTable.fnDraw();
+					oTable.fnClearTable(0);
+					oTable.fnAddData(tasks);
+					oTable.fnDraw();
 				});
 			} else {
-				notice('msgError', 'Saved.', true, function() {
+				notice('msgErrorTask', 'Saved.', true, function() {
 
-					var objD = getTimelineById(isEditingDeveloper);
-					objD.name = $('#devName').val();
-					objD.team = $('#devTeam').val();
+					var objT = getTaskById(isEditingTask);
+					objT.name = $('#tskName').val();
+					objT.duration = $('#tskDuration').val();
+					objT.description = $('#tskDescription').val();
 
-					stringTimelines = JSON.stringify(timeline);
-					localStorage.setItem('backTimelines', stringTimelines);
-					timeline = JSON.parse(localStorage.getItem('backTimelines'));
+					stringTasks = JSON.stringify(tasks);
+					localStorage.setItem('backTasks', stringTasks);
+					tasks = JSON.parse(localStorage.getItem('backTasks'));
 
-					oDevTable.fnClearTable(0);
-					oDevTable.fnAddData(timeline);
-					oDevTable.fnDraw();
+					oTable.fnClearTable(0);
+					oTable.fnAddData(tasks);
+					oTable.fnDraw();
 
-					$('#devName').val('');
+					$('#tskName').val('');
+					$('#tskDuration').val('');
+					$('#tskDescription').val('');
 					$('#frmAddDeveloper').slideUp();
 
-					isEditingDeveloper = 0;
+					isEditingTask = 0;
 
-					return true;
 				});
 			}
 
 		} else {
-			$("#btnAddDeveloper").button("option", "disabled", false);
-			error('msgError', 'Error trying to save.');
+			$("#btnAddTask").button("option", "disabled", false);
+			error('msgErrorTask', 'Error trying to save.');
 		}
-	}).fail(function(){
-		notice('msgError', 'Couldn\'t connect with server.', true);
+	}).fail(function() {
+		notice('msgErrorTask', 'Couldn\'t connect with server.', true);
 	});
 }
 
+function deleteTask(taskId) {
 
-function initTaskList(){
+	if (taskId instanceof Array) {
+	} else {
+		taskId = Array(taskId);
+	}
 
-	console.log("initing taskList");
+	var strTsks = "[" + taskId.join(",") + "]";
+
+	$.ajax({
+		type : "POST",
+		url : "http://planner/www/removeTask.php",
+		data : {
+			taskId : strTsks
+		}
+	}).done(function(msg) {
+		var answer = JSON.parse(msg);
+
+		if (answer.result == 'TRUE') {
+
+			$.ajax({
+				type : "POST",
+				url : "http://planner/www/getTasks.php"
+			}).done(function(resultTasks) {
+				var jsonTasksResult = JSON.parse(resultTasks);
+
+				stringTasks = JSON.stringify(jsonTasksResult.package.tasks);
+				localStorage.setItem('backTasks', stringTasks);
+				tasks = JSON.parse(localStorage.getItem('backTasks'));
+
+				oTable.fnClearTable(0);
+				oTable.fnAddData(tasks);
+				oTable.fnDraw();
+
+				$('#tskName').val('');
+				$('#tskDuration').val('');
+				$('#tskDescription').val('');
+				$('#frmAddDeveloper').slideUp();
+
+				notice('msgErrorTask', 'Removed.', true);
+			});
+
+		} else {
+			error('msgErrorTask', 'Error trying to remove.');
+		}
+	}).fail(function() {
+		notice('msgErrorTask', 'Couldn\'t connect with server.', true);
+	});
+}
+
+function initTaskList() {
 
 	$("#taskList").dialog({
 		width : '70%',
 		autoOpen : false,
 		modal : true,
-		buttons : [
-			{
-				text : "Close",
-				click : function() {
-					$(this).dialog("close");
-				}
+		buttons : [ {
+			text : "Delete",
+			click : function() {
+				var deletes = new Array();
+				$('input:checkbox[name=taskIds]:checked').each(function() {
+					deletes.push($(this).attr('value'));
+				});
+
+				deleteTask(deletes);
+
 			}
-		],
-		close:	function(){
-//			saveTasks();
-		}
+		}, {
+			text : "Close",
+			click : function() {
+				$(this).dialog("close");
+			}
+		} ]
 	});
 
-
-//$(document).ready(function() {
+	// $(document).ready(function() {
 	oTable = $('#tblTaskList').dataTable({
 		"aaData" : tasks,
-		"bJQueryUI": true,
-//		"asStripeClasses": ["odd ui-widget-content","even ui-state-default"],
-		"sPaginationType": "full_numbers",
-		"aoColumns" : [
-				{
-					"mDataProp" : null,
-					"sTitle" : "",
-					"sClass" : "center",
-					"fnRender" : function(obj) {
-						return '<img src="imgs/details_open.png" />';
-					}
-				}, {
-					"mDataProp" : "id",
-					"sTitle" : "Id",
-					"bSortable" : true,
-				}, {
-					"mDataProp" : "name",
-					"sTitle" : "Name",
-					"bSortable" : false
-				}, {
-					"mDataProp" : "duration",
-					"sTitle" : "Duration",
-					"bSortable" : false
-				}
-		]
+		"bJQueryUI" : true,
+		"sPaginationType" : "full_numbers",
+		"aoColumns" : [ {
+			"mDataProp" : null,
+			"sTitle" : "",
+			"sClass" : "center",
+			"fnRender" : function(obj) {
+				return '<img src="imgs/details_open.png" />';
+			}
+		}, {
+			"mDataProp" : "id",
+			"sTitle" : "Id",
+			"bSortable" : true,
+		}, {
+			"mDataProp" : null,
+			"sTitle" : "Name",
+			"sClass" : "left",
+			"bSortable" : true,
+			"fnRender" : function(obj) {
+				return '<a href="javascript:;" onclick="editTask(' + obj.aData.id + ')">' + obj.aData.name + '</a>';
+			}
+		}, {
+			"mDataProp" : "duration",
+			"sTitle" : "Duration",
+			"bSortable" : true
+		} ]
 	});
 
 	$('#tblTaskList tbody td img').live('click', function() {
@@ -197,5 +254,6 @@ function initTaskList(){
 			oTable.fnOpen(nTr, taskDetails(nTr), 'details');
 		}
 	});
-//});
+
+
 };
