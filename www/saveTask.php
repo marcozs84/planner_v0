@@ -33,16 +33,53 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['teamId'] )) {
 		if ($res) {
 			$timelineId = $mysqli->insert_id;
 
-			$resultJSON = Array("result" => "TRUE",
-					"message" => "Timeline was saved succesfully",
-					"package" => Array(
-							"id" => $timelineId,
-							"name" => $name,
-							"team" => $teamId,
-							"days" => Array(),
-							"tasks" => Array()
-							)
-					);
+			$querySplit = "
+			INSERT INTO
+				  tblsplit(
+				  `parentId`,
+				  `timelineId`,
+				  `assigned`,
+				  `closed`,
+				  `startdate`,
+				  `originalDate`,
+				  `delayBeginning`,
+				  `delay`,
+				  `duration`)
+				VALUES(
+				  $timelineId,
+				  0,
+				  0,
+				  0,
+				  '',
+				  '',
+				  0,
+				  0,
+				  $duration)
+			";
+
+			$resSplit = $mysqli->query ( $querySplit );
+
+			if ($res) {
+				$splitId = $mysqli->insert_id;
+
+				$splitResult = Array(
+						"id" => $splitId,
+						"parentId" => $timelineId,
+						""	// CONTINUE HERE, FILL AL FIELDS MISSING
+						);
+
+				$resultJSON = Array("result" => "TRUE",
+						"message" => "Timeline was saved succesfully",
+						"package" => Array(
+								"id" => $timelineId,
+								"name" => $name,
+								"team" => $teamId,
+								"days" => Array(),
+								"tasks" => Array()
+						)
+				);
+			}
+
 
 			print json_encode($resultJSON);
 		} else {

@@ -56,6 +56,8 @@ function editTask(taskId) {
 	$('#tskDuration').val(objT.duration);
 	$('#tskDescription').val(objT.description);
 	$('#tskColor').val(objT.color);
+	$('#tskAssigned').val(objT.assigned);
+	$('#tskClosed').val(objT.closed);
 
 	$('#frmAddTask').slideDown();
 	$('#tskName').focus();
@@ -75,8 +77,10 @@ function saveTask() {
 			tskId : isEditingTask,
 			name : $.trim($('#tskName').val()),
 			duration : $.trim($('#tskDuration').val()),
+			description : $.trim($('#tskDescription').val()),
 			color : $.trim($('#tskColor').val()),
-			description : $.trim($('#tskDescription').val())
+			assigned : $.trim($('#tskAssigned').val()),
+			closed : $.trim($('#tskClosed').val())
 		}
 	}).done(function(msg) {
 
@@ -92,6 +96,8 @@ function saveTask() {
 					$('#tskDuration').val('');
 					$('#tskDescription').val('');
 					$('#tskColor').val('');
+					$('#tskAssigned').val('0');
+					$('#tskClosed').val('0');
 					$('#frmAddTask').slideUp();
 
 					tasks.push(answer.package);
@@ -112,6 +118,8 @@ function saveTask() {
 					objT.duration = $('#tskDuration').val();
 					objT.color = $('#tskColor').val();
 					objT.description = $('#tskDescription').val();
+					objT.assigned = $('#tskAssigned').val();
+					objT.closed = $('#tskClosed').val();
 
 					stringTasks = JSON.stringify(tasks);
 					localStorage.setItem('backTasks', stringTasks);
@@ -125,6 +133,8 @@ function saveTask() {
 					$('#tskDuration').val('');
 					$('#tskColor').val('');
 					$('#tskDescription').val('');
+					$('#tskAssigned').val('0');
+					$('#tskClosed').val('0');
 					$('#frmAddDeveloper').slideUp();
 
 					isEditingTask = 0;
@@ -179,6 +189,8 @@ function deleteTask(taskId) {
 				$('#tskDuration').val('');
 				$('#tskColor').val('');
 				$('#tskDescription').val('');
+				$('#tskAssigned').val('0');
+				$('#tskClosed').val('0');
 				$('#frmAddDeveloper').slideUp();
 
 				notice('msgErrorTask', 'Removed.', true);
@@ -198,63 +210,76 @@ function initTaskList() {
 		width : '70%',
 		autoOpen : false,
 		modal : true,
-		buttons : [ {
-			text : "Delete",
-			click : function() {
-				var deletes = new Array();
-				$('input:checkbox[name=taskIds]:checked').each(function() {
-					deletes.push($(this).attr('value'));
-				});
+		buttons : [
+				{
+					text : "Delete",
+					click : function() {
+						var deletes = new Array();
+						$('input:checkbox[name=taskIds]:checked').each(function() {
+							deletes.push($(this).attr('value'));
+						});
 
-				deleteTask(deletes);
+						deleteTask(deletes);
 
-			}
-		}, {
-			text : "Close",
-			click : function() {
-				$(this).dialog("close");
-			}
-		} ]
+					}
+				}, {
+					text : "Close",
+					click : function() {
+						$(this).dialog("close");
+					}
+				}
+		]
 	});
 
 	// $(document).ready(function() {
-	oTable = $('#tblTaskList').dataTable({
-		"aaData" : tasks,
-		"bJQueryUI" : true,
-		"sPaginationType" : "full_numbers",
-		"aoColumns" : [ {
-			"mDataProp" : null,
-			"sTitle" : "",
-			"sClass" : "center",
-			"fnRender" : function(obj) {
-				return '<img class="btnTaskOpenTbl" src="imgs/details_open.png" />';
-			}
-		}, {
-			"mDataProp" : "id",
-			"sTitle" : "Id",
-			"bSortable" : true
-		}, {
-			"mDataProp" : null,
-			"sTitle" : "Name",
-			"sClass" : "left",
-			"bSortable" : true,
-			"fnRender" : function(obj) {
-				return '<a href="javascript:;" onclick="editTask(' + obj.aData.id + ')">' + obj.aData.name + '</a>';
-			}
-		}, {
-			"mDataProp" : "duration",
-			"sTitle" : "Duration",
-			"bSortable" : true
-		}, {
-			"mDataProp" : null,
-			"sTitle" : "Color",
-			"sClass" : "left",
-			"bSortable" : false,
-			"fnRender" : function(obj) {
-				return '<a href="javascript:;" style="background-color:' + obj.aData.color + ';" >&nbsp;&nbsp;&nbsp;</a>';
-			}
-		} ]
-	});
+	oTable = $('#tblTaskList').dataTable(
+			{
+				"aaData" : tasks,
+				"bJQueryUI" : true,
+				"sPaginationType" : "full_numbers",
+				"aoColumns" : [
+						{
+							"mDataProp" : null,
+							"sTitle" : "",
+							"sClass" : "center",
+							"fnRender" : function(obj) {
+								return '<img class="btnTaskOpenTbl" src="imgs/details_open.png" />';
+							}
+						},
+						{
+							"mDataProp" : "id",
+							"sTitle" : "Id",
+							"sClass" : "center",
+							"bSortable" : true
+						},
+						{
+							"mDataProp" : null,
+							"sTitle" : "Name",
+							"sClass" : "left",
+							"bSortable" : true,
+							"fnRender" : function(obj) {
+								return '<a href="javascript:;" onclick="editTask(' + obj.aData.id + ')">' + obj.aData.name
+										+ '</a>';
+							}
+						},
+						{
+							"mDataProp" : "duration",
+							"sTitle" : "Duration",
+							"sClass" : "center",
+							"bSortable" : true
+						},
+						{
+							"mDataProp" : null,
+							"sTitle" : "Color",
+							"sClass" : "center",
+							"bSortable" : false,
+							"fnRender" : function(obj) {
+								return '<a href="javascript:;" style="background-color:' + obj.aData.color
+										+ ';" >&nbsp;&nbsp;&nbsp;</a>';
+							}
+						}
+				]
+			});
 
 	$('#tblTaskList tbody td img.btnTaskOpenTbl').live('click', function() {
 		var nTr = $(this).parents('tr')[0];
@@ -279,6 +304,8 @@ function initTaskList() {
 		$('#tskDuration').val('');
 		$('#tskDescription').val('');
 		$('#tskColor').val('');
+		$('#tskAssigned').val('0');
+		$('#tskClosed').val('0');
 		$('#tskName').focus();
 
 		$("#btnAddTask").button("option", "disabled", false);
@@ -307,8 +334,7 @@ function initTaskList() {
 	});
 
 	$('#tskColor').change(function() {
-		  $('#tskColor').css('background-color',$('#tskColor').val());
+		$('#tskColor').css('background-color', $('#tskColor').val());
 	});
-
 
 };
