@@ -11,27 +11,43 @@
 		
 		<div id="frmAddTask" style="display: none; margin: 10px 0px;">
 		
-			<table cellspacing="4" cellpadding="0" style="width:90%;">
+			<table class="tblForm" cellspacing="4" cellpadding="0" style="width:90%;">
 				<tr>
-					<td style="text-align:right;">Name</td>
-					<td>
+					<td class="label">Name</td>
+					<td class="formInput">
 						<input type="text" name="tskName" id="tskName" />
 					</td>
-					<td style="text-align:right;">Duration</td>
-					<td>
+					<td class="label">Duration</td>
+					<td class="formInput">
 						<input type="text" name="tskDuration" id="tskDuration" />
+					</td>
+					<td class="label">Color</td>
+					<td class="formInput">
+						<select id="tskColor" style="width:80px;">
+							<option value="#FFCC00" style="background-color:#FFCC00"></option>
+							<option value="#F5FB00" style="background-color:#F5FB00"></option>
+							<option value="#81C600" style="background-color:#81C600"></option>
+							<option value="#00AE02" style="background-color:#00AE02"></option>
+							<option value="#009BC3" style="background-color:#009BC3"></option>
+							<option value="#0059B1" style="background-color:#0059B1"></option>
+							<option value="#0008A7" style="background-color:#0008A7"></option>
+							<option value="#6C00A4" style="background-color:#6C00A4"></option>
+							<option value="#CA0076" style="background-color:#CA0076"></option>
+							<option value="#FF0800" style="background-color:#FF0800"></option>
+							<option value="#FF6500" style="background-color:#FF6500"></option>
+							<option value="#FF9500" style="background-color:#FF9500"></option>
+						</select>
 					</td>
 					
 				</tr>
 				<tr>
-					<td style="text-align:right;">Description</td>
-					<td colspan="3">
+					<td class="label">Description</td>
+					<td colspan="5" class="formInput">
 						<textarea name="tskDescription" id="tskDescription" style="width:100%;"></textarea>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="3">
-					</td>
+					<td colspan="5"></td>
 					<td style="text-align:right;">
 						<a href="javascript:;" id="btnAddTask">Save</a>
 					</td>

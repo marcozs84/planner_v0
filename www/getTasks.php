@@ -24,7 +24,7 @@ if ($res) {
 				$splits[] = Array(
 						"id" => $row ['id'],
 						"parentId" => $row ['parentId'],
-						"devId" => $row ['devId'],
+						"timelineId" => $row ['timelineId'],
 						"assigned" => $row ['assigned'],
 						"closed" => $row ['closed'],
 						"startDate" => $row ['startDate'],

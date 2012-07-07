@@ -55,6 +55,7 @@ function editTask(taskId) {
 	$('#tskName').val(objT.name);
 	$('#tskDuration').val(objT.duration);
 	$('#tskDescription').val(objT.description);
+	$('#tskColor').val(objT.color);
 
 	$('#frmAddTask').slideDown();
 	$('#tskName').focus();
@@ -74,6 +75,7 @@ function saveTask() {
 			tskId : isEditingTask,
 			name : $.trim($('#tskName').val()),
 			duration : $.trim($('#tskDuration').val()),
+			color : $.trim($('#tskColor').val()),
 			description : $.trim($('#tskDescription').val())
 		}
 	}).done(function(msg) {
@@ -89,6 +91,7 @@ function saveTask() {
 					$('#tskName').val('');
 					$('#tskDuration').val('');
 					$('#tskDescription').val('');
+					$('#tskColor').val('');
 					$('#frmAddTask').slideUp();
 
 					tasks.push(answer.package);
@@ -107,6 +110,7 @@ function saveTask() {
 					var objT = getTaskById(isEditingTask);
 					objT.name = $('#tskName').val();
 					objT.duration = $('#tskDuration').val();
+					objT.color = $('#tskColor').val();
 					objT.description = $('#tskDescription').val();
 
 					stringTasks = JSON.stringify(tasks);
@@ -119,6 +123,7 @@ function saveTask() {
 
 					$('#tskName').val('');
 					$('#tskDuration').val('');
+					$('#tskColor').val('');
 					$('#tskDescription').val('');
 					$('#frmAddDeveloper').slideUp();
 
@@ -172,6 +177,7 @@ function deleteTask(taskId) {
 
 				$('#tskName').val('');
 				$('#tskDuration').val('');
+				$('#tskColor').val('');
 				$('#tskDescription').val('');
 				$('#frmAddDeveloper').slideUp();
 
@@ -226,7 +232,7 @@ function initTaskList() {
 		}, {
 			"mDataProp" : "id",
 			"sTitle" : "Id",
-			"bSortable" : true,
+			"bSortable" : true
 		}, {
 			"mDataProp" : null,
 			"sTitle" : "Name",
@@ -239,6 +245,14 @@ function initTaskList() {
 			"mDataProp" : "duration",
 			"sTitle" : "Duration",
 			"bSortable" : true
+		}, {
+			"mDataProp" : null,
+			"sTitle" : "Color",
+			"sClass" : "left",
+			"bSortable" : false,
+			"fnRender" : function(obj) {
+				return '<a href="javascript:;" style="background-color:' + obj.aData.color + ';" >&nbsp;&nbsp;&nbsp;</a>';
+			}
 		} ]
 	});
 
@@ -264,6 +278,7 @@ function initTaskList() {
 		$('#tskName').val('');
 		$('#tskDuration').val('');
 		$('#tskDescription').val('');
+		$('#tskColor').val('');
 		$('#tskName').focus();
 
 		$("#btnAddTask").button("option", "disabled", false);
@@ -289,6 +304,10 @@ function initTaskList() {
 
 		saveTask();
 
+	});
+
+	$('#tskColor').change(function() {
+		  $('#tskColor').css('background-color',$('#tskColor').val());
 	});
 
 

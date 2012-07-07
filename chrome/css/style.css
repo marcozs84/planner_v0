@@ -26,6 +26,18 @@ h1 {
 	font-size: 24px;
 }
 
+.tblForm tr td{
+	padding:2px;
+}
+
+.tblForm tr td.label{
+	text-aligh:right;
+}
+
+.tblForm tr td.formInput{
+	text-aligh:left;
+}
+
 .weekTable>tbody>tr>.devName {
 	padding: 2px;
 	vertical-align: middle;

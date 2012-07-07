@@ -3,16 +3,30 @@ include_once ('tools.php');
 
 if (isset ( $_POST ['name'] ) && isset ( $_POST ['teamId'] )) {
 
-	$devId = trim ( $_POST ['tskId'] );
+	$taskId = trim ( $_POST ['tskId'] );
 	$name = trim ( $_POST ['name'] );
-	$teamId = trim ( $_POST ['teamId'] );
+	$description = trim ( $_POST ['description'] );
+	$duration = trim ( $_POST ['duration'] );
+	$assigned = trim ( $_POST ['assigned'] );
+	$closed = trim ( $_POST ['closed'] );
+	$color = trim ( $_POST ['color'] );
 
 	if ($devId == 0) {
 		$query = "INSERT INTO
-			tbltimeline(`name`,`teamId`)
-			VALUES(
-			'$name',
-			$teamId)";
+				  tbltask(
+				  `name`,
+				  `description`,
+				  `duration`,
+				  `assigned`,
+				  `closed`,
+				  `color`)
+				VALUES(
+				  '$name',
+				  '$description',
+				  $duration,
+				  $assigned,
+				  $closed,
+				  '$color')";
 
 		$res = $mysqli->query ( $query );
 
