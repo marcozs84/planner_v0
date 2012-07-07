@@ -84,7 +84,7 @@ function saveTask() {
 
 		if (answer.result == 'TRUE') {
 
-			if (isEditingDeveloper == 0) {
+			if (isEditingTask == 0) {
 				notice('msgErrorTask', 'Created.', true, function() {
 					$('#tskName').val('');
 					$('#tskDuration').val('');
@@ -221,7 +221,7 @@ function initTaskList() {
 			"sTitle" : "",
 			"sClass" : "center",
 			"fnRender" : function(obj) {
-				return '<img src="imgs/details_open.png" />';
+				return '<img class="btnTaskOpenTbl" src="imgs/details_open.png" />';
 			}
 		}, {
 			"mDataProp" : "id",
@@ -242,7 +242,7 @@ function initTaskList() {
 		} ]
 	});
 
-	$('#tblTaskList tbody td img').live('click', function() {
+	$('#tblTaskList tbody td img.btnTaskOpenTbl').live('click', function() {
 		var nTr = $(this).parents('tr')[0];
 		if (oTable.fnIsOpen(nTr)) {
 			/* This row is already open - close it */
@@ -253,6 +253,42 @@ function initTaskList() {
 			// this.src = "../examples_support/details_close.png";
 			oTable.fnOpen(nTr, taskDetails(nTr), 'details');
 		}
+	});
+
+	$('#btnOpenTaskForm').button({
+		icons : {
+			primary : "ui-icon-plus"
+		}
+	}).click(function() {
+		$('#frmAddTask').slideDown();
+		$('#tskName').val('');
+		$('#tskDuration').val('');
+		$('#tskDescription').val('');
+		$('#tskName').focus();
+
+		$("#btnAddTask").button("option", "disabled", false);
+	});
+
+	$('#btnAddTask').button({
+		icons : {
+			primary : "ui-icon-disk"
+		}
+	}).click(function() {
+
+		if ($('#tskName').val() == '') {
+			alert("Please provide a valid name.");
+			return false;
+		}
+
+		if ($('#tskDuration').val() == '' || isNaN(parseInt($('#tskDuration').val(), 10))) {
+			alert("Please provide a valid duration value.");
+			return false;
+		}
+
+		$("#btnAddDeveloper").button("option", "disabled", true);
+
+		saveTask();
+
 	});
 
 
