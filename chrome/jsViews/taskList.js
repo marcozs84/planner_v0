@@ -145,6 +145,7 @@ function saveTask() {
 		} else {
 			$("#btnAddTask").button("option", "disabled", false);
 			error('msgErrorTask', 'Error trying to save.');
+			console.log(msg);
 		}
 	}).fail(function() {
 		notice('msgErrorTask', 'Couldn\'t connect with server.', true);
@@ -274,8 +275,7 @@ function initTaskList() {
 							"sClass" : "center",
 							"bSortable" : false,
 							"fnRender" : function(obj) {
-								return '<a href="javascript:;" style="background-color:' + obj.aData.color
-										+ ';" >&nbsp;&nbsp;&nbsp;</a>';
+								return '<a href="javascript:;" style="background-color:' + obj.aData.color + '; text-decoration:none;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>';
 							}
 						}
 				]
@@ -322,8 +322,8 @@ function initTaskList() {
 			return false;
 		}
 
-		if ($('#tskDuration').val() == '' || isNaN(parseInt($('#tskDuration').val(), 10))) {
-			alert("Please provide a valid duration value.");
+		if ($('#tskDuration').val() == '' || isNaN($('#tskDuration').val())) {
+			alert("Please provide a valid duration value. Only numbers are allowed.");
 			return false;
 		}
 

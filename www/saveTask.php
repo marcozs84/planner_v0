@@ -1,7 +1,7 @@
 <?php
 include_once ('tools.php');
 
-if (isset ( $_POST ['name'] ) && isset ( $_POST ['teamId'] )) {
+if (isset ( $_POST ['name'] ) && isset ( $_POST ['duration'] )) {
 
 	$taskId = trim ( $_POST ['tskId'] );
 	$name = trim ( $_POST ['name'] );
@@ -11,22 +11,22 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['teamId'] )) {
 	$closed = trim ( $_POST ['closed'] );
 	$color = trim ( $_POST ['color'] );
 
-	if ($devId == 0) {
+	if ($taskId == 0) {
 		$query = "INSERT INTO
-				  tbltask(
-				  `name`,
-				  `description`,
-				  `duration`,
-				  `assigned`,
-				  `closed`,
-				  `color`)
-				VALUES(
-				  '$name',
-				  '$description',
-				  $duration,
-				  $assigned,
-				  $closed,
-				  '$color')";
+			tbltask(
+			`name`,
+			`description`,
+			`duration`,
+			`assigned`,
+			`closed`,
+			`color`)
+			VALUES(
+			'$name',
+			'$description',
+			$duration,
+			$assigned,
+			$closed,
+			'$color')";
 
 		$res = $mysqli->query ( $query );
 
@@ -65,7 +65,13 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['teamId'] )) {
 				$splitResult = Array(
 						"id" => $splitId,
 						"parentId" => $timelineId,
-						""	// CONTINUE HERE, FILL AL FIELDS MISSING
+						"assigned" => 0,
+						"closed" => 0,
+						"startDate" => '',
+						"originalDate" => '',
+						"delayBeginning" => '',
+						"delay" => '',
+						"duration" => $duration,
 						);
 
 				$resultJSON = Array("result" => "TRUE",
@@ -73,40 +79,50 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['teamId'] )) {
 						"package" => Array(
 								"id" => $timelineId,
 								"name" => $name,
-								"team" => $teamId,
-								"days" => Array(),
-								"tasks" => Array()
+								"duration" => $duration,
+								"description" => $description,
+								"assigned" => $assigned,
+								"closed" => $closed,
+								"color" => $color,
+								"splits" => Array($resSplit)
 						)
 				);
 			}
 
-
 			print json_encode($resultJSON);
 		} else {
-// 			print "{\"result\":\"FALSE\",\"message\":\"Insertion query failed.\",\"package\":\"null\"}";
 			$resultJSON = Array(
 					"result" => "FALSE",
-					"message" => "Insertion query failed.",
+					"message" => "Insertion query failed. Error: ".$mysqli->error. " Query: ".$query ,
 					"package" => "null"
 					);
 			print json_encode($resultJSON);
 		}
 	} else {
 		$query = "UPDATE
-			tbltimeline set `name` = '$name', `teamId` = $teamId WHERE id=$devId";
+			tbltask set
+			`name` = '$name',
+			`description` = $description,
+			`duration` = $duration,
+			`assigned` = $assigned,
+			`closed` = $closed,
+			`color` = $color
+		WHERE id=$taskId";
 
 		$res = $mysqli->query ( $query );
 
 		if ($res) {
-// 			print "{\"result\":\"TRUE\",\"message\":\"Timeline was saved succesfully.\",\"package\":{\"id\" : $teamId,\"name\" : \"" . $name . "\",\"team\" : $teamId,\"days\" : [],\"tasks\" : []}}";
 			$resultJSON = Array("result" => "TRUE",
 					"message" => "Timeline was saved succesfully",
 					"package" => Array(
-							"id" => $devId,
+							"id" => $taskId,
 							"name" => $name,
-							"team" => $teamId,
-							"days" => Array(),
-							"tasks" => Array()
+							"duration" => $duration,
+							"description" => $description,
+							"assigned" => $assigned,
+							"closed" => $closed,
+							"color" => $color,
+							"splits" => Array($resSplit)
 					)
 			);
 
