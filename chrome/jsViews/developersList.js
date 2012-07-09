@@ -183,7 +183,6 @@ function initDevelopersList() {
 
 				deleteDeveloper(deletes);
 
-				console.log(deletes);
 			}
 		},{
 			text : "Close",

@@ -22,6 +22,7 @@ window['detachWindow'] = function(url) {
 
 function notice(obj, message, autoclose, callback) {
 	obj = $('#' + obj);
+	obj.removeClass();
 	obj.css('display','none');
 	obj.css('margin', '4px');
 	obj.css('padding', '4px');
@@ -50,6 +51,7 @@ window['notice'] = notice;
 
 function error(obj, message, autoclose, callback) {
 	obj = $('#' + obj);
+	obj.removeClass();
 	obj.css('display', 'none');
 	obj.css('margin', '4px');
 	obj.css('padding', '4px');

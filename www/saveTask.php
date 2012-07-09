@@ -35,31 +35,30 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['duration'] )) {
 
 			$querySplit = "
 			INSERT INTO
-				  tblsplit(
-				  `parentId`,
-				  `timelineId`,
-				  `assigned`,
-				  `closed`,
-				  `startdate`,
-				  `originalDate`,
-				  `delayBeginning`,
-				  `delay`,
-				  `duration`)
+				tblsplit(
+				`parentId`,
+				`timelineId`,
+				`assigned`,
+				`closed`,
+				`startdate`,
+				`originalDate`,
+				`delayBeginning`,
+				`delay`,
+				`duration`)
 				VALUES(
-				  $timelineId,
-				  0,
-				  0,
-				  0,
-				  '',
-				  '',
-				  0,
-				  0,
-				  $duration)
-			";
+				$timelineId,
+				0,
+				0,
+				0,
+				'',
+				'',
+				0,
+				0,
+				$duration)";
 
 			$resSplit = $mysqli->query ( $querySplit );
 
-			if ($res) {
+			if ($resSplit) {
 				$splitId = $mysqli->insert_id;
 
 				$splitResult = Array(
@@ -87,9 +86,17 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['duration'] )) {
 								"splits" => Array($resSplit)
 						)
 				);
+
+				print json_encode($resultJSON);
+			}else{
+				$resultJSON = Array(
+						"result" => "FALSE",
+						"message" => "Insertion query failed. Error: ".$mysqli->error. " Query: ".$query ,
+						"package" => "null"
+				);
+				print json_encode($resultJSON);
 			}
 
-			print json_encode($resultJSON);
 		} else {
 			$resultJSON = Array(
 					"result" => "FALSE",
@@ -99,15 +106,18 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['duration'] )) {
 			print json_encode($resultJSON);
 		}
 	} else {
-		$query = "UPDATE
-			tbltask set
-			`name` = '$name',
-			`description` = $description,
-			`duration` = $duration,
-			`assigned` = $assigned,
-			`closed` = $closed,
-			`color` = $color
-		WHERE id=$taskId";
+
+		$query = <<<xxx
+UPDATE
+tbltask set
+`name` = '{$name}',
+`description` = '{$description}',
+`duration` = {$duration},
+`assigned` = {$assigned},
+`closed` = {$closed},
+`color` = '{$color}'
+WHERE id={$taskId}
+xxx;
 
 		$res = $mysqli->query ( $query );
 
@@ -130,7 +140,7 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['duration'] )) {
 		} else {
 // 			print "{\"result\":\"FALSE\",\"message\":\"Update query failed.\",\"package\":\"null\"}";
 			$resultJSON = Array("result" => "FALSE",
-					"message" => "Update query failed.",
+					"message" => "Update query failed when updating. Error: ".$mysqli->error. " Query: ".$query ,
 					"package" => "null"
 			);
 

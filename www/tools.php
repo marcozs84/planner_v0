@@ -1,11 +1,23 @@
 <?php
-$con = mysqli_connect('localhost','root','');
-$mysqli = new mysqli('localhost', 'root', '', 'weekplanner');
+$con = @mysqli_connect('localhost','root','');
 
-if ($mysqli->connect_errno) {
-	echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+if($con){
+	$mysqli = new mysqli('localhost', 'root', '', 'weekplanner');
+
+	if ($mysqli->connect_errno) {
+// 		echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+	}
+}else{
+	$resultJSON = Array(
+			"result" => "FALSE",
+			"message" => "Connection error. Error: ".$mysqli->error ,
+			"package" => "null"
+	);
+	print json_encode($resultJSON);
 	die();
 }
+
+
 
 $go = '';
 
@@ -30,35 +42,6 @@ xxx;
 		}
 
 		print $content;
-
-// 		$res = $mysqli->query($query);
-
-
-// 		die();
-
-// 		print $res->num_rows.'<br/ >';
-
-// 		for ($row_no = 0; $row_no < $res->num_rows; $row_no++) {
-// 			$res->data_seek($row_no);
-// 			$row = $res->fetch_assoc();
-// 			echo " id = " . $row['dataCount'] . "\n";
-// 		}
-
-// 		$res->data_seek(0);
-
-
-// 		var_dump($res);
-// 		die();
-
-// 		while ($row = $res->fetch_assoc()) {
-// 			echo " id = " . $row['dataId'] . "\n";
-// 		}
-
-// 		if($con){
-
-// 			$exec = mysqli_query($query);
-// 			$query = "update ";
-// 		}
 
 		die();
 

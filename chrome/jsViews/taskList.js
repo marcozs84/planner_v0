@@ -49,13 +49,19 @@ function taskDetails(nTr) {
 var isEditingTask = 0;
 
 function editTask(taskId) {
+
 	isEditingTask = taskId;
 
 	var objT = getTaskById(isEditingTask);
 	$('#tskName').val(objT.name);
 	$('#tskDuration').val(objT.duration);
+	$('#tskDuration').attr('disabled', true);
 	$('#tskDescription').val(objT.description);
+	console.log("edit color: " + objT.color);
 	$('#tskColor').val(objT.color);
+	$('#tskColor').css('background-color', '#' + $('#tskColor').val());
+	console.log("edit color selected: " + $('#tskColor').val());
+
 	$('#tskAssigned').val(objT.assigned);
 	$('#tskClosed').val(objT.closed);
 
@@ -91,55 +97,58 @@ function saveTask() {
 		if (answer.result == 'TRUE') {
 
 			if (isEditingTask == 0) {
-				notice('msgErrorTask', 'Created.', true, function() {
-					$('#tskName').val('');
-					$('#tskDuration').val('');
-					$('#tskDescription').val('');
-					$('#tskColor').val('');
-					$('#tskAssigned').val('0');
-					$('#tskClosed').val('0');
-					$('#frmAddTask').slideUp();
 
-					tasks.push(answer.package);
+				$('#tskName').val('');
+				$('#tskDuration').val('');
+				$('#tskDescription').val('');
+				$('#tskColor').val('');
+				$('#tskAssigned').val('0');
+				$('#tskClosed').val('0');
 
-					stringTasks = JSON.stringify(tasks);
-					localStorage.setItem('backTasks', stringTasks);
-					tasks = JSON.parse(localStorage.getItem('backTasks'));
+				$('#frmAddTask').slideUp();
 
-					oTable.fnClearTable(0);
-					oTable.fnAddData(tasks);
-					oTable.fnDraw();
-				});
+				tasks.push(answer.package);
+
+				stringTasks = JSON.stringify(tasks);
+				localStorage.setItem('backTasks', stringTasks);
+				tasks = JSON.parse(localStorage.getItem('backTasks'));
+
+				oTable.fnClearTable(0);
+				oTable.fnAddData(tasks);
+				oTable.fnDraw();
+
+				notice('msgErrorTask', 'Created.', true);
 			} else {
-				notice('msgErrorTask', 'Saved.', true, function() {
 
-					var objT = getTaskById(isEditingTask);
-					objT.name = $('#tskName').val();
-					objT.duration = $('#tskDuration').val();
-					objT.color = $('#tskColor').val();
-					objT.description = $('#tskDescription').val();
-					objT.assigned = $('#tskAssigned').val();
-					objT.closed = $('#tskClosed').val();
+				var objT = getTaskById(isEditingTask);
+				objT.name = $('#tskName').val();
+				objT.duration = $('#tskDuration').val();
+				objT.color = $('#tskColor').val();
+				objT.description = $('#tskDescription').val();
+				objT.assigned = $('#tskAssigned').val();
+				objT.closed = $('#tskClosed').val();
 
-					stringTasks = JSON.stringify(tasks);
-					localStorage.setItem('backTasks', stringTasks);
-					tasks = JSON.parse(localStorage.getItem('backTasks'));
+				$('#frmAddTask').slideUp();
 
-					oTable.fnClearTable(0);
-					oTable.fnAddData(tasks);
-					oTable.fnDraw();
+				stringTasks = JSON.stringify(tasks);
+				localStorage.setItem('backTasks', stringTasks);
+				tasks = JSON.parse(localStorage.getItem('backTasks'));
 
-					$('#tskName').val('');
-					$('#tskDuration').val('');
-					$('#tskColor').val('');
-					$('#tskDescription').val('');
-					$('#tskAssigned').val('0');
-					$('#tskClosed').val('0');
-					$('#frmAddDeveloper').slideUp();
+				oTable.fnClearTable(0);
+				oTable.fnAddData(tasks);
+				oTable.fnDraw();
 
-					isEditingTask = 0;
+				$('#tskName').val('');
+				$('#tskDuration').val('');
+				$('#tskColor').val('');
+				$('#tskDescription').val('');
+				$('#tskAssigned').val('0');
+				$('#tskClosed').val('0');
+				$('#frmAddDeveloper').slideUp();
 
-				});
+				isEditingTask = 0;
+
+				notice('msgErrorTask', 'Saved.', true);
 			}
 
 		} else {
@@ -192,6 +201,7 @@ function deleteTask(taskId) {
 				$('#tskDescription').val('');
 				$('#tskAssigned').val('0');
 				$('#tskClosed').val('0');
+
 				$('#frmAddDeveloper').slideUp();
 
 				notice('msgErrorTask', 'Removed.', true);
@@ -275,7 +285,15 @@ function initTaskList() {
 							"sClass" : "center",
 							"bSortable" : false,
 							"fnRender" : function(obj) {
-								return '<a href="javascript:;" style="background-color:' + obj.aData.color + '; text-decoration:none;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>';
+								return '<a href="javascript:;" style="background-color:#' + obj.aData.color + '; text-decoration:none;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>';
+							}
+						}, {
+							"mDataProp" : null,
+							"sTitle" : "",
+							"sClass" : "center",
+							"bSortable" : false,
+							"fnRender" : function(obj) {
+								return '<input type="checkbox" value="' + obj.aData.id + '" name="taskIds" />';
 							}
 						}
 				]
@@ -284,12 +302,8 @@ function initTaskList() {
 	$('#tblTaskList tbody td img.btnTaskOpenTbl').live('click', function() {
 		var nTr = $(this).parents('tr')[0];
 		if (oTable.fnIsOpen(nTr)) {
-			/* This row is already open - close it */
-			// this.src = "../examples_support/details_open.png";
 			oTable.fnClose(nTr);
 		} else {
-			/* Open this row */
-			// this.src = "../examples_support/details_close.png";
 			oTable.fnOpen(nTr, taskDetails(nTr), 'details');
 		}
 	});
@@ -302,10 +316,12 @@ function initTaskList() {
 		$('#frmAddTask').slideDown();
 		$('#tskName').val('');
 		$('#tskDuration').val('');
+		$('#tskDuration').removeAttr('disabled');
 		$('#tskDescription').val('');
 		$('#tskColor').val('');
 		$('#tskAssigned').val('0');
 		$('#tskClosed').val('0');
+
 		$('#tskName').focus();
 
 		$("#btnAddTask").button("option", "disabled", false);
@@ -324,6 +340,8 @@ function initTaskList() {
 
 		if ($('#tskDuration').val() == '' || isNaN($('#tskDuration').val())) {
 			alert("Please provide a valid duration value. Only numbers are allowed.");
+			$('#tskDuration').focus();
+			$('#tskDuration').select();
 			return false;
 		}
 
@@ -334,7 +352,7 @@ function initTaskList() {
 	});
 
 	$('#tskColor').change(function() {
-		$('#tskColor').css('background-color', $('#tskColor').val());
+		$('#tskColor').css('background-color', '#' + $('#tskColor').val());
 	});
 
 };
