@@ -19,6 +19,11 @@ $(document).ready(function() {
 
 				if(myData.loginResult == "TRUE"){
 
+					if(myData.token == undefined || myData.token == '' || myData.token == 'null'){
+						alert('Authentication failed.');
+						return false;
+					}
+
 					localStorage.setItem('localSession',myData.token);
 					tasksString = myData.tasks;
 					stringTasks = JSON.stringify(myData.tasks);

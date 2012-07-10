@@ -17,7 +17,27 @@ if($con){
 	die();
 }
 
+function ConnectDB(){
+	$con = @mysqli_connect('localhost','root','');
 
+	if($con){
+		$mysqli = new mysqli('localhost', 'root', '', 'weekplanner');
+
+		if ($mysqli->connect_errno) {
+			// 		echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+		}
+
+		return $mysqli;
+	}else{
+		$resultJSON = Array(
+				"result" => "FALSE",
+				"message" => "Connection error. Error: ".$mysqli->error ,
+				"package" => "null"
+		);
+		print json_encode($resultJSON);
+		die();
+	}
+}
 
 $go = '';
 

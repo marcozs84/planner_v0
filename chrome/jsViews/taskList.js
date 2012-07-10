@@ -2,6 +2,7 @@ var oTable;
 
 /* Formating function for row details */
 function taskDetails(nTr) {
+	newDivRowObj = nTr;
 	var aData = oTable.fnGetData(nTr);
 
 	var sOut = '';
@@ -13,8 +14,9 @@ function taskDetails(nTr) {
 
 	for ( var i = 0; i < aData.splits.length; i++) {
 		wPercent = ((aData.splits[i].duration * 100) / aData.duration);
+
 		sOut += '<td style="background-color:#ffffff; width:' + Math.floor(wPercent) + '%; height:12px; border:1px solid #000;">';
-		sOut += '<a href="javascript:;" onclick="devideSplit('+ aData.splits[i].id +','+ aData.splits[i].duration +');" style="text-width:normal;">Devide</a>';
+		sOut += '<a href="javascript:;" onclick="devideSplit('+ aData.splits[i].id +','+ aData.splits[i].duration +','+ aData.splits[i].parentId +');" style="text-width:normal;">Devide</a>';
 		sOut += '</td>';
 	}
 
@@ -48,6 +50,8 @@ function taskDetails(nTr) {
 
 var isEditingTask = 0;
 
+var newDivRowObj = 0;
+var newDivParentTaskId = 0;
 var newDivOldSplitId = 0;
 var newDivOldSplitDuration = 0;
 var newDivNewSplitid = 0;
@@ -76,12 +80,20 @@ function editTask(taskId) {
 
 }
 
-function devideSplit(splitId,duration){
+function devideSplit(splitId,duration,parentId){
 	$("#task-divition").dialog("open");
 	$('#spnCurrentTime').html(duration);
 
+	$('#newSplitDuration').val(0);
+	$('#newSplitDuration').focus();
+	$('#newSplitDuration').select();
+
+	$('input[name="splitbehavior"]').attr('checked', false);
+	$('input[name="splitbehavior"]')[0].checked = true;
+
 	newDivOldSplitId = splitId;
 	newDivOldSplitDuration = duration;
+	newDivParentTaskId = parentId;
 }
 
 function saveTask() {
@@ -102,7 +114,12 @@ function saveTask() {
 		}
 	}).done(function(msg) {
 
-		var answer = JSON.parse(msg);
+		try{
+			var answer = JSON.parse(msg);
+		}catch(error){
+			console.log(msg + ' ' + error);
+			return false;
+		}
 
 		console.log("answer: " + answer);
 
@@ -189,15 +206,29 @@ function deleteTask(taskId) {
 			taskId : strTsks
 		}
 	}).done(function(msg) {
-		var answer = JSON.parse(msg);
+		try{
+			var answer = JSON.parse(msg);
+		}catch(error){
+			console.log(msg + ' ' + error);
+			return false;
+		}
 
 		if (answer.result == 'TRUE') {
 
 			$.ajax({
 				type : "POST",
-				url : "http://planner/www/getTasks.php"
+				url : "http://planner/www/getTasks.php",
+				data : {
+					taskId : 1
+				}
 			}).done(function(resultTasks) {
-				var jsonTasksResult = JSON.parse(resultTasks);
+				try{
+					var jsonTasksResult = JSON.parse(resultTasks);
+				}catch(error){
+					console.log(resultTasks + ' ' + error);
+					return false;
+				}
+
 
 				stringTasks = JSON.stringify(jsonTasksResult.package.tasks);
 				localStorage.setItem('backTasks', stringTasks);
@@ -295,22 +326,63 @@ function initTaskList() {
 					return false;
 				}
 
-				console.log($("input[name='splitbehavior']:checked").val());
+				var thisDialTask = this;
 
 				$.ajax({
 					type : "POST",
 					url : "http://planner/www/newSplitDivision.php",
 					data : {
 						oldId : newDivOldSplitId,
+						parentId : newDivParentTaskId,
 						behavior : $("input[name='splitbehavior']:checked").val(),
 						duration : newDivNewSplitDuration
 					}
 				}).done(function(msg) {
 
+//					var oTable = $('#example').dataTable();
+//					oTable.fnUpdate( 'Example update', 0, 0 ); // Single cell
+//					oTable.fnUpdate( ['a', 'b', 'c', 'd', 'e'], 1, 0 ); // Row
+
+					try{
+						var jsonTasksResult = JSON.parse(msg);
+					}catch(error){
+						console.log(msg + ' ' + error);
+						return false;
+					}
+
+					stringTasks = JSON.stringify(jsonTasksResult.package.tasks);
+					localStorage.setItem('backTasks', stringTasks);
+					tasks = JSON.parse(localStorage.getItem('backTasks'));
+
+					oTable.fnClearTable(0);
+					oTable.fnAddData(tasks);
+					oTable.fnDraw();
+
+//					taskObj = getTaskById(id);
+
+//					oTable.fnUpdate( taskObj , 1, 0 ); // Row
+
+					var nTr = newDivRowObj;
+//					oTable.fnOpen(nTr, taskDetails(nTr), 'details');
+					console.log("nTr: " + nTr);
+					if (oTable.fnIsOpen(nTr)) {
+						oTable.fnClose(nTr);
+						oTable.fnOpen(nTr, taskDetails(nTr), 'details');
+					} else {
+						console.log("cerrado");
+						oTable.fnOpen(nTr, taskDetails(nTr), 'details');
+					}
+
+					notice('msgErrorTask', 'New division created.', true);
+
+					newDivRowObj = 0;
+					newDivParentTaskId = 0;
 					newDivOldSplitId = 0;
 					newDivOldSplitDuration = 0;
 					newDivNewSplitid = 0;
 					newDivNewSplitDuration = 0;
+
+					$(thisDialTask).dialog("close");
 				});
 			}
 		}, {

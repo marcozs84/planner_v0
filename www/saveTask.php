@@ -83,7 +83,7 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['duration'] )) {
 								"assigned" => $assigned,
 								"closed" => $closed,
 								"color" => $color,
-								"splits" => Array($resSplit)
+								"splits" => Array($splitResult)
 						)
 				);
 

@@ -4,69 +4,80 @@ include_once ('tools.php');
 /**
  * ************************* GETTING TIMEINES *****************************
  */
-$query = "select * from tbltask";
 
-$res = $mysqli->query ( $query );
+function getTasksJSON(){
 
-if ($res) {
-	if ($res->num_rows > 0) {
-		$package = Array();
-		while ( $row = $res->fetch_assoc () ) {
+	$query = "select * from tbltask";
 
-			$parentId = $row ['id'];
+	$mysqli = ConnectDB();
 
-			$querySplits = "select * from tblsplit where parentId = ".$parentId;
+	$res = $mysqli->query( $query );
 
-			$splits = Array();
+	if ($res) {
+		if ($res->num_rows > 0) {
+			$package = Array();
+			while ( $row = $res->fetch_assoc () ) {
 
-			$resSplit = $mysqli->query($querySplits);
-			while($rowSplit = $resSplit->fetch_assoc()){
-				$splits[] = Array(
+				$parentId = $row ['id'];
+
+				$querySplits = "select * from tblsplit where parentId = ".$parentId;
+
+				$splits = Array();
+
+				$resSplit = $mysqli->query($querySplits);
+				while($rowSplit = $resSplit->fetch_assoc()){
+					$splits[] = Array(
+							"id" => $rowSplit ['id'],
+							"parentId" => $rowSplit ['parentId'],
+							"timelineId" => $rowSplit ['timelineId'],
+							"assigned" => $rowSplit ['assigned'],
+							"closed" => $rowSplit ['closed'],
+							"startDate" => $rowSplit ['startDate'],
+							"originalDate" => $rowSplit ['originalDate'],
+							"delayBeginning" => $rowSplit ['delayBeginning'],
+							"delay" => $rowSplit ['delay'],
+							"duration" => $rowSplit ['duration']
+							);
+				}
+
+				$package [] = Array(
 						"id" => $row ['id'],
-						"parentId" => $row ['parentId'],
-						"timelineId" => $row ['timelineId'],
+						"name" => $row ['name'],
+						"description" => $row ['description'],
+						"duration" => $row ['duration'],
 						"assigned" => $row ['assigned'],
 						"closed" => $row ['closed'],
-						"startDate" => $row ['startDate'],
-						"originalDate" => $row ['originalDate'],
-						"delayBeginning" => $row ['delayBeginning'],
-						"delay" => $row ['delay'],
-						"duration" => $row ['duration']
+						"color" => $row ['color'],
+						"splits" => $splits
 						);
 			}
 
-			$package [] = Array(
-					"id" => $row ['id'],
-					"name" => $row ['name'],
-					"description" => $row ['description'],
-					"duration" => $row ['duration'],
-					"assigned" => $row ['assigned'],
-					"closed" => $row ['closed'],
-					"color" => $row ['color'],
-					"splits" => $splits
-					);
+			/**
+			 * ************************************************************************
+			 */
+
+
+			$resultJSON = Array("result" => "TRUE",
+					"message" => "Tasks",
+					"package" => Array(
+							"tasks" => $package
+					)
+			);
+
+			print json_encode($resultJSON);
+
+		}else{
+			print "{\"result\":\"FALSE\",\"message\":\"There is no data to show.\",\"package\":\"null\"}";
 		}
 
-		/**
-		 * ************************************************************************
-		 */
-
-
-		$resultJSON = Array("result" => "TRUE",
-				"message" => "Timelines",
-				"package" => Array(
-						"tasks" => $package
-				)
-		);
-
-		print json_encode($resultJSON);
-
 	}else{
-		print "{\"result\":\"FALSE\",\"message\":\"There is no data to show.\",\"package\":\"null\"}";
+		print "{\"result\":\"FALSE\",\"message\":\"".$mysqli->error."\",\"package\":\"null\"}";
 	}
 
-}else{
-	print "{\"result\":\"FALSE\",\"message\":\"".$mysqli->error."\",\"package\":\"null\"}";
+}
+
+if($_POST){
+	getTasksJSON();
 }
 
 ?>
