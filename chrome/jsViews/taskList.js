@@ -48,6 +48,12 @@ function taskDetails(nTr) {
 
 var isEditingTask = 0;
 
+var newDivOldSplitId = 0;
+var newDivOldSplitDuration = 0;
+var newDivNewSplitid = 0;
+var newDivNewSplitDuration = 0;
+
+
 function editTask(taskId) {
 
 	isEditingTask = taskId;
@@ -73,6 +79,9 @@ function editTask(taskId) {
 function devideSplit(splitId,duration){
 	$("#task-divition").dialog("open");
 	$('#spnCurrentTime').html(duration);
+
+	newDivOldSplitId = splitId;
+	newDivOldSplitDuration = duration;
 }
 
 function saveTask() {
@@ -260,38 +269,48 @@ function initTaskList() {
 	});
 
 	$("#task-divition").dialog({
-		width : '300px',
+		width : '410px',
 		autoOpen : false,
 		modal : true,
 		buttons : [ {
 			text : "Divide",
 			click : function() {
 
-				var newSplitDuration = $('#newSplitDuration').val();
+				newDivNewSplitDuration = $.trim($('#newSplitDuration').val());
 
-				var oldSplitDuration = eval($('#spnCurrentTime').html());
-
-				if(newSplitDuration >= oldSplitDuration){
+				if(newDivNewSplitDuration >= newDivOldSplitDuration){
 					alert('New division has to be smaller than the original division.');
 					return false;
 				}
 
+				if(newDivNewSplitDuration == 0){
+					alert('New division has to be greater than 0.');
+					return false;
+				}
 
-				// CONTINUE HERE, SAVE A NEW DIVISION
+				if (newDivNewSplitDuration == '' || isNaN(newDivNewSplitDuration)) {
+					alert("Please provide a valid duration value. Only numbers are allowed.");
+					$('#newSplitDuration').focus();
+					$('#newSplitDuration').select();
+					return false;
+				}
+
+				console.log($("input[name='splitbehavior']:checked").val());
+
 				$.ajax({
 					type : "POST",
-					url : "http://planner/www/newSplit.php",
+					url : "http://planner/www/newSplitDivision.php",
 					data : {
-						tskId : isEditingTask,
-						name : $.trim($('#tskName').val()),
-						duration : $.trim($('#tskDuration').val()),
-						description : $.trim($('#tskDescription').val()),
-						color : $.trim($('#tskColor').val()),
-						assigned : $.trim($('#tskAssigned').val()),
-						closed : $.trim($('#tskClosed').val())
+						oldId : newDivOldSplitId,
+						behavior : $("input[name='splitbehavior']:checked").val(),
+						duration : newDivNewSplitDuration
 					}
 				}).done(function(msg) {
 
+					newDivOldSplitId = 0;
+					newDivOldSplitDuration = 0;
+					newDivNewSplitid = 0;
+					newDivNewSplitDuration = 0;
 				});
 			}
 		}, {
