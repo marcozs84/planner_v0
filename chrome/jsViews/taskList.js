@@ -5,39 +5,39 @@ function taskDetails(nTr) {
 	var aData = oTable.fnGetData(nTr);
 
 	var sOut = '';
-	sOut += 'Total Hours: ' + aData.duration + '<br />';
-	sOut += '';
 	sOut += '<table cellpadding="5" cellspacing="0" border="0" style="/*padding-left:50px;*/ width:100%;">';
-
-	sOut += '<tr><td style="width:20%;">Graphic:</td><td style="width:80%;">';
-	sOut += '<div style="background-color:#ccc; height:10px; width:100%; border:1px solid #333; padding:0px;">';
+	sOut += '<tr><td style="width:20%; text-align:right;">Total Hours:</td><td style="width:80%;">' + aData.duration + '</td></tr>';
+	sOut += '<tr><td style="width:20%; text-align:right; vertical-align:top;">Graphic:</td><td>';
+	sOut += '<table cellspacing="0" cellpadding="0" style="width:100%; background:none;">';
+	sOut += '<tr>';
 
 	for ( var i = 0; i < aData.splits.length; i++) {
 		wPercent = ((aData.splits[i].duration * 100) / aData.duration);
-		sOut += '<div style="background-color:#ff3300; height:100%; width:' + Math.floor(wPercent) + '%; float:left;"></div>';
+		sOut += '<td style="background-color:#ffffff; width:' + Math.floor(wPercent) + '%; height:12px; border:1px solid #000;">';
+		sOut += '<a href="javascript:;" onclick="devideSplit('+ aData.splits[i].id +','+ aData.splits[i].duration +');" style="text-width:normal;">Devide</a>';
+		sOut += '</td>';
 	}
 
-	sOut += '</div></td>';
-
-	sOut += '</tr><tr>';
-	sOut += '<td></td>';
-	sOut += '<td style="padding:0px; text-align:center;">';
+	sOut += '</tr>';
+	sOut += '<tr>';
 
 	for ( var i = 0; i < aData.splits.length; i++) {
 		wPercent = ((aData.splits[i].duration * 100) / aData.duration);
+		sOut += '<td style="width:' + Math.floor(wPercent) + '%; text-align:center; height:15px;">';
 
-		sOut += '<div style="width:' + Math.floor(wPercent) + '%; float:left;">';
-		sOut += aData.splits[i].duration;
+		sOut += '<span style="color:#fff; font-weight:normal;">' + aData.splits[i].duration + '</span>';
 
-		if (aData.splits[i].devId == 0) {
-			sOut += ' [<a href="javascript:;" onclick="">Assign</a>]';
+		if (aData.splits[i].timelineId == 0) {
+			sOut += ' [<a href="javascript:;" onclick="" style="color:#fff; font-weight:normal;">Assign</a>]';
 		} else {
-			sOut += ' [' + getTimelineById(aData.splits[i].devId).name + ']';
+			sOut += ' [' + getTimelineById(aData.splits[i].timelineId).name + ']';
 		}
 
-		sOut += '</div>';
-
+		sOut += '</td>';
 	}
+
+	sOut += '</tr>';
+	sOut += '</table>';
 
 	sOut += '</td>';
 	sOut += '</tr>';
@@ -57,10 +57,8 @@ function editTask(taskId) {
 	$('#tskDuration').val(objT.duration);
 	$('#tskDuration').attr('disabled', true);
 	$('#tskDescription').val(objT.description);
-	console.log("edit color: " + objT.color);
 	$('#tskColor').val(objT.color);
 	$('#tskColor').css('background-color', '#' + $('#tskColor').val());
-	console.log("edit color selected: " + $('#tskColor').val());
 
 	$('#tskAssigned').val(objT.assigned);
 	$('#tskClosed').val(objT.closed);
@@ -70,6 +68,11 @@ function editTask(taskId) {
 
 	$("#btnAddTask").button("option", "disabled", false);
 
+}
+
+function devideSplit(splitId,duration){
+	$("#task-divition").dialog("open");
+	$('#spnCurrentTime').html(duration);
 }
 
 function saveTask() {
@@ -221,25 +224,82 @@ function initTaskList() {
 		width : '70%',
 		autoOpen : false,
 		modal : true,
-		buttons : [
-				{
-					text : "Delete",
-					click : function() {
-						var deletes = new Array();
-						$('input:checkbox[name=taskIds]:checked').each(function() {
-							deletes.push($(this).attr('value'));
-						});
+		buttons : [ {
+			text : "Delete",
+			click : function() {
 
-						deleteTask(deletes);
+				$("#task-confirm-deletion").dialog({
+					resizable : false,
+					height : 100,
+					modal : true,
+					buttons : {
+						Cancel : function() {
+							$(this).dialog("close");
+						},
+						"Accept" : function() {
+							$(this).dialog("close");
 
+							var deletes = new Array();
+							$('input:checkbox[name=taskIds]:checked').each(function() {
+								deletes.push($(this).attr('value'));
+							});
+
+							deleteTask(deletes);
+
+						}
 					}
-				}, {
-					text : "Close",
-					click : function() {
-						$(this).dialog("close");
-					}
+				});
+
+			}
+		}, {
+			text : "Close",
+			click : function() {
+				$(this).dialog("close");
+			}
+		} ]
+	});
+
+	$("#task-divition").dialog({
+		width : '300px',
+		autoOpen : false,
+		modal : true,
+		buttons : [ {
+			text : "Divide",
+			click : function() {
+
+				var newSplitDuration = $('#newSplitDuration').val();
+
+				var oldSplitDuration = eval($('#spnCurrentTime').html());
+
+				if(newSplitDuration >= oldSplitDuration){
+					alert('New division has to be smaller than the original division.');
+					return false;
 				}
-		]
+
+
+				// CONTINUE HERE, SAVE A NEW DIVISION
+				$.ajax({
+					type : "POST",
+					url : "http://planner/www/newSplit.php",
+					data : {
+						tskId : isEditingTask,
+						name : $.trim($('#tskName').val()),
+						duration : $.trim($('#tskDuration').val()),
+						description : $.trim($('#tskDescription').val()),
+						color : $.trim($('#tskColor').val()),
+						assigned : $.trim($('#tskAssigned').val()),
+						closed : $.trim($('#tskClosed').val())
+					}
+				}).done(function(msg) {
+
+				});
+			}
+		}, {
+			text : "Close",
+			click : function() {
+				$(this).dialog("close");
+			}
+		} ]
 	});
 
 	// $(document).ready(function() {
@@ -269,15 +329,39 @@ function initTaskList() {
 							"sClass" : "left",
 							"bSortable" : true,
 							"fnRender" : function(obj) {
-								return '<a href="javascript:;" onclick="editTask(' + obj.aData.id + ')">' + obj.aData.name
-										+ '</a>';
+								return '<a href="javascript:;" onclick="editTask(' + obj.aData.id + ')">' + obj.aData.name + '</a>';
 							}
 						},
 						{
-							"mDataProp" : "duration",
+							"mDataProp" : null,
 							"sTitle" : "Duration",
 							"sClass" : "center",
-							"bSortable" : true
+							"bSortable" : true,
+							"fnRender" : function(obj) {
+
+								var residual = obj.aData.duration;
+								var iWeeks = 0;
+								var iDays = 0;
+								var iHours = 0;
+
+								while (residual > 0) {
+									if (residual > 40) {
+										iWeeks++;
+										residual -= 40;
+										continue;
+									}
+									if (residual > 8) {
+										iDays++;
+										residual -= 8;
+										continue;
+									}
+									iHours = residual;
+									residual = 0;
+								}
+
+								return ((iWeeks > 0) ? iWeeks + 'w' : '') + ' ' + ((iDays > 0) ? iDays + 'd' : '') + ' '
+										+ ((iHours > 0) ? iHours + 'h' : '') + ' ( ' + obj.aData.duration + 'h )';
+							}
 						},
 						{
 							"mDataProp" : null,
@@ -285,7 +369,8 @@ function initTaskList() {
 							"sClass" : "center",
 							"bSortable" : false,
 							"fnRender" : function(obj) {
-								return '<a href="javascript:;" style="background-color:#' + obj.aData.color + '; text-decoration:none;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>';
+								return '<a href="javascript:;" style="background-color:#' + obj.aData.color
+										+ '; text-decoration:none;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>';
 							}
 						}, {
 							"mDataProp" : null,
@@ -295,8 +380,7 @@ function initTaskList() {
 							"fnRender" : function(obj) {
 								return '<input type="checkbox" value="' + obj.aData.id + '" name="taskIds" />';
 							}
-						}
-				]
+						} ]
 			});
 
 	$('#tblTaskList tbody td img.btnTaskOpenTbl').live('click', function() {
@@ -319,6 +403,9 @@ function initTaskList() {
 		$('#tskDuration').removeAttr('disabled');
 		$('#tskDescription').val('');
 		$('#tskColor').val('');
+
+		$('#tskColor').css('background-color', '#' + $('#tskColor').val());
+
 		$('#tskAssigned').val('0');
 		$('#tskClosed').val('0');
 

@@ -176,12 +176,28 @@ function initDevelopersList() {
 		buttons : [ {
 			text : "Delete",
 			click : function() {
-				var deletes = new Array();
-				$('input:checkbox[name=developerIds]:checked').each(function() {
-					deletes.push($(this).attr('value'));
-				});
 
-				deleteDeveloper(deletes);
+				$("#timeline-confirm-deletion").dialog({
+					resizable : false,
+					height : 100,
+					modal : true,
+					buttons : {
+						Cancel : function() {
+							$(this).dialog("close");
+						},
+						"Accept" : function() {
+							$(this).dialog("close");
+
+							var deletes = new Array();
+							$('input:checkbox[name=developerIds]:checked').each(function() {
+								deletes.push($(this).attr('value'));
+							});
+
+							deleteDeveloper(deletes);
+
+						}
+					}
+				});
 
 			}
 		},{

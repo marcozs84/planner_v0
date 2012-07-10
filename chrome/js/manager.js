@@ -184,6 +184,7 @@ var Split = function(split) {
 
 function getTimelineById(devId) {
 	// Searching Developers timeline
+	var dev = 0;
 	for ( var i = 0; i < timeline.length; i++) {
 		if (timeline[i].id == devId) {
 			timeId = i;

@@ -3,6 +3,23 @@
 	Do you want to remove the selected items?</p>
 </div>
 
+<div id="task-divition" title="New division">
+
+	<p>NOTE: the new division has to be smaller than the original division.<br /><br /></p>
+
+	<table cellspacing="2" cellpadding="3" border="0" style="margin:0px auto;">
+		<tr>
+			<td style="text-align:right; width:150px;">Current time assignation:</td>
+			<td style="width:50px;"><span id="spnCurrentTime"></span></td>
+		</tr>
+		<tr>
+			<td style="text-align:right;">New division assignation:</td>
+			<td><input type="text" id="newSplitDuration" style="width:50px;" /></td>
+		</tr>
+	</table>
+	
+</div>
+
 <div id="taskList" title="Tasks List">
 	<div style="margin:0px 0px 5px 0px;">
 		<a href="javascript:;" id="btnOpenTaskForm">New Task</a>
@@ -27,6 +44,7 @@
 					<td class="label">Color</td>
 					<td class="formInput">
 						<select id="tskColor" style="width:80px;">
+							<option value="FFFFFF" style="background-color:#FFFFFF"></option>
 							<option value="FFCC00" style="background-color:#FFCC00"></option>
 							<option value="F5FB00" style="background-color:#F5FB00"></option>
 							<option value="81C600" style="background-color:#81C600"></option>
