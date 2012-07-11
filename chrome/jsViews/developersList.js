@@ -169,6 +169,8 @@ function deleteDeveloper(devId) {
 
 function initDevelopersList() {
 
+	$('#devTeam').selectmenu();
+
 	$("#developersList").dialog({
 		width : '70%',
 		autoOpen : false,
@@ -287,8 +289,6 @@ function initDevelopersList() {
 
 	});
 
-
-		// CONTINUE HERE!!
 	$('#tblDevelopersList tbody tr td img.btnDevEditTbl').live('click', function() {
 
 		var aData = oDevTable.fnGetData(this.parentNode.parentNode); // get
@@ -327,4 +327,5 @@ function initDevelopersList() {
 		saveDeveloper();
 
 	});
+
 };

@@ -27,10 +27,10 @@ function taskDetails(nTr) {
 		wPercent = ((aData.splits[i].duration * 100) / aData.duration);
 		sOut += '<td style="width:' + Math.floor(wPercent) + '%; text-align:center; height:15px;">';
 
-		sOut += '<span style="color:#fff; font-weight:normal;">' + aData.splits[i].duration + '</span>';
+		sOut += '<span style="color:#fff; font-weight:normal;">' + aData.splits[i].duration + '</span><br />';
 
 		if (aData.splits[i].timelineId == 0) {
-			sOut += ' [<a href="javascript:;" onclick="" style="color:#fff; font-weight:normal;">Assign</a>]';
+			sOut += ' [<a href="javascript:;" onclick="assignTask(' + aData.splits[i].id + ','+ posRow +');" style="color:#fff; font-weight:normal;">Assign</a>]';
 		} else {
 			sOut += ' [' + getTimelineById(aData.splits[i].timelineId).name + ']';
 		}
@@ -95,6 +95,27 @@ function devideSplit(splitId,duration,parentId,rowPos){
 	newDivOldSplitId = splitId;
 	newDivOldSplitDuration = duration;
 	newDivParentTaskId = parentId;
+}
+
+var toAssignSplitId = 0;
+var toAssignSplitObj = 0;
+var toAssignSplitRowPos = 0;
+
+function assignTask(splitId,rowPos){
+	toAssignSplitId = splitId;
+//	console.log(splitObj);
+//	toAssignSplitObj = splitObj;
+	toAssignSplitRowPos = rowPos;
+
+	$("#tskDevList").empty();
+
+	$.each(timeline, function() {
+		$("#tskDevList").append($("<option/>").attr("value", this.id).text(this.name));
+	});
+
+	$('#tskDevList').selectmenu();
+
+	$("#task-assignation").dialog("open");
 }
 
 function saveTask() {
@@ -250,7 +271,7 @@ function deleteTask(taskId) {
 
 					notice('msgErrorTask', 'Removed.', true);
 				}else{
-					error('msgErrorTask', jsonTasksResult.message, true);
+					error('msgErrorTask', jsonTasksResult.message);
 				}
 			});
 
@@ -272,27 +293,7 @@ function initTaskList() {
 			text : "Delete",
 			click : function() {
 
-				$("#task-confirm-deletion").dialog({
-					resizable : false,
-					height : 100,
-					modal : true,
-					buttons : {
-						Cancel : function() {
-							$(this).dialog("close");
-						},
-						"Accept" : function() {
-							$(this).dialog("close");
-
-							var deletes = new Array();
-							$('input:checkbox[name=taskIds]:checked').each(function() {
-								deletes.push($(this).attr('value'));
-							});
-
-							deleteTask(deletes);
-
-						}
-					}
-				});
+				$("#task-confirm-deletion").dialog("open");
 
 			}
 		}, {
@@ -301,6 +302,29 @@ function initTaskList() {
 				$(this).dialog("close");
 			}
 		} ]
+	});
+
+	$("#task-confirm-deletion").dialog({
+		resizable : false,
+		autoOpen : false,
+		height : 100,
+		modal : true,
+		buttons : {
+			Cancel : function() {
+				$(this).dialog("close");
+			},
+			"Accept" : function() {
+				$(this).dialog("close");
+
+				var deletes = new Array();
+				$('input:checkbox[name=taskIds]:checked').each(function() {
+					deletes.push($(this).attr('value'));
+				});
+
+				deleteTask(deletes);
+
+			}
+		}
 	});
 
 	$("#task-divition").dialog({
@@ -343,10 +367,6 @@ function initTaskList() {
 					}
 				}).done(function(msg) {
 
-//					var oTable = $('#example').dataTable();
-//					oTable.fnUpdate( 'Example update', 0, 0 ); // Single cell
-//					oTable.fnUpdate( ['a', 'b', 'c', 'd', 'e'], 1, 0 ); // Row
-
 					try{
 						var jsonTasksResult = JSON.parse(msg);
 					}catch(error){
@@ -355,7 +375,7 @@ function initTaskList() {
 					}
 
 					if(jsonTasksResult.package.result == 'FALSE'){
-						error('msgErrorTask', jsonTasksResult.package.message, true);
+						error('msgErrorTask', jsonTasksResult.package.message);
 						return false;
 					}
 
@@ -399,6 +419,101 @@ function initTaskList() {
 				$(this).dialog("close");
 			}
 		} ]
+	});
+
+	$("#task-assignation").dialog({
+		width : '410px',
+		autoOpen : false,
+		modal : true,
+		buttons : [ {
+			text : "Divide",
+			click : function() {
+
+				var thisDialTask = this;
+
+//				var posRow = oTable.fnGetPosition(nTr);
+//				var aData = oTable.fnGetData(nTr);
+
+				var nNodes = oTable.fnGetNodes(toAssignSplitRowPos);
+				var aObj = oTable.fnGetData(nNodes);
+				var aData = null;
+
+				for(var j = 0 ; j < aObj.splits.length ; j++){
+					if(aObj.splits[j].id == toAssignSplitId){
+						aData = aObj.splits[j];
+					}
+				}
+
+				console.log(aData);
+
+				$.ajax({
+					type : "POST",
+					url : "http://planner/www/saveSplit.php",
+					data : {
+						splitId : aData.id,
+						parentId : aData.parentId,
+						timelineId : $('#tskDevList').val(),
+						assigned : 1,
+						closed : aData.closed,
+						startDate : aData.startDate,
+						originalDate : aData.originalDate,
+						delayBeginning : aData.delayBeginning,
+						delay : aData.delay,
+						duration : aData.duration
+					}
+				}).done(function(msg) {
+
+					try{
+						var splitResult = JSON.parse(msg);
+					}catch(error){
+						console.log(msg + ' ' + error);
+						return false;
+					}
+
+					if(splitResult.result == 'FALSE'){
+						error('msgErrorTask', splitResult.message);
+						$(thisDialTask).dialog("close");
+						return false;
+					}
+
+					stringTasks = JSON.stringify(splitResult.package.tasks);
+					localStorage.setItem('backTasks', stringTasks);
+					tasks = JSON.parse(localStorage.getItem('backTasks'));
+
+					oTable.fnClearTable(0);
+					oTable.fnAddData(tasks);
+					oTable.fnDraw();
+
+					var nNodes = oTable.fnGetNodes(toAssignSplitRowPos);
+
+					if (oTable.fnIsOpen(nNodes)) {
+						oTable.fnClose(nNodes);
+						oTable.fnOpen(nNodes, taskDetails(nNodes), 'details');
+					} else {
+						oTable.fnOpen(nNodes, taskDetails(nNodes), 'details');
+					}
+
+					notice('msgErrorTask', 'Task assigned.', true);
+
+					toAssignSplitObj = 0;
+					toAssignSplitObj = 0;
+
+					$(thisDialTask).dialog("close");
+
+				});
+
+				 toAssignSplitId = 0;
+			}
+		}, {
+			text : "Close",
+			click : function() {
+				 toAssignSplitId = 0;
+				$(this).dialog("close");
+			}
+		} ],
+		open : function(){
+
+		}
 	});
 
 	// $(document).ready(function() {
