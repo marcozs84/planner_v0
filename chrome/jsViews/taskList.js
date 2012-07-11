@@ -2,7 +2,7 @@ var oTable;
 
 /* Formating function for row details */
 function taskDetails(nTr) {
-	newDivRowObj = nTr;
+	var posRow = oTable.fnGetPosition(nTr);
 	var aData = oTable.fnGetData(nTr);
 
 	var sOut = '';
@@ -16,7 +16,7 @@ function taskDetails(nTr) {
 		wPercent = ((aData.splits[i].duration * 100) / aData.duration);
 
 		sOut += '<td style="background-color:#ffffff; width:' + Math.floor(wPercent) + '%; height:12px; border:1px solid #000;">';
-		sOut += '<a href="javascript:;" onclick="devideSplit('+ aData.splits[i].id +','+ aData.splits[i].duration +','+ aData.splits[i].parentId +');" style="text-width:normal;">Devide</a>';
+		sOut += '<a href="javascript:;" onclick="devideSplit('+ aData.splits[i].id +','+ aData.splits[i].duration +','+ aData.splits[i].parentId +','+ posRow +');" style="text-width:normal;">Devide</a>';
 		sOut += '</td>';
 	}
 
@@ -80,7 +80,7 @@ function editTask(taskId) {
 
 }
 
-function devideSplit(splitId,duration,parentId){
+function devideSplit(splitId,duration,parentId,rowPos){
 	$("#task-divition").dialog("open");
 	$('#spnCurrentTime').html(duration);
 
@@ -91,6 +91,7 @@ function devideSplit(splitId,duration,parentId){
 	$('input[name="splitbehavior"]').attr('checked', false);
 	$('input[name="splitbehavior"]')[0].checked = true;
 
+	newDivRowObj = rowPos;
 	newDivOldSplitId = splitId;
 	newDivOldSplitDuration = duration;
 	newDivParentTaskId = parentId;
@@ -219,7 +220,7 @@ function deleteTask(taskId) {
 				type : "POST",
 				url : "http://planner/www/getTasks.php",
 				data : {
-					taskId : 1
+					taskId : 1		//so the request is taken as POST
 				}
 			}).done(function(resultTasks) {
 				try{
@@ -229,25 +230,28 @@ function deleteTask(taskId) {
 					return false;
 				}
 
+				if(jsonTasksResult.result == 'TRUE'){
+					stringTasks = JSON.stringify(jsonTasksResult.package.tasks);
+					localStorage.setItem('backTasks', stringTasks);
+					tasks = JSON.parse(localStorage.getItem('backTasks'));
 
-				stringTasks = JSON.stringify(jsonTasksResult.package.tasks);
-				localStorage.setItem('backTasks', stringTasks);
-				tasks = JSON.parse(localStorage.getItem('backTasks'));
+					oTable.fnClearTable(0);
+					oTable.fnAddData(tasks);
+					oTable.fnDraw();
 
-				oTable.fnClearTable(0);
-				oTable.fnAddData(tasks);
-				oTable.fnDraw();
+					$('#tskName').val('');
+					$('#tskDuration').val('');
+					$('#tskColor').val('');
+					$('#tskDescription').val('');
+					$('#tskAssigned').val('0');
+					$('#tskClosed').val('0');
 
-				$('#tskName').val('');
-				$('#tskDuration').val('');
-				$('#tskColor').val('');
-				$('#tskDescription').val('');
-				$('#tskAssigned').val('0');
-				$('#tskClosed').val('0');
+					$('#frmAddDeveloper').slideUp();
 
-				$('#frmAddDeveloper').slideUp();
-
-				notice('msgErrorTask', 'Removed.', true);
+					notice('msgErrorTask', 'Removed.', true);
+				}else{
+					error('msgErrorTask', jsonTasksResult.message, true);
+				}
 			});
 
 		} else {
@@ -350,6 +354,11 @@ function initTaskList() {
 						return false;
 					}
 
+					if(jsonTasksResult.package.result == 'FALSE'){
+						error('msgErrorTask', jsonTasksResult.package.message, true);
+						return false;
+					}
+
 					stringTasks = JSON.stringify(jsonTasksResult.package.tasks);
 					localStorage.setItem('backTasks', stringTasks);
 					tasks = JSON.parse(localStorage.getItem('backTasks'));
@@ -358,19 +367,18 @@ function initTaskList() {
 					oTable.fnAddData(tasks);
 					oTable.fnDraw();
 
-//					taskObj = getTaskById(id);
+//					$(this).parents("TR").fadeOut("slow", function () {
+//						var pos = oTable.fnGetPosition(this);
+//						oTable.fnDeleteRow(pos);
+//					});
 
-//					oTable.fnUpdate( taskObj , 1, 0 ); // Row
+					var nNodes = oTable.fnGetNodes(newDivRowObj);
 
-					var nTr = newDivRowObj;
-//					oTable.fnOpen(nTr, taskDetails(nTr), 'details');
-					console.log("nTr: " + nTr);
-					if (oTable.fnIsOpen(nTr)) {
-						oTable.fnClose(nTr);
-						oTable.fnOpen(nTr, taskDetails(nTr), 'details');
+					if (oTable.fnIsOpen(nNodes)) {
+						oTable.fnClose(nNodes);
+						oTable.fnOpen(nNodes, taskDetails(nNodes), 'details');
 					} else {
-						console.log("cerrado");
-						oTable.fnOpen(nTr, taskDetails(nTr), 'details');
+						oTable.fnOpen(nNodes, taskDetails(nNodes), 'details');
 					}
 
 					notice('msgErrorTask', 'New division created.', true);
