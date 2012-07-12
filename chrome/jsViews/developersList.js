@@ -5,31 +5,34 @@ function developerDetails(nTr) {
 	var aData = oDevTable.fnGetData(nTr);
 
 	var sOut = '';
-	sOut += '<table cellpadding="5" cellspacing="0" border="0" style="/*padding-left:50px;*/ width:100%;">';
+	sOut += '<table class="ui-widget" cellpadding="5" cellspacing="0" border="0" style="/*padding-left:50px;*/ width:100%;">';
+	sOut += '<thead class="ui-widget-header">';
 	sOut += '<tr>';
-	sOut += '<td style="width:20px; padding:0px; text-align:center;">Tasks</td>';
-	sOut += '<td style="width:20px; padding:0px; text-align:center;">Duration</td>';
-	sOut += '<td style="width:20px; padding:0px; text-align:center;">Finished</td>';
-	sOut += '<td style="width:20px; padding:0px; text-align:center;">Start Date</td>';
+	sOut += '<th style="width:20px; padding:0px; text-align:center;">Tasks</th>';
+	sOut += '<th style="width:20px; padding:0px; text-align:center;">Duration</th>';
+	sOut += '<th style="width:20px; padding:0px; text-align:center;">Finished</th>';
+	sOut += '<th style="width:20px; padding:0px; text-align:center;">Start Date</th>';
 	sOut += '</tr>';
+	sOut += '</thead>';
+	sOut += '<tbody class="ui-widget-content">';
 	for ( var i = 0; i < aData.tasks.length; i++) {
 
 		sOut += '<tr>';
-		sOut += '<td style="width:20px; padding:0px; text-align:left; vertical-align:middle; border-bottom:1px solid #A19B9E;">';
+		sOut += '<td>';
 		sOut += getTaskName(aData.tasks[i].parentId);
 		sOut += '</td>';
-		sOut += '<td style="width:20px; padding:0px; text-align:center; vertical-align:middle; border-bottom:1px solid #A19B9E;">';
+		sOut += '<td>';
 		sOut += aData.tasks[i].duration;
 		sOut += '</td>';
-		sOut += '<td style="width:20px; padding:0px; text-align:center; vertical-align:middle; border-bottom:1px solid #A19B9E;">';
+		sOut += '<td>';
 		sOut += aData.tasks[i].closed;
 		sOut += '</td>';
-		sOut += '<td style="width:20px; padding:0px; text-align:center; vertical-align:middle; border-bottom:1px solid #A19B9E;">';
+		sOut += '<td>';
 		sOut += aData.tasks[i].startDate;
 		sOut += '</td>';
 		sOut += '</tr>';
 	}
-
+	sOut += '</tbody>';
 	sOut += '</table>';
 
 	return sOut;

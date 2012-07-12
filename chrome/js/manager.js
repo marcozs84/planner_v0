@@ -28,6 +28,8 @@ $(document).ready(function() {
 
 	toolBarInit();
 
+	initFromToCalendars();
+
 	return false;
 
 	assignableTasks = Array();
@@ -644,5 +646,24 @@ function updateTimelines(){
 		oDevTable.fnAddData(timeline);
 		oDevTable.fnDraw();
 
+	});
+}
+
+function initFromToCalendars(){
+	$( "#from" ).datepicker({
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 3,
+		onSelect: function( selectedDate ) {
+			$( "#to" ).datepicker( "option", "minDate", selectedDate );
+		}
+	});
+	$( "#to" ).datepicker({
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 3,
+		onSelect: function( selectedDate ) {
+			$( "#from" ).datepicker( "option", "maxDate", selectedDate );
+		}
 	});
 }

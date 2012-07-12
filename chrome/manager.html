@@ -72,14 +72,26 @@ ul#icons span.ui-icon { float: left; margin: 0 4px; }
 			
 		</span>
 	</div>
-	<div id="modalsHolder" style="/*display: none;*/">
+	<div id="modalsHolder" style="display: none;">
 		<!-- Div holder for all views -->
 	</div>
 	<div class="weeksWrapper">
 		<div>
+
+			<div class="dateFromTo">
+			
+				<label for="from">From</label>
+				<input type="text" id="from" name="from"/>
+				<label for="to">to</label>
+				<input type="text" id="to" name="to"/>
+			
+			</div>
+
 			<h1>Planner</h1>
 
-	<?PHP print $literal; ?>
+			<?PHP print $literal; ?>
+	
+			<div id="weeksHolder"></div>
 
 		</div>
 	</div>
