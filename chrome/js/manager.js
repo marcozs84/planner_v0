@@ -617,19 +617,32 @@ function toolBarInit() {
 	});
 }
 
-function saveTasks() {
 
-	strTasks = JSON.stringify(tasks);
-
+function updateTimelines(){
 	$.ajax({
 		type : "POST",
-		url : "manager.php",
-		data : {
-			type : 'tasks',
-			content : strTasks
+		url : "http://planner/www/getTimelines.php"
+	}).done(function(resultTimelines) {
+
+		try{
+			var jsonTimelinesResult = JSON.parse(resultTimelines);
+		}catch(error){
+			alert(error);
+			return false;
 		}
-	}).done(function(msg) {
-		tasks = JSON.parse(msg);
+
+		if(jsonTimelinesResult.result == 'FALSE'){
+			alert(jsonTimelinesResult.message);
+			return false
+		}
+
+		stringTimelines = JSON.stringify(jsonTimelinesResult.package.timelines);
+		localStorage.setItem('backTimelines', stringTimelines);
+		timeline = JSON.parse(localStorage.getItem('backTimelines'));
+
+		oDevTable.fnClearTable(0);
+		oDevTable.fnAddData(timeline);
+		oDevTable.fnDraw();
+
 	});
 }
-

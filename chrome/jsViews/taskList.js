@@ -212,10 +212,6 @@ function saveTask() {
 	});
 }
 
-function updateTimelines(){
-
-}
-
 function deleteTask(taskId) {
 
 	if (taskId instanceof Array) {
@@ -498,6 +494,8 @@ function initTaskList() {
 					}
 
 					notice('msgErrorTask', 'Task assigned.', true);
+
+					updateTimelines();
 
 					toAssignSplitObj = 0;
 					toAssignSplitObj = 0;

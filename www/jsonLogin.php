@@ -15,12 +15,44 @@ if (isset ( $_POST ['password'] ) && isset ( $_POST ['username'] )) {
 		if ($res->num_rows > 0) {
 
 			while ( $row = $res->fetch_assoc () ) {
+
+				$tmpTimelineId = $row ['id'];
+				$devSplitsQuery = "SELECT * FROM tblsplit WHERE timelineId = $tmpTimelineId";
+
+				$resSplit2 = $mysqli->query($devSplitsQuery);
+
+				$tasksTimeline = Array();
+				if($resSplit2){
+					while($rowSplit = $resSplit2->fetch_assoc()){
+						$tasksTimeline[] = Array(
+								"id" => $rowSplit ['id'],
+								"parentId" => $rowSplit ['parentId'],
+								"timelineId" => $rowSplit ['timelineId'],
+								"assigned" => $rowSplit ['assigned'],
+								"closed" => $rowSplit ['closed'],
+								"startDate" => $rowSplit ['startDate'],
+								"originalDate" => $rowSplit ['originalDate'],
+								"delayBeginning" => $rowSplit ['delayBeginning'],
+								"delay" => $rowSplit ['delay'],
+								"duration" => $rowSplit ['duration']
+						);
+					}
+				} else {
+					$resultJSON = Array(
+							"result" => "FALSE",
+							"message" => "Failed to get Tasks per Timeline. Error: " . $mysqli->error,
+							"package" => "null"
+					);
+					print json_encode($resultJSON);
+					die();
+				}
+
 				$addTimelines [] = Array(
 						"id" => $row ['id'],
 						"name" => $row ['name'],
 						"team" => $row ['teamId'],
 						"days" =>  Array(),
-						"tasks" => Array()
+						"tasks" => $tasksTimeline
 						);
 			}
 		}
