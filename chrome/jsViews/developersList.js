@@ -72,42 +72,40 @@ function saveDeveloper() {
 		if (answer.result == 'TRUE') {
 
 			if (isEditingDeveloper == 0) {
-				notice('msgError', 'Created.', true, function() {
-					$('#devName').val('');
-					$('#frmAddDeveloper').slideUp();
+				$('#devName').val('');
+				$('#frmAddDeveloper').slideUp();
 
-					timeline.push(answer.package);
+				timeline.push(answer.package);
 
-					stringTimelines = JSON.stringify(timeline);
-					localStorage.setItem('backTimelines', stringTimelines);
-					timeline = JSON.parse(localStorage.getItem('backTimelines'));
+				stringTimelines = JSON.stringify(timeline);
+				localStorage.setItem('backTimelines', stringTimelines);
+				timeline = JSON.parse(localStorage.getItem('backTimelines'));
 
-					oDevTable.fnClearTable(0);
-					oDevTable.fnAddData(timeline);
-					oDevTable.fnDraw();
-				});
+				oDevTable.fnClearTable(0);
+				oDevTable.fnAddData(timeline);
+				oDevTable.fnDraw();
+				notice('msgError', 'Created.', true);
+
 			} else {
-				notice('msgError', 'Saved.', true, function() {
 
-					var objD = getTimelineById(isEditingDeveloper);
-					objD.name = $('#devName').val();
-					objD.team = $('#devTeam').val();
+				var objD = getTimelineById(isEditingDeveloper);
+				objD.name = $('#devName').val();
+				objD.team = $('#devTeam').val();
 
-					stringTimelines = JSON.stringify(timeline);
-					localStorage.setItem('backTimelines', stringTimelines);
-					timeline = JSON.parse(localStorage.getItem('backTimelines'));
+				stringTimelines = JSON.stringify(timeline);
+				localStorage.setItem('backTimelines', stringTimelines);
+				timeline = JSON.parse(localStorage.getItem('backTimelines'));
 
-					oDevTable.fnClearTable(0);
-					oDevTable.fnAddData(timeline);
-					oDevTable.fnDraw();
+				oDevTable.fnClearTable(0);
+				oDevTable.fnAddData(timeline);
+				oDevTable.fnDraw();
 
-					$('#devName').val('');
-					$('#frmAddDeveloper').slideUp();
+				$('#devName').val('');
+				$('#frmAddDeveloper').slideUp();
 
-					isEditingDeveloper = 0;
+				isEditingDeveloper = 0;
 
-					return true;
-				});
+				notice('msgError', 'Saved.', true);
 			}
 
 		} else {
@@ -143,7 +141,18 @@ function deleteDeveloper(devId) {
 				type : "POST",
 				url : "http://planner/www/getTimelines.php"
 			}).done(function(resultTimelines) {
-				var jsonTimelinesResult = JSON.parse(resultTimelines);
+
+				try{
+					var jsonTimelinesResult = JSON.parse(resultTimelines);
+				}catch(error){
+					error('msgError',error);
+					return false;
+				}
+
+				if(jsonTimelinesResult.result == 'FALSE'){
+					error('msgError',jsonTimelinesResult.message);
+					return false
+				}
 
 				stringTimelines = JSON.stringify(jsonTimelinesResult.package.timelines);
 				localStorage.setItem('backTimelines', stringTimelines);

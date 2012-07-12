@@ -212,6 +212,10 @@ function saveTask() {
 	});
 }
 
+function updateTimelines(){
+
+}
+
 function deleteTask(taskId) {
 
 	if (taskId instanceof Array) {

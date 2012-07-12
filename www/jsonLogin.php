@@ -11,10 +11,10 @@ if (isset ( $_POST ['password'] ) && isset ( $_POST ['username'] )) {
 	$res = $mysqli->query ( $query );
 
 	if ($res) {
+		$addTimelines = Array ();
 		if ($res->num_rows > 0) {
-			$addTimelines = Array ();
+
 			while ( $row = $res->fetch_assoc () ) {
-// 				$addTimelines [] = "{\"id\" : " . $row ['id'] . ",\"name\" : \"" . $row ['name'] . "\",\"team\" : " . $row ['teamId'] . ",\"days\" : [],\"tasks\" : []}";
 				$addTimelines [] = Array(
 						"id" => $row ['id'],
 						"name" => $row ['name'],
