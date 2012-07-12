@@ -37,6 +37,7 @@ CREATE TABLE `tblsplit` (
   `delayBeginning` int(11) default '0',
   `delay` int(11) default '0',
   `duration` int(11) default '0',
+  `order` int(11) default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
