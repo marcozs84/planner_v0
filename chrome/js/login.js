@@ -25,12 +25,13 @@ $(document).ready(function() {
 					}
 
 					localStorage.setItem('localSession',myData.token);
-					tasksString = myData.tasks;
 					stringTasks = JSON.stringify(myData.tasks);
 					stringTimelines = JSON.stringify(myData.timelines);
+					stringProjects = JSON.stringify(myData.projects);
 
 					localStorage.setItem('backTasks',stringTasks);
 					localStorage.setItem('backTimelines',stringTimelines);
+					localStorage.setItem('backProjects',stringProjects);
 
 					window.location.href = 'manager.html';
 				}else{

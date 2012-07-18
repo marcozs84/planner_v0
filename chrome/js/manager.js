@@ -3,28 +3,28 @@ var assignableTasks = Array();
 $(document).ready(function() {
 
 	var localSession = localStorage.getItem('localSession');
-	if(localSession == null || localSession == ''){
+	if (localSession == null || localSession == '') {
 		window.location.href = 'login.html';
-//		chrome.extension.sendRequest({redirect: "login.html"});
-	}else{
-		if(location.search != '?detached'){
+		// chrome.extension.sendRequest({redirect: "login.html"});
+	} else {
+		if (location.search != '?detached') {
 			chrome.extension.getBackgroundPage().detachWindow('manager.html');
 			return false;
-		}else{
+		} else {
 			console.log("detached already");
 		}
 	}
 
 	tasks = JSON.parse(localStorage.getItem('backTasks'));
 	timeline = JSON.parse(localStorage.getItem('backTimelines'));
+	projects = JSON.parse(localStorage.getItem('backProjects'));
 
-	loadView('taskList',initTaskList);
-	loadView('developersList',initDevelopersList);
+	loadView('taskList', initTaskList);
+	loadView('developersList', initDevelopersList);
+	loadView('projectsList', initProjectsList);
 
-//	initTaskList();
-//	initDevelopersList();
-
-	initDemoButtons();
+	// initTaskList();
+	// initDevelopersList();
 
 	toolBarInit();
 
@@ -69,7 +69,7 @@ $(document).ready(function() {
 
 	// ==================================================
 
-//	toolBarInit();
+	// toolBarInit();
 
 	// $('.taskName').textOverFlow('...',true);
 	// $(".finalCont").dotdotdot();
@@ -92,24 +92,14 @@ $(document).ready(function() {
 
 });
 
-function loadView(viewName,callbackFunc){
+function loadView(viewName, callbackFunc) {
 	$.ajax({
-		  type: "POST",
-		  url: "jsViews/"+viewName+".html"
-		}).done(function( msg ) {
-			$('#modalsHolder').append(msg);
-			callbackFunc();
-		});
-}
-
-function initDemoButtons(){
-//	alert("initint");
-	$("#btnKillSession").button().click(function() {
-		// saveTasks();
-		localStorage.setItem('localSession','');
-		window.location.href = window.location.href;
+		type : "POST",
+		url : "jsViews/" + viewName + ".html"
+	}).done(function(msg) {
+		$('#modalsHolder').append(msg);
+		callbackFunc();
 	});
-
 }
 
 function initModalWindows() {
@@ -237,9 +227,7 @@ function hex2rgb(hexStr) {
 	var r = (hex & 0xff0000) >> 16;
 	var g = (hex & 0x00ff00) >> 8;
 	var b = hex & 0x0000ff;
-	return [
-			r, g, b
-	];
+	return [ r, g, b ];
 }
 
 /**
@@ -485,8 +473,8 @@ function buildTask(task) {
 		}
 
 		$('#div_' + oDay.week + '_' + timeId + '_' + oDay.day).append(
-				'<div><table id="tbl_' + sufix + '" cellspacing="0" cellpadding="0" border="0" class="task ' + classes
-						+ '" style="' + '"><tr><td class="taskName" style="background-color:' + backColor // + ';
+				'<div><table id="tbl_' + sufix + '" cellspacing="0" cellpadding="0" border="0" class="task ' + classes + '" style="'
+						+ '"><tr><td class="taskName" style="background-color:' + backColor // + ';
 						// color:'
 						// +
 						// color
@@ -536,8 +524,8 @@ function assignHeights() {
 				// i + '_' + timeline[i].days[j].day + '_'
 				// + timeline[i].days[j].tasks[k].id + ' .taskName div';
 
-				elename2 = '#tbl_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day + '_'
-						+ timeline[i].days[j].tasks[k].id + ' .finalCont';
+				elename2 = '#tbl_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day + '_' + timeline[i].days[j].tasks[k].id
+						+ ' .finalCont';
 
 				$(elename2).css('max-height', $(divElementDiv).height());
 
@@ -591,49 +579,70 @@ function toolBarInit() {
 	// primary: "ui-icon-stop"
 	// }
 	}).click(function() {
-	// saveTasks();
+		// saveTasks();
+	});
+
+	$("#btnTBProjects").button({
+		text : "Projects",
+		icons : {
+			primary : "ui-icon-suitcase"
+		}
+	}).click(function() {
+		openModal('projectsList');
 	});
 
 	$("#btnTBDevelopers").button({
-		text : "Developers"
-	// icons: {
-	// primary: "ui-icon-stop"
-	// }
+		text : "Developers",
+		icons : {
+			primary : "ui-icon-person"
+		}
 	}).click(function() {
 		openModal('developersList');
 	});
 
 	$("#btnTBTasks").button({
-		text : "Tasks"
-	// icons: {
-	// primary: "ui-icon-seek-next"
-	// }
+		text : "Tasks",
+		icons : {
+			primary : "ui-icon-clipboard"
+		}
 	}).click(function() {
 		openModal('taskList');
 	});
 
+	$("#btnKillSession").button({
+		text : "KillSession",
+		icons : {
+			primary : "ui-icon-power"
+		}
+	}).click(function() {
+		localStorage.setItem('localSession', '');
+		window.location.href = window.location.href;
+	});
+
 	$("#btnLogOut").button({
-		text : "Log Out"
+		text : "Log Out",
+		icons : {
+			primary : "ui-icon-power"
+		}
 	}).click(function() {
 		window.location.replace("logout.php");
 	});
 }
 
-
-function updateTimelines(){
+function updateTimelines() {
 	$.ajax({
 		type : "POST",
 		url : "http://planner/www/getTimelines.php"
 	}).done(function(resultTimelines) {
 
-		try{
+		try {
 			var jsonTimelinesResult = JSON.parse(resultTimelines);
-		}catch(error){
+		} catch (error) {
 			alert(error);
 			return false;
 		}
 
-		if(jsonTimelinesResult.result == 'FALSE'){
+		if (jsonTimelinesResult.result == 'FALSE') {
 			alert(jsonTimelinesResult.message);
 			return false
 		}
@@ -649,21 +658,21 @@ function updateTimelines(){
 	});
 }
 
-function initFromToCalendars(){
-	$( "#from" ).datepicker({
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 3,
-		onSelect: function( selectedDate ) {
-			$( "#to" ).datepicker( "option", "minDate", selectedDate );
+function initFromToCalendars() {
+	$("#from").datepicker({
+		defaultDate : "+1w",
+		changeMonth : true,
+		numberOfMonths : 3,
+		onSelect : function(selectedDate) {
+			$("#to").datepicker("option", "minDate", selectedDate);
 		}
 	});
-	$( "#to" ).datepicker({
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 3,
-		onSelect: function( selectedDate ) {
-			$( "#from" ).datepicker( "option", "maxDate", selectedDate );
+	$("#to").datepicker({
+		defaultDate : "+1w",
+		changeMonth : true,
+		numberOfMonths : 3,
+		onSelect : function(selectedDate) {
+			$("#from").datepicker("option", "maxDate", selectedDate);
 		}
 	});
 }

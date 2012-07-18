@@ -26,6 +26,11 @@ h1 {
 	font-size: 24px;
 }
 
+.tblForm{
+	margin:0px auto 0px auto;
+	width:100%;
+}
+
 .tblForm tr td{
 	padding:2px;
 }
@@ -36,6 +41,10 @@ h1 {
 
 .tblForm tr td.formInput{
 	text-aligh:left;
+}
+
+.tblForm tr td.formInput input{
+	width:95%;
 }
 
 .weekTable>tbody>tr>.devName {

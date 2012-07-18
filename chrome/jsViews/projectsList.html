@@ -1,0 +1,48 @@
+<div id="project-confirm-deletion" title="Remove Project">
+	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 0px 0;"></span>
+	Do you want to remove the selected items?</p>
+</div>
+
+<div id="projectsList" title="Projects List">
+	<div style="margin:0px 0px 5px 0px;">
+		<a href="javascript:;" id="btnOpenProjectForm">New Project</a>
+		
+		<div id="msgError"></div>
+		
+		<div id="frmAddProject" style="display: none; margin: 10px 0px;">
+		
+			<table class="tblForm" cellspacing="4" cellpadding="0">
+				<tr>
+					<td class="label">Name</td>
+					<td class="formInput">
+						<input type="text" name="prjName" id="prjName" />
+					</td>
+					<td class="label">StartDate</td>
+					<td class="formInput">
+						<input type="text" name="prjStartDate" id="prjStartDate" />
+					</td>
+					<td class="label">EndDate</td>
+					<td class="formInput">
+						<input type="text" name="prjEndDate" id="prjEndDate" />
+					</td>
+					
+				</tr>
+				<tr>
+					<td class="label">Description</td>
+					<td colspan="5" class="formInput">
+						<textarea name="prjDescription" id="prjDescription" style="width:100%;"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="5"></td>
+					<td style="text-align:right;">
+						<a href="javascript:;" id="btnAddProject">Save</a>
+					</td>
+				</tr>
+			</table>
+
+		</div>
+	</div>
+	<table id="tblProjectsList" class="display" cellspacing="0" cellpadding="0">
+	</table>
+</div>
