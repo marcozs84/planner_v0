@@ -29,6 +29,7 @@ DROP TABLE IF EXISTS `tblproject`;
 CREATE TABLE `tblproject` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(250) default NULL,
+  `description` text,
   `startDate` date default '0000-00-00',
   `endDate` date default '0000-00-00',
   PRIMARY KEY  (`id`),
