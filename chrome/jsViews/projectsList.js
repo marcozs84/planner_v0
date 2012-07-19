@@ -37,11 +37,12 @@ function editProject(projectId) {
 	isEditingProject = projectId;
 
 	var objD = getTimelineById(isEditingProject);
-	$('#devName').val(objD.name);
-	$('#devTeam').val(objD.team);
+	$('#prjName').val(objD.name);
+	$('#prjStartDate').val(objD.startDate);
+	$('#prjEndtDate').val(objD.endDate);
 
 	$('#frmAddProject').slideDown();
-	$('#devName').focus();
+	$('#prjName').focus();
 
 	$("#btnAddProject").button("option", "disabled", false);
 
@@ -49,29 +50,35 @@ function editProject(projectId) {
 
 function saveProject() {
 
-	strDevs = JSON.stringify(timeline);
-
 	$.ajax({
 		type : "POST",
-		url : "http://planner/www/saveTimeline.php",
+		url : "http://planner/www/saveProject.php",
 		data : {
-			devId : isEditingProject,
-			name : $.trim($('#devName').val()),
-			teamId : $.trim($('#devTeam').val())
+			id : isEditingProject,
+			name : $.trim($('#prjName').val()),
+			startDate : $.trim($('#prjStartDate').val()),
+			endDate : $.trim($('#prjEndDate').val())
 		}
 	}).done(function(msg) {
 
-		var answer = JSON.parse(msg);
+		try {
+			var answer = JSON.parse(msg);
+		} catch (error) {
+			console.log(msg + ' ' + error);
+			return false;
+		}
 
-		console.log("answer: " + answer);
+		console.log("answer Saving project: " + answer);
 
 		if (answer.result == 'TRUE') {
 
 			if (isEditingProject == 0) {
-				$('#devName').val('');
+				$('#prjName').val('');
+				$('#prjStartDate').val('');
+				$('#prjEndDate').val('');
 				$('#frmAddProject').slideUp();
 
-				timeline.push(answer.package);
+				projects.push(answer.package);
 
 				stringTimelines = JSON.stringify(timeline);
 				localStorage.setItem('backTimelines', stringTimelines);
@@ -108,15 +115,15 @@ function saveProject() {
 			$("#btnAddProject").button("option", "disabled", false);
 			error('msgError', 'Error trying to save.');
 		}
-	}).fail(function(){
+	}).fail(function() {
 		notice('msgError', 'Couldn\'t connect with server.', true);
 	});
 }
 
 function deleteProject(devId) {
 
-	if(devId instanceof Array){
-	}else{
+	if (devId instanceof Array) {
+	} else {
 		devId = Array(devId);
 	}
 
@@ -138,15 +145,15 @@ function deleteProject(devId) {
 				url : "http://planner/www/getTimelines.php"
 			}).done(function(resultTimelines) {
 
-				try{
+				try {
 					var jsonTimelinesResult = JSON.parse(resultTimelines);
-				}catch(error){
-					error('msgError',error);
+				} catch (error) {
+					error('msgError', error);
 					return false;
 				}
 
-				if(jsonTimelinesResult.result == 'FALSE'){
-					error('msgError',jsonTimelinesResult.message);
+				if (jsonTimelinesResult.result == 'FALSE') {
+					error('msgError', jsonTimelinesResult.message);
 					return false
 				}
 
@@ -167,7 +174,7 @@ function deleteProject(devId) {
 		} else {
 			error('msgError', 'Error trying to remove.');
 		}
-	}).fail(function(){
+	}).fail(function() {
 		notice('msgError', 'Couldn\'t connect with server.', true);
 	});
 }
@@ -201,80 +208,84 @@ function initProjectsList() {
 		width : '70%',
 		autoOpen : false,
 		modal : true,
-		buttons : [ {
-			text : "Delete",
-			click : function() {
+		buttons : [
+				{
+					text : "Delete",
+					click : function() {
 
-				$("#project-confirm-deletion").dialog({
-					resizable : false,
-					height : 100,
-					modal : true,
-					buttons : {
-						Cancel : function() {
-							$(this).dialog("close");
-						},
-						"Accept" : function() {
-							$(this).dialog("close");
+						$("#project-confirm-deletion").dialog({
+							resizable : false,
+							height : 100,
+							modal : true,
+							buttons : {
+								Cancel : function() {
+									$(this).dialog("close");
+								},
+								"Accept" : function() {
+									$(this).dialog("close");
 
-							var deletes = new Array();
-							$('input:checkbox[name=projectIds]:checked').each(function() {
-								deletes.push($(this).attr('value'));
-							});
+									var deletes = new Array();
+									$('input:checkbox[name=projectIds]:checked').each(function() {
+										deletes.push($(this).attr('value'));
+									});
 
-							deleteProject(deletes);
+									deleteProject(deletes);
 
-						}
+								}
+							}
+						});
+
 					}
-				});
-
-			}
-		},{
-			text : "Close",
-			click : function(){
-				$(this).dialog("close");
-			}
-		} ]
+				}, {
+					text : "Close",
+					click : function() {
+						$(this).dialog("close");
+					}
+				}
+		]
 	});
 
 	oDevTable = $('#tblProjectsList').dataTable({
 		"aaData" : timeline,
 		"bJQueryUI" : true,
 		"sPaginationType" : "full_numbers",
-		"aoColumns" : [ {
-			"mDataProp" : null,
-			"sTitle" : "",
-			"sClass" : "center",
-			"bSortable" : false,
-			"fnRender" : function(obj) {
-				return '<img class="btnDevOpenTbl" src="imgs/icon-add.png" />';
-			}
-		}, {
-			"mDataProp" : "id",
-			"sTitle" : "Id",
-			"sClass" : "center",
-			"bSortable" : true
-		}, {
-			"mDataProp" : null,
-			"sTitle" : "Name",
-			"sClass" : "left",
-			"bSortable" : true,
-			"fnRender" : function(obj) {
-				return '<a href="javascript:;" onclick="editProject(' + obj.aData.id + ')">' + obj.aData.name + '</a>';
-			}
-		}, {
-			"mDataProp" : "team",
-			"sTitle" : "Team",
-			"sClass" : "center",
-			"bSortable" : true
-		}, {
-			"mDataProp" : null,
-			"sTitle" : "",
-			"sClass" : "center",
-			"bSortable" : false,
-			"fnRender" : function(obj) {
-				return '<input type="checkbox" value="' + obj.aData.id + '" name="projectIds" />';
-			}
-		}]
+		"aoColumns" : [
+				{
+					"mDataProp" : null,
+					"sTitle" : "",
+					"sClass" : "center",
+					"bSortable" : false,
+					"fnRender" : function(obj) {
+						return '<img class="btnDevOpenTbl" src="imgs/icon-add.png" />';
+					}
+				}, {
+					"mDataProp" : "id",
+					"sTitle" : "Id",
+					"sClass" : "center",
+					"bSortable" : true
+				}, {
+					"mDataProp" : null,
+					"sTitle" : "Name",
+					"sClass" : "left",
+					"bSortable" : true,
+					"fnRender" : function(obj) {
+						return '<a href="javascript:;" onclick="editProject(' + obj.aData.id + ')">' + obj.aData.name + '</a>';
+					}
+				}, {
+					"mDataProp" : "team",
+					"sTitle" : "Team",
+					"sClass" : "center",
+					"bSortable" : true
+				}, {
+					"mDataProp" : null,
+					"sTitle" : "",
+					"sClass" : "center",
+					"bSortable" : false,
+					"fnRender" : function(obj) {
+						return '<input type="checkbox" value="' + obj.aData.id + '" name="projectIds" />';
+					}
+				}
+		]
 	});
 
 	$('#tblProjectsList tbody tr td img.btnDevOpenTbl').live('click', function() {
