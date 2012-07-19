@@ -69,8 +69,44 @@ if (isset ( $_POST ['password'] ) && isset ( $_POST ['username'] )) {
 
 	$timelines = $addTimelines;
 
+
+/**
+ * ************************* GETTING PROJECTS *****************************
+ */
+	$query = "select * from tblproject";
+
+	$resPrj = $mysqli->query ( $query );
+
+	if ($resPrj) {
+		$addProjects = Array ();
+		if ($resPrj->num_rows > 0) {
+
+			while ( $row = $resPrj->fetch_assoc () ) {
+
+				$addProjects [] = Array(
+						"id" => $row ['id'],
+						"name" => $row ['name'],
+						"description" => $row ['description'],
+						"startDate" => $row ['startDate'],
+						"endDate" => $row ['endDate']
+						);
+			}
+		}
+
+	} else {
+		$resultJSON = Array(
+				"result" => "FALSE",
+				"message" => "Failed to get Projects. Error: " . $mysqli->error,
+				"package" => "null"
+		);
+		print json_encode($resultJSON);
+		die();
+	}
+
+	$projects = $addProjects;
+
 // 	$timelines = "[";
-// 	$timelines .= @implode ( ",", $addTimelines );
+// 	$timelines .= @implode ( ",", $addProjects );
 // 	$timelines .= "]";
 
 
@@ -170,7 +206,8 @@ if (isset ( $_POST ['password'] ) && isset ( $_POST ['username'] )) {
 			"developer" => "delete"
 		),
 		"tasks" => $tasks,
-		"timelines" => $timelines
+		"timelines" => $timelines,
+		"projects" => $projects
 	);
 
 	print json_encode($loginResult);

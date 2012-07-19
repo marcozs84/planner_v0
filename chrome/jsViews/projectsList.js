@@ -1,10 +1,12 @@
-var oDevTable;
+var oPrjTable;
 
 /* Formating function for row details */
 function projectDetails(nTr) {
-	var aData = oDevTable.fnGetData(nTr);
+	var aData = oPrjTable.fnGetData(nTr);
 
 	var sOut = '';
+	sOut += '<strong>Description</strong><br />';
+	sOut += aData.description;
 	sOut += '<table class="ui-widget" cellpadding="5" cellspacing="0" border="0" style="/*padding-left:50px;*/ width:100%;">';
 	sOut += '<caption>Resources</caption>';
 	sOut += '<thead class="ui-widget-header">';
@@ -18,7 +20,7 @@ function projectDetails(nTr) {
 
 		sOut += '<tr>';
 		sOut += '<td>';
-		sOut += getTimelineById(aData.timelines[i].name);
+		sOut += getProjectById(aData.projects[i].name);
 		sOut += '</td>';
 		sOut += '<td>';
 		sOut += aData.tasks[i].duration;
@@ -36,10 +38,11 @@ var isEditingProject = 0;
 function editProject(projectId) {
 	isEditingProject = projectId;
 
-	var objD = getTimelineById(isEditingProject);
+	var objD = getProjectById(isEditingProject);
 	$('#prjName').val(objD.name);
 	$('#prjStartDate').val(objD.startDate);
 	$('#prjEndtDate').val(objD.endDate);
+	$('#prjDescription').val(objD.description);
 
 	$('#frmAddProject').slideDown();
 	$('#prjName').focus();
@@ -56,6 +59,7 @@ function saveProject() {
 		data : {
 			id : isEditingProject,
 			name : $.trim($('#prjName').val()),
+			description : $.trim($('#prjDescription').val()),
 			startDate : $.trim($('#prjStartDate').val()),
 			endDate : $.trim($('#prjEndDate').val())
 		}
@@ -74,108 +78,127 @@ function saveProject() {
 
 			if (isEditingProject == 0) {
 				$('#prjName').val('');
+				$('#prjDescription').val('');
 				$('#prjStartDate').val('');
 				$('#prjEndDate').val('');
 				$('#frmAddProject').slideUp();
 
 				projects.push(answer.package);
 
-				stringTimelines = JSON.stringify(timeline);
-				localStorage.setItem('backTimelines', stringTimelines);
-				timeline = JSON.parse(localStorage.getItem('backTimelines'));
+				stringProjects = JSON.stringify(projects);
+				localStorage.setItem('backProjects', stringProjects);
+				projects = JSON.parse(localStorage.getItem('backProjects'));
 
-				oDevTable.fnClearTable(0);
-				oDevTable.fnAddData(timeline);
-				oDevTable.fnDraw();
-				notice('msgError', 'Created.', true);
+				oPrjTable.fnClearTable(0);
+				oPrjTable.fnAddData(projects);
+				oPrjTable.fnDraw();
+				notice('msgErrorProject', 'Created.', true);
 
 			} else {
 
-				var objD = getTimelineById(isEditingProject);
-				objD.name = $('#devName').val();
-				objD.team = $('#devTeam').val();
+				var objP = getProjectById(isEditingProject);
+				objP.name = $('#prjName').val();
+				objP.description = $('#prjDescription').val();
+				objP.startDate = $('#prjStartDate').val();
+				objP.endDate = $('#prjEndDate').val();
 
-				stringTimelines = JSON.stringify(timeline);
-				localStorage.setItem('backTimelines', stringTimelines);
-				timeline = JSON.parse(localStorage.getItem('backTimelines'));
+				$('#frmAddProject').slideUp();
 
-				oDevTable.fnClearTable(0);
-				oDevTable.fnAddData(timeline);
-				oDevTable.fnDraw();
+				stringProjects = JSON.stringify(projects);
+				localStorage.setItem('backProjects', stringProjects);
+				projects = JSON.parse(localStorage.getItem('backProjects'));
 
-				$('#devName').val('');
+				oPrjTable.fnClearTable(0);
+				oPrjTable.fnAddData(projects);
+				oPrjTable.fnDraw();
+
+				$('#prjName').val('');
+				$('#prjDescription').val('');
+				$('#prjStartDate').val('');
+				$('#prjEndDate').val('');
 				$('#frmAddProject').slideUp();
 
 				isEditingProject = 0;
 
-				notice('msgError', 'Saved.', true);
+				notice('msgErrorProject', 'Saved.', true);
 			}
 
 		} else {
 			$("#btnAddProject").button("option", "disabled", false);
-			error('msgError', 'Error trying to save.');
+			error('msgErrorProject', 'Error trying to save.');
 		}
 	}).fail(function() {
-		notice('msgError', 'Couldn\'t connect with server.', true);
+		notice('msgErrorProject', 'Couldn\'t connect with server.', true);
 	});
 }
 
-function deleteProject(devId) {
+function deleteProject(prjId) {
 
-	if (devId instanceof Array) {
+	if (prjId instanceof Array) {
 	} else {
-		devId = Array(devId);
+		prjId = Array(prjId);
 	}
 
-	var strDevs = "[" + devId.join(",") + "]";
+	var strPrjs = "[" + prjId.join(",") + "]";
 
 	$.ajax({
 		type : "POST",
-		url : "http://planner/www/removeTimeline.php",
+		url : "http://planner/www/removeProject.php",
 		data : {
-			devId : strDevs
+			id : strPrjs
 		}
 	}).done(function(msg) {
-		var answer = JSON.parse(msg);
+		try{
+			var answer = JSON.parse(msg);
+		}catch(error){
+			console.log(msg + ' ' + error);
+			return false;
+		}
 
 		if (answer.result == 'TRUE') {
 
 			$.ajax({
 				type : "POST",
-				url : "http://planner/www/getTimelines.php"
-			}).done(function(resultTimelines) {
+				url : "http://planner/www/getProjects.php",
+				data : {
+					taskId : 1		//so the request is taken as POST
+				}
+			}).done(function(resultProjects) {
 
 				try {
-					var jsonTimelinesResult = JSON.parse(resultTimelines);
+					var jsonProjectsResult = JSON.parse(resultProjects);
 				} catch (error) {
-					error('msgError', error);
+					error('msgErrorProject', error);
 					return false;
 				}
 
-				if (jsonTimelinesResult.result == 'FALSE') {
-					error('msgError', jsonTimelinesResult.message);
-					return false
+				if (jsonProjectsResult.result == 'FALSE') {
+					error('msgErrorProject', jsonProjectsResult.message);
+					return false;
 				}
 
-				stringTimelines = JSON.stringify(jsonTimelinesResult.package.timelines);
-				localStorage.setItem('backTimelines', stringTimelines);
-				timeline = JSON.parse(localStorage.getItem('backTimelines'));
+				stringProjects = JSON.stringify(jsonProjectsResult.package.projects);
+				localStorage.setItem('backProjects', stringProjects);
+				projects = JSON.parse(localStorage.getItem('backProjects'));
 
-				oDevTable.fnClearTable(0);
-				oDevTable.fnAddData(timeline);
-				oDevTable.fnDraw();
+				oPrjTable.fnClearTable(0);
+				oPrjTable.fnAddData(projects);
+				oPrjTable.fnDraw();
 
-				$('#devName').val('');
+				$('#prjName').val('');
+				$('#prjDescription').val('');
+				$('#prjStartDate').val('');
+				$('#prjEndDate').val('');
 				$('#frmAddProject').slideUp();
 
-				notice('msgError', 'Removed.', true);
+				notice('msgErrorProject', 'Removed.', true);
 			});
 
 		} else {
-			error('msgError', 'Error trying to remove.');
+			error('msgErrorProject', 'Error trying to remove.');
 		}
 	}).fail(function() {
-		notice('msgError', 'Couldn\'t connect with server.', true);
+		notice('msgErrorProject', 'Couldn\'t connect with server.', true);
 	});
 }
 
@@ -202,7 +225,7 @@ function initProjectsList() {
 
 	initPrjAddFromToCalendars();
 
-	$('#devTeam').selectmenu();
+	$('#prjTeam').selectmenu();
 
 	$("#projectsList").dialog({
 		width : '70%',
@@ -213,27 +236,7 @@ function initProjectsList() {
 					text : "Delete",
 					click : function() {
 
-						$("#project-confirm-deletion").dialog({
-							resizable : false,
-							height : 100,
-							modal : true,
-							buttons : {
-								Cancel : function() {
-									$(this).dialog("close");
-								},
-								"Accept" : function() {
-									$(this).dialog("close");
-
-									var deletes = new Array();
-									$('input:checkbox[name=projectIds]:checked').each(function() {
-										deletes.push($(this).attr('value'));
-									});
-
-									deleteProject(deletes);
-
-								}
-							}
-						});
+						$("#project-confirm-deletion").dialog("open");
 
 					}
 				}, {
@@ -245,8 +248,31 @@ function initProjectsList() {
 		]
 	});
 
-	oDevTable = $('#tblProjectsList').dataTable({
-		"aaData" : timeline,
+	$("#project-confirm-deletion").dialog({
+		resizable : false,
+		autoOpen : false,
+		height : 100,
+		modal : true,
+		buttons : {
+			Cancel : function() {
+				$(this).dialog("close");
+			},
+			"Accept" : function() {
+				$(this).dialog("close");
+
+				var deletes = new Array();
+				$('input:checkbox[name=projectIds]:checked').each(function() {
+					deletes.push($(this).attr('value'));
+				});
+
+				deleteProject(deletes);
+
+			}
+		}
+	});
+
+	oPrjTable = $('#tblProjectsList').dataTable({
+		"aaData" : projects,
 		"bJQueryUI" : true,
 		"sPaginationType" : "full_numbers",
 		"aoColumns" : [
@@ -256,7 +282,7 @@ function initProjectsList() {
 					"sClass" : "center",
 					"bSortable" : false,
 					"fnRender" : function(obj) {
-						return '<img class="btnDevOpenTbl" src="imgs/icon-add.png" />';
+						return '<img class="btnPrjOpenTbl" src="imgs/icon-add.png" />';
 					}
 				}, {
 					"mDataProp" : "id",
@@ -272,10 +298,15 @@ function initProjectsList() {
 						return '<a href="javascript:;" onclick="editProject(' + obj.aData.id + ')">' + obj.aData.name + '</a>';
 					}
 				}, {
-					"mDataProp" : "team",
-					"sTitle" : "Team",
+					"mDataProp" : "startDate",
+					"sTitle" : "Start Date",
 					"sClass" : "center",
-					"bSortable" : true
+					"bSortable" : false
+				}, {
+					"mDataProp" : "endDate",
+					"sTitle" : "End Date",
+					"sClass" : "center",
+					"bSortable" : false
 				}, {
 					"mDataProp" : null,
 					"sTitle" : "",
@@ -288,27 +319,27 @@ function initProjectsList() {
 		]
 	});
 
-	$('#tblProjectsList tbody tr td img.btnDevOpenTbl').live('click', function() {
+	$('#tblProjectsList tbody tr td img.btnPrjOpenTbl').live('click', function() {
 
 		var nTr = $(this).parents('tr')[0];
-		if (oDevTable.fnIsOpen(nTr)) {
+		if (oPrjTable.fnIsOpen(nTr)) {
 			/* This row is already open - close it */
 			// this.src = "../examples_support/details_open.png";
-			oDevTable.fnClose(nTr);
+			oPrjTable.fnClose(nTr);
 		} else {
 			/* Open this row */
 			// this.src = "../examples_support/details_close.png";
-			oDevTable.fnOpen(nTr, projectDetails(nTr), 'details');
+			oPrjTable.fnOpen(nTr, projectDetails(nTr), 'details');
 		}
 	});
 
-	$('#tblProjectsList tbody tr td img.btnDevRemoveTbl').live('click', function() {
+	$('#tblProjectsList tbody tr td img.btnPrjRemoveTbl').live('click', function() {
 
-		var aData = oDevTable.fnGetData(this.parentNode.parentNode); // get
+		var aData = oPrjTable.fnGetData(this.parentNode.parentNode); // get
 		// datarow
 		if (null != aData) { // null if we clicked on title row
 			console.log("remove: " + aData.id);
-			$("#timeline-confirm-deletion").dialog({
+			$("#project-confirm-deletion").dialog({
 				resizable : false,
 				height : 100,
 				modal : true,
@@ -326,9 +357,9 @@ function initProjectsList() {
 
 	});
 
-	$('#tblProjectsList tbody tr td img.btnDevEditTbl').live('click', function() {
+	$('#tblProjectsList tbody tr td img.btnPrjEditTbl').live('click', function() {
 
-		var aData = oDevTable.fnGetData(this.parentNode.parentNode); // get
+		var aData = oPrjTable.fnGetData(this.parentNode.parentNode); // get
 		// datarow
 		if (null != aData) { // null if we clicked on title row
 			console.log("edit: " + aData.id);
@@ -341,9 +372,11 @@ function initProjectsList() {
 		}
 	}).click(function() {
 		$('#frmAddProject').slideDown();
-		$('#devName').val('');
-		$('#devTeam').val('');
-		$('#devName').focus();
+		$('#prjName').val('');
+		$('#prjDescription').val('');
+		$('#prjStartDate').val('');
+		$('#prjEndDate').val('');
+		$('#prjName').focus();
 
 		$("#btnAddProject").button("option", "disabled", false);
 	});
@@ -354,7 +387,12 @@ function initProjectsList() {
 		}
 	}).click(function() {
 
-		if ($('#devName').val() == '') {
+		if ($('#prjName').val() == '') {
+			alert("Please provide a valid name.");
+			return false;
+		}
+
+		if ($('#prjStartDate').val() == '') {
 			alert("Please provide a valid name.");
 			return false;
 		}

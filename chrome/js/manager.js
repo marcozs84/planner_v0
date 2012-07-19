@@ -179,8 +179,20 @@ function getTimelineById(devId) {
 	var dev = 0;
 	for ( var i = 0; i < timeline.length; i++) {
 		if (timeline[i].id == devId) {
-			timeId = i;
 			dev = timeline[i];
+			break;
+		}
+	}
+
+	return dev;
+}
+
+function getProjectById(Id) {
+	// Searching Projects
+	var dev = 0;
+	for ( var i = 0; i < projects.length; i++) {
+		if (projects[i].id == Id) {
+			dev = projects[i];
 			break;
 		}
 	}
