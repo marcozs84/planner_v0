@@ -7,28 +7,28 @@ function projectDetails(nTr) {
 	var sOut = '';
 	sOut += '<strong>Description</strong><br />';
 	sOut += aData.description;
-	sOut += '<table class="ui-widget" cellpadding="5" cellspacing="0" border="0" style="/*padding-left:50px;*/ width:100%;">';
-	sOut += '<caption>Resources</caption>';
-	sOut += '<thead class="ui-widget-header">';
-	sOut += '<tr>';
-	sOut += '<th style="width:20px; padding:0px; text-align:center;">Name</th>';
-	sOut += '<th style="width:20px; padding:0px; text-align:center;">Initials</th>';
-	sOut += '</tr>';
-	sOut += '</thead>';
-	sOut += '<tbody class="ui-widget-content">';
-	for ( var i = 0; i < aData.tasks.length; i++) {
-
-		sOut += '<tr>';
-		sOut += '<td>';
-		sOut += getProjectById(aData.projects[i].name);
-		sOut += '</td>';
-		sOut += '<td>';
-		sOut += aData.tasks[i].duration;
-		sOut += '</td>';
-		sOut += '</tr>';
-	}
-	sOut += '</tbody>';
-	sOut += '</table>';
+//	sOut += '<table class="ui-widget" cellpadding="5" cellspacing="0" border="0" style="/*padding-left:50px;*/ width:100%;">';
+//	sOut += '<caption>Resources</caption>';
+//	sOut += '<thead class="ui-widget-header">';
+//	sOut += '<tr>';
+//	sOut += '<th style="width:20px; padding:0px; text-align:center;">Name</th>';
+//	sOut += '<th style="width:20px; padding:0px; text-align:center;">Initials</th>';
+//	sOut += '</tr>';
+//	sOut += '</thead>';
+//	sOut += '<tbody class="ui-widget-content">';
+//	for ( var i = 0; i < aData.timelines.length; i++) {
+//
+//		sOut += '<tr>';
+//		sOut += '<td>';
+//		sOut += getProjectById(aData.timelines[i].name);
+//		sOut += '</td>';
+//		sOut += '<td>';
+//		sOut += aData.tasks[i].duration;
+//		sOut += '</td>';
+//		sOut += '</tr>';
+//	}
+//	sOut += '</tbody>';
+//	sOut += '</table>';
 
 	return sOut;
 }
@@ -41,7 +41,7 @@ function editProject(projectId) {
 	var objD = getProjectById(isEditingProject);
 	$('#prjName').val(objD.name);
 	$('#prjStartDate').val(objD.startDate);
-	$('#prjEndtDate').val(objD.endDate);
+	$('#prjEndDate').val(objD.endDate);
 	$('#prjDescription').val(objD.description);
 
 	$('#frmAddProject').slideDown();
@@ -205,16 +205,18 @@ function deleteProject(prjId) {
 function initPrjAddFromToCalendars() {
 	$("#prjStartDate").datepicker({
 		defaultDate : "+1w",
+		dateFormat : "d.m.yy",
 		changeMonth : true,
-		numberOfMonths : 1,
+		numberOfMonths : 3,
 		onSelect : function(selectedDate) {
 			$("#prjEndDate").datepicker("option", "minDate", selectedDate);
 		}
 	});
 	$("#prjEndDate").datepicker({
 		defaultDate : "+1w",
+		dateFormat : "d.m.yy",
 		changeMonth : true,
-		numberOfMonths : 1,
+		numberOfMonths : 3,
 		onSelect : function(selectedDate) {
 			$("#prjStartDate").datepicker("option", "maxDate", selectedDate);
 		}
@@ -289,10 +291,16 @@ function initProjectsList() {
 					"sTitle" : "Id",
 					"sClass" : "center",
 					"bSortable" : true
+//				}, {
+//					"mDataProp" : "name",
+//					"sTitle" : "NameHidden",
+//					"sClass" : "center",
+//					"bSortable" : true
 				}, {
 					"mDataProp" : null,
 					"sTitle" : "Name",
 					"sClass" : "left",
+					"bSearchable" : true,
 					"bSortable" : true,
 					"fnRender" : function(obj) {
 						return '<a href="javascript:;" onclick="editProject(' + obj.aData.id + ')">' + obj.aData.name + '</a>';
@@ -386,6 +394,13 @@ function initProjectsList() {
 			primary : "ui-icon-disk"
 		}
 	}).click(function() {
+
+//		console.log($( "#prjStartDate" ).datepicker( "option", "dateFormat" ));
+//		console.log($( "#prjEndDate" ).datepicker( "option", "dateFormat" ));
+//		console.log($( "#prjStartDate" ).val());
+//		console.log($( "#prjEndDate" ).val());
+
+//		return false;
 
 		if ($('#prjName').val() == '') {
 			alert("Please provide a valid name.");

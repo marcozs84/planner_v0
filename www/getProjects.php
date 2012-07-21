@@ -24,8 +24,8 @@ function getTasksJSON(){
 						"id" => $row ['id'],
 						"name" => $row ['name'],
 						"description" => $row ['description'],
-						"startDate" => date("d-m-Y",strtotime($row ['startDate'])),
-						"endDate" => date("d-m-Y",strtotime($row ['endDate']))
+						"startDate" => date("d.m.Y",strtotime($row ['startDate'])),
+						"endDate" => date("d.m.Y",strtotime($row ['endDate']))
 						);
 			}
 
@@ -34,7 +34,7 @@ function getTasksJSON(){
 		$resultJSON = Array("result" => "TRUE",
 				"message" => "Tasks",
 				"package" => Array(
-						"tasks" => $package
+						"projects" => $package
 				)
 		);
 

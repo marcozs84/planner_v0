@@ -9,8 +9,11 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['startDate'] )) {
 	$startDate = trim ( $_POST ['startDate'] );
 	$endDate = trim ( $_POST ['endDate'] );
 
-	$startDate = date("Y-m-d",strtotime("$startDate"));
-	$endDate = date("Y-m-d",strtotime("$endDate"));
+	$insertStartDate = date("Y-m-d",strtotime(str_replace('.', '-', $startDate)));
+	$insertEndDate = date("Y-m-d",strtotime("$endDate"));
+
+	$startDate = date("d.m.Y",strtotime("$startDate"));
+	$endDate = date("d.m.Y",strtotime("$endDate"));
 
 	if ($id == 0) {
 		$query = "INSERT INTO
@@ -18,8 +21,8 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['startDate'] )) {
 			VALUES(
 			'$name',
 			'$description',
-			'$startDate',
-			'$endDate')";
+			'$insertStartDate',
+			'$insertEndDate')";
 
 		$res = $mysqli->query ( $query );
 
@@ -27,7 +30,7 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['startDate'] )) {
 			$projectId = $mysqli->insert_id;
 
 			$resultJSON = Array("result" => "TRUE",
-					"message" => "Project was saved succesfully ".$query,
+					"message" => "Project was saved succesfully. ".$query,
 					"package" => Array(
 							"id" => $projectId,
 							"name" => $name,
@@ -48,13 +51,13 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['startDate'] )) {
 		}
 	} else {
 		$query = "UPDATE
-			tblproject set `name` = '$name', `description` = '$description', `startDate` = '$startDate', `endDate` = '$endDate' WHERE id=$id";
+			tblproject set `name` = '$name', `description` = '$description', `startDate` = '$insertStartDate', `endDate` = '$insertEndDate' WHERE id=$id";
 
 		$res = $mysqli->query ( $query );
 
 		if ($res) {
 			$resultJSON = Array("result" => "TRUE",
-					"message" => "Timeline was saved succesfully",
+					"message" => "Project was saved succesfully. ".$query,
 					"package" => Array(
 							"id" => $id,
 							"name" => $name,

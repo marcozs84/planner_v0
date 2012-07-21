@@ -87,8 +87,8 @@ if (isset ( $_POST ['password'] ) && isset ( $_POST ['username'] )) {
 						"id" => $row ['id'],
 						"name" => $row ['name'],
 						"description" => $row ['description'],
-						"startDate" => $row ['startDate'],
-						"endDate" => $row ['endDate']
+						"startDate" => date("d.m.Y",strtotime($row ['startDate'])),
+						"endDate" => date("d.m.Y",strtotime($row ['endDate']))
 						);
 			}
 		}
