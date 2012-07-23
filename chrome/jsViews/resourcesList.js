@@ -44,6 +44,7 @@ function saveResource() {
 			if (isEditingResource == 0) {
 				$('#rscName').val('');
 				$('#rscInitials').val('');
+				$('#frmAddResource').slideUp();
 
 				resources.push(answer.package);
 
