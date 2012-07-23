@@ -1,4 +1,5 @@
 <?php
+
 $con = @mysqli_connect('localhost','root','');
 
 if($con){
@@ -36,6 +37,15 @@ function ConnectDB(){
 		);
 		print json_encode($resultJSON);
 		die();
+	}
+}
+
+function displayQuery($query){
+	$display_queries_in_messages = true;
+	if($display_queries_in_messages){
+		return $query;
+	}else{
+		return '';
 	}
 }
 

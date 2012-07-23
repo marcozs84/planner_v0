@@ -7,28 +7,28 @@ function projectDetails(nTr) {
 	var sOut = '';
 	sOut += '<strong>Description</strong><br />';
 	sOut += aData.description;
-//	sOut += '<table class="ui-widget" cellpadding="5" cellspacing="0" border="0" style="/*padding-left:50px;*/ width:100%;">';
-//	sOut += '<caption>Resources</caption>';
-//	sOut += '<thead class="ui-widget-header">';
-//	sOut += '<tr>';
-//	sOut += '<th style="width:20px; padding:0px; text-align:center;">Name</th>';
-//	sOut += '<th style="width:20px; padding:0px; text-align:center;">Initials</th>';
-//	sOut += '</tr>';
-//	sOut += '</thead>';
-//	sOut += '<tbody class="ui-widget-content">';
-//	for ( var i = 0; i < aData.timelines.length; i++) {
-//
-//		sOut += '<tr>';
-//		sOut += '<td>';
-//		sOut += getProjectById(aData.timelines[i].name);
-//		sOut += '</td>';
-//		sOut += '<td>';
-//		sOut += aData.tasks[i].duration;
-//		sOut += '</td>';
-//		sOut += '</tr>';
-//	}
-//	sOut += '</tbody>';
-//	sOut += '</table>';
+	sOut += '<table class="ui-widget" cellpadding="5" cellspacing="0" border="0" style="/*padding-left:50px;*/ width:100%;">';
+	sOut += '<caption>Resources</caption>';
+	sOut += '<thead class="ui-widget-header">';
+	sOut += '<tr>';
+	sOut += '<th style="width:20px; padding:0px; text-align:center;">Name</th>';
+	sOut += '<th style="width:20px; padding:0px; text-align:center;">Initials</th>';
+	sOut += '</tr>';
+	sOut += '</thead>';
+	sOut += '<tbody class="ui-widget-content">';
+	for ( var i = 0; i < aData.timelines.length; i++) {
+
+		sOut += '<tr>';
+		sOut += '<td>';
+		sOut += getProjectById(aData.timelines[i].name);
+		sOut += '</td>';
+		sOut += '<td>';
+		sOut += aData.tasks[i].duration;
+		sOut += '</td>';
+		sOut += '</tr>';
+	}
+	sOut += '</tbody>';
+	sOut += '</table>';
 
 	return sOut;
 }
@@ -72,7 +72,8 @@ function saveProject() {
 			return false;
 		}
 
-		console.log("answer Saving project: " + answer);
+		console.log("answer Saving project: ");
+		console.log(answer);
 
 		if (answer.result == 'TRUE') {
 

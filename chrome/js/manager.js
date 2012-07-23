@@ -17,11 +17,13 @@ $(document).ready(function() {
 
 	tasks = JSON.parse(localStorage.getItem('backTasks'));
 	timeline = JSON.parse(localStorage.getItem('backTimelines'));
+	resources = JSON.parse(localStorage.getItem('backResources'));
 	projects = JSON.parse(localStorage.getItem('backProjects'));
 
 	loadView('taskList', initTaskList);
 	loadView('developersList', initDevelopersList);
 	loadView('projectsList', initProjectsList);
+	loadView('resourcesList', initResourcesList);
 
 	// initTaskList();
 	// initDevelopersList();
@@ -193,6 +195,19 @@ function getProjectById(Id) {
 	for ( var i = 0; i < projects.length; i++) {
 		if (projects[i].id == Id) {
 			dev = projects[i];
+			break;
+		}
+	}
+
+	return dev;
+}
+
+function getResourceById(Id) {
+	// Searching Resources
+	var dev = 0;
+	for ( var i = 0; i < resources.length; i++) {
+		if (resources[i].id == Id) {
+			dev = resources[i];
 			break;
 		}
 	}
@@ -601,6 +616,15 @@ function toolBarInit() {
 		}
 	}).click(function() {
 		openModal('projectsList');
+	});
+
+	$("#btnTBResources").button({
+		text : "Resources",
+		icons : {
+			primary : "ui-icon-person"
+		}
+	}).click(function() {
+		openModal('resourcesList');
 	});
 
 	$("#btnTBDevelopers").button({

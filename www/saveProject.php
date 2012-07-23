@@ -44,7 +44,7 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['startDate'] )) {
 		} else {
 			$resultJSON = Array(
 					"result" => "FALSE",
-					"message" => "Insertion query failed.",
+					"message" => "Insertion query failed.".displayQuery($query),
 					"package" => "null"
 					);
 			print json_encode($resultJSON);

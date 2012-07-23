@@ -28,10 +28,12 @@ $(document).ready(function() {
 					stringTasks = JSON.stringify(myData.tasks);
 					stringTimelines = JSON.stringify(myData.timelines);
 					stringProjects = JSON.stringify(myData.projects);
+					stringResources = JSON.stringify(myData.resources);
 
 					localStorage.setItem('backTasks',stringTasks);
 					localStorage.setItem('backTimelines',stringTimelines);
 					localStorage.setItem('backProjects',stringProjects);
+					localStorage.setItem('backResources',stringResources);
 
 					window.location.href = 'manager.html';
 				}else{
