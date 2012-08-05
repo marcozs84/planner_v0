@@ -1,4 +1,5 @@
 var oPrjTable;
+var ProjectOnEdit = 0;
 
 /* Formating function for row details */
 function projectDetails(nTr) {
@@ -30,8 +31,8 @@ function projectDetails(nTr) {
 	sOut += '</tbody>';
 	sOut += '</table>';
 
-	sOut += '<a href="javascript:;" id="btnAddResource_'+ aData.id +'">Add Resources</a>';
-//	sOut += '<script>callbackRow('+ aData.id +');</script>';
+	sOut += '<a href="javascript:;" id="btnAddResource_' + aData.id + '">Add Resources</a>';
+	// sOut += '<script>callbackRow('+ aData.id +');</script>';
 
 	return sOut;
 }
@@ -152,9 +153,9 @@ function deleteProject(prjId) {
 			id : strPrjs
 		}
 	}).done(function(msg) {
-		try{
+		try {
 			var answer = JSON.parse(msg);
-		}catch(error){
+		} catch (error) {
 			console.log(msg + ' ' + error);
 			return false;
 		}
@@ -165,7 +166,8 @@ function deleteProject(prjId) {
 				type : "POST",
 				url : "http://planner/www/getProjects.php",
 				data : {
-					taskId : 1		//so the request is taken as POST
+					taskId : 1
+				// so the request is taken as POST
 				}
 			}).done(function(resultProjects) {
 
@@ -231,8 +233,6 @@ function initProjectsList() {
 
 	initPrjAddFromToCalendars();
 
-	$('#prjTeam').selectmenu();
-
 	$("#projectsList").dialog({
 		width : '70%',
 		autoOpen : false,
@@ -243,6 +243,27 @@ function initProjectsList() {
 					click : function() {
 
 						$("#project-confirm-deletion").dialog("open");
+
+					}
+				}, {
+					text : "Close",
+					click : function() {
+						$(this).dialog("close");
+					}
+				}
+		]
+	});
+
+	$("#projectAddResource").dialog({
+		width : '250px',
+		autoOpen : false,
+		modal : true,
+		buttons : [
+				{
+					text : "Accept",
+					click : function() {
+
+					// $("#project-confirm-deletion").dialog("open");
 
 					}
 				}, {
@@ -295,11 +316,11 @@ function initProjectsList() {
 					"sTitle" : "Id",
 					"sClass" : "center",
 					"bSortable" : true
-//				}, {
-//					"mDataProp" : "name",
-//					"sTitle" : "NameHidden",
-//					"sClass" : "center",
-//					"bSortable" : true
+				// }, {
+				// "mDataProp" : "name",
+				// "sTitle" : "NameHidden",
+				// "sClass" : "center",
+				// "bSortable" : true
 				}, {
 					"mDataProp" : null,
 					"sTitle" : "Name",
@@ -348,9 +369,15 @@ function initProjectsList() {
 				icons : {
 					primary : "ui-icon-plus"
 				},
-				buttonIndex : aData.id
+				btnProjectId : aData.id
 			}).click(function() {
-				console.log($('#btnAddResource_' + aData.id).button( "option", "buttonIndex" ));
+				console.log($('#btnAddResource_' + aData.id).button("option", "btnProjectId"));
+				// $("#projectAddResource").dialog("open");
+				ProjectOnEdit = $('#btnAddResource_' + aData.id).button("option", "btnProjectId");
+				$("#resourcesList").dialog("open");
+
+				$('#prjRscName').selectmenu();
+
 			});
 		}
 	});
@@ -409,12 +436,13 @@ function initProjectsList() {
 		}
 	}).click(function() {
 
-//		console.log($( "#prjStartDate" ).datepicker( "option", "dateFormat" ));
-//		console.log($( "#prjEndDate" ).datepicker( "option", "dateFormat" ));
-//		console.log($( "#prjStartDate" ).val());
-//		console.log($( "#prjEndDate" ).val());
+		// console.log($( "#prjStartDate" ).datepicker( "option", "dateFormat"
+		// ));
+		// console.log($( "#prjEndDate" ).datepicker( "option", "dateFormat" ));
+		// console.log($( "#prjStartDate" ).val());
+		// console.log($( "#prjEndDate" ).val());
 
-//		return false;
+		// return false;
 
 		if ($('#prjName').val() == '') {
 			alert("Please provide a valid name.");
