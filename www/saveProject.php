@@ -36,7 +36,8 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['startDate'] )) {
 							"name" => $name,
 							"description" => $description,
 							"startDate" => $startDate,
-							"endDate" => $endDate
+							"endDate" => $endDate,
+							"timelines" => Array()
 							)
 					);
 

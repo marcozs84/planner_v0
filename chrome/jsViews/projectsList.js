@@ -30,6 +30,9 @@ function projectDetails(nTr) {
 	sOut += '</tbody>';
 	sOut += '</table>';
 
+	sOut += '<a href="javascript:;" id="btnAddResource_'+ aData.id +'">Add Resources</a>';
+//	sOut += '<script>callbackRow('+ aData.id +');</script>';
+
 	return sOut;
 }
 
@@ -339,6 +342,16 @@ function initProjectsList() {
 			/* Open this row */
 			// this.src = "../examples_support/details_close.png";
 			oPrjTable.fnOpen(nTr, projectDetails(nTr), 'details');
+
+			var aData = oPrjTable.fnGetData(nTr);
+			$('#btnAddResource_' + aData.id).button({
+				icons : {
+					primary : "ui-icon-plus"
+				},
+				buttonIndex : aData.id
+			}).click(function() {
+				console.log($('#btnAddResource_' + aData.id).button( "option", "buttonIndex" ));
+			});
 		}
 	});
 
