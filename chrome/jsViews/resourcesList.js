@@ -1,6 +1,5 @@
 var oRscTable;
 
-
 var isEditingResource = 0;
 
 function editResource(resourceId) {
@@ -108,9 +107,9 @@ function deleteResource(rscId) {
 			id : strRscs
 		}
 	}).done(function(msg) {
-		try{
+		try {
 			var answer = JSON.parse(msg);
-		}catch(error){
+		} catch (error) {
 			console.log(msg + ' ' + error);
 			return false;
 		}
@@ -121,7 +120,8 @@ function deleteResource(rscId) {
 				type : "POST",
 				url : "http://planner/www/getResources.php",
 				data : {
-					taskId : 1		//so the request is taken as POST
+					taskId : 1
+				// so the request is taken as POST
 				}
 			}).done(function(resultResources) {
 
@@ -145,7 +145,7 @@ function deleteResource(rscId) {
 				oRscTable.fnAddData(resources);
 				oRscTable.fnDraw();
 
-				$('#rscName').val('');7
+				$('#rscName').val('');
 				$('#rscInitials').val('');
 				$('#frmAddResource').slideUp();
 
@@ -166,6 +166,13 @@ function initResourcesList() {
 		width : '70%',
 		autoOpen : false,
 		modal : true,
+		open : function(event, ui) {
+			console.log("projectOnEdit: " + ProjectOnEdit);
+			var buttons = $('#tblResourcesList').dialog("option", "buttons");
+			console.log(buttons[0]);
+			console.log();
+
+		},
 		buttons : [
 				{
 					text : "Delete",
