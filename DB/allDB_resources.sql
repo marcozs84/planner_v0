@@ -37,6 +37,17 @@ CREATE TABLE `tblproject` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
+# Structure for the `tblproject_resource` table : 
+#
+
+DROP TABLE IF EXISTS `tblproject_resource`;
+
+CREATE TABLE `tblproject_resource` (
+  `projectId` int(11) NOT NULL,
+  `resourceId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+#
 # Structure for the `tblresource` table : 
 #
 
