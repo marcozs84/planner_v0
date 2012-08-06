@@ -658,4 +658,16 @@ function initTaskList() {
 		$('#tskColor').css('background-color', '#' + $('#tskColor').val());
 	});
 
+	$('#btnAddTaskCancel').button().click(function() {
+
+		$('#tskName').val('');
+		$('#tskDuration').val('');
+		$('#tskDescription').val('');
+		$('#tskColor').val('');
+		$('#tskAssigned').val('0');
+		$('#tskClosed').val('0');
+
+		$('#frmAddTask').slideUp();
+
+	});
 };

@@ -1,5 +1,6 @@
 var oPrjTable;
 var ProjectOnEdit = 0;
+var ProjectResourcesSelection = new Array();
 
 /* Formating function for row details */
 function projectDetails(nTr) {
@@ -254,27 +255,6 @@ function initProjectsList() {
 		]
 	});
 
-	$("#projectAddResource").dialog({
-		width : '250px',
-		autoOpen : false,
-		modal : true,
-		buttons : [
-				{
-					text : "Accept",
-					click : function() {
-
-					// $("#project-confirm-deletion").dialog("open");
-
-					}
-				}, {
-					text : "Close",
-					click : function() {
-						$(this).dialog("close");
-					}
-				}
-		]
-	});
-
 	$("#project-confirm-deletion").dialog({
 		resizable : false,
 		autoOpen : false,
@@ -374,6 +354,8 @@ function initProjectsList() {
 				console.log($('#btnAddResource_' + aData.id).button("option", "btnProjectId"));
 				// $("#projectAddResource").dialog("open");
 				ProjectOnEdit = $('#btnAddResource_' + aData.id).button("option", "btnProjectId");
+				ProjectResourcesSelection = new Array();
+
 				$("#resourcesList").dialog("open");
 
 				$('#prjRscName').selectmenu();
@@ -457,6 +439,16 @@ function initProjectsList() {
 		$("#btnAddProject").button("option", "disabled", true);
 
 		saveProject();
+
+	});
+
+	$('#btnAddProjectCancel').button().click(function() {
+
+		$('#prjName').val('');
+		$('#prjDescription').val('');
+		$('#prjStartDate').val('');
+		$('#prjEndDate').val('');
+		$('#frmAddProject').slideUp();
 
 	});
 

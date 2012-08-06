@@ -168,26 +168,43 @@ function initResourcesList() {
 		modal : true,
 		open : function(event, ui) {
 			console.log("projectOnEdit: " + ProjectOnEdit);
-			var buttons = $('#tblResourcesList').dialog("option", "buttons");
-			console.log(buttons[0]);
-			console.log();
 
-		},
-		buttons : [
-				{
-					text : "Delete",
-					click : function() {
+			var buttons = {};
 
-						$("#resource-confirm-deletion").dialog("open");
+			if(ProjectOnEdit != 0){
+				buttons["Select"] = function() {
+					$('input:checkbox[name=resourceIds]:checked').each(function() {
+						ProjectResourcesSelection.push($(this).attr('value'));
+					});
+				};
+			}else{
+				buttons["Delete"] = function() {
+					$("#resource-confirm-deletion").dialog("open");
+				};
+				buttons["Close"] = function() {
+					$(this).dialog("close");
+				};
+			}
 
-					}
-				}, {
-					text : "Close",
-					click : function() {
-						$(this).dialog("close");
-					}
-				}
-		]
+			$('#resourcesList').dialog("option","buttons",buttons);
+
+		}
+//		,
+//		buttons : [
+//				{
+//					text : "Delete",
+//					click : function() {
+//
+//						$("#resource-confirm-deletion").dialog("open");
+//
+//					}
+//				}, {
+//					text : "Close",
+//					click : function() {
+//						$(this).dialog("close");
+//					}
+//				}
+//		]
 	});
 
 	$("#resource-confirm-deletion").dialog({
@@ -314,6 +331,14 @@ function initResourcesList() {
 		$("#btnAddResource").button("option", "disabled", true);
 
 		saveResource();
+
+	});
+
+	$('#btnAddResourceCancel').button().click(function() {
+
+		$('#rscName').val('');
+		$('#rscInitials').val('');
+		$('#frmAddResource').slideUp();
 
 	});
 
