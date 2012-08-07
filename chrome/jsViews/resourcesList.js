@@ -176,6 +176,11 @@ function initResourcesList() {
 					$('input:checkbox[name=resourceIds]:checked').each(function() {
 						ProjectResourcesSelection.push($(this).attr('value'));
 					});
+
+					addResources(ProjectOnEdit,ProjectResourcesSelection);
+
+					$(this).dialog("close");
+
 				};
 			}else{
 				buttons["Delete"] = function() {
