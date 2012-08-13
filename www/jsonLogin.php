@@ -86,7 +86,11 @@ if (isset ( $_POST ['password'] ) && isset ( $_POST ['username'] )) {
 				$tmpProjectId = $row ['id'];
 				$devTimelinesQuery = "
 				SELECT
+				`tbltimeline`.`id` as 'id',
 				`tblresource`.`name` as 'name',
+				`tblresource`.`initials` as 'initials',
+				`tbltimeline`.`projectId` as 'projectId',
+				`tbltimeline`.`resourceId` as 'resourceId',
 				`tbltimeline`.`teamId` as 'teamId'
 				FROM tbltimeline
 				INNER JOIN tblresource ON tbltimeline.resourceId = tblresource.id

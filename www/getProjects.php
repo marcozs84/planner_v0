@@ -23,9 +23,10 @@ function getProjectsJSON(){
 				$tmpProjectId = $row ['id'];
 				$devTimelinesQuery = "
 				SELECT
+				`tbltimeline`.`id` as 'id',
 				`tblresource`.`name` as 'name',
 				`tblresource`.`initials` as 'initials',
-				`tbltimeline`.`id` as 'id',
+				`tbltimeline`.`resourceId` as 'resourceId',
 				`tbltimeline`.`teamId` as 'teamId'
 				FROM tbltimeline
 				INNER JOIN tblresource ON tbltimeline.resourceId = tblresource.id
@@ -40,6 +41,7 @@ function getProjectsJSON(){
 								"id" => $rowSplit ['id'],
 								"name" => $rowSplit ['name'],
 								"initials" => $rowSplit ['initials'],
+								"resourceId" => $rowSplit ['resourceId'],
 								"projectId" => $tmpProjectId,
 								"teamId" => $rowSplit ['teamId']
 						);

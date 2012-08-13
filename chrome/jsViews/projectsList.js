@@ -1,23 +1,91 @@
 var oPrjTable;
 var ProjectOnEdit = 0;
 var ProjectRowPos = 0;
+var ProjectRowPosTmp = 0;
 var ProjectResourcesSelection = new Array();
+var ProjectExistingResources = new Array();
+
+function renderButtonAddResource(aDataId) {
+	$('#btnAddResource_' + aDataId).button({
+		icons : {
+			primary : "ui-icon-plus"
+		},
+		btnProjectId : aDataId,
+		btnProjectRowPos : ProjectRowPosTmp
+	}).click(function() {
+		// console.log($('#btnAddResource_' + aData.id).button("option",
+		// "btnProjectId"));
+		// console.log($('#btnAddResource_' + aData.id).button("option",
+		// "btnProjectRowPos"));
+		// $("#projectAddResource").dialog("open");
+
+		$('input:checkbox[name=project_' + aDataId + '_ResourceIds]').each(function() {
+			ProjectExistingResources.push($(this).attr('value'));
+		});
+
+		ProjectOnEdit = $('#btnAddResource_' + aDataId).button("option", "btnProjectId");
+		ProjectRowPos = $('#btnAddResource_' + aDataId).button("option", "btnProjectRowPos");
+
+		ProjectResourcesSelection = new Array();
+
+		$("#resourcesList").dialog("open");
+
+		$('#prjRscName').selectmenu();
+
+	});
+
+	$('#btnRemResource_' + aDataId).button({
+		icons : {
+			primary : "ui-icon-plus"
+		},
+		btnProjectId : aDataId,
+		btnProjectRowPos : ProjectRowPosTmp
+	}).click(function() {
+		var projectId = $('#btnAddResource_' + aDataId).button("option", "btnProjectId");
+		var projectResourceIds = new Array();
+
+		$('input:checkbox[name=project_' + projectId + '_ResourceIds]:checked').each(function() {
+			projectResourceIds.push($(this).attr('value'));
+		});
+
+		deleteProjectResources(projectResourceIds);
+
+		projectResourceIds = new Array();
+
+	});
+
+	ProjectRowPosTmp = 0;
+
+	$('.tableInnerDescription tr td').css('border-bottom', '1px solid #444');
+	// oPrjTable = $('.tableInnerDescription').dataTable({
+	// "bJQueryUI" : true,
+	// "sPaginationType" : "full_numbers"
+	// });
+}
 
 /* Formating function for row details */
 function projectDetails(nTr) {
+
 	var aData = oPrjTable.fnGetData(nTr);
+	ProjectRowPosTmp = oPrjTable.fnGetPosition(nTr);
 
 	var sOut = '';
+	sOut += '<br />';
 	sOut += '<strong>Description</strong><br />';
-	sOut += aData.description;
-	sOut += '<table class="ui-widget" cellpadding="5" cellspacing="0" border="0" style="/*padding-left:50px;*/ width:100%;">';
-	sOut += '<caption>Resources</caption>';
-	sOut += '<thead class="ui-widget-header">';
-	sOut += '<tr>';
-	sOut += '<th style="width:20px; padding:0px; text-align:center;">Name</th>';
-	sOut += '<th style="width:20px; padding:0px; text-align:center;">Initials</th>';
-	sOut += '</tr>';
-	sOut += '</thead>';
+	sOut += aData.description + '<br /><br />';
+	sOut += '<strong>Resources</strong><br />';
+	// sOut += '<table class="ui-widget" cellpadding="5" cellspacing="0"
+	// border="0" style="/*padding-left:50px;*/ width:100%;">';
+	sOut += '<table class="tableInnerDescription" cellpadding="5" cellspacing="0" border="0" style="/*padding-left:50px;*/ width:100%;">';
+	// sOut += '<caption>Resources</caption>';
+	// sOut += '<thead class="ui-widget-header">';
+	// sOut += '<tr>';
+	// sOut += '<th style="width:20px; padding:0px;
+	// text-align:center;">Name</th>';
+	// sOut += '<th style="width:20px; padding:0px;
+	// text-align:center;">Initials</th>';
+	// sOut += '</tr>';
+	// sOut += '</thead>';
 	sOut += '<tbody class="ui-widget-content">';
 	for ( var i = 0; i < aData.timelines.length; i++) {
 
@@ -28,13 +96,20 @@ function projectDetails(nTr) {
 		sOut += '<td>';
 		sOut += aData.timelines[i].initials;
 		sOut += '</td>';
+		sOut += '<td style="width:20px;">';
+		sOut += '<input type="checkbox" value="' + aData.timelines[i].resourceId + '" name="project_' + aData.id + '_ResourceIds" />';
+		sOut += '</td>';
 		sOut += '</tr>';
 	}
 	sOut += '</tbody>';
 	sOut += '</table>';
+	sOut += '<br />';
 
 	sOut += '<a href="javascript:;" id="btnAddResource_' + aData.id + '">Add Resources</a>';
-	// sOut += '<script>callbackRow('+ aData.id +');</script>';
+	sOut += '<a href="javascript:;" id="btnRemResource_' + aData.id + '">Remove Resources</a>';
+	sOut += '<br />';
+	sOut += '<br />';
+	sOut += '<script>renderButtonAddResource(' + aData.id + ');</script>';
 
 	return sOut;
 }
@@ -210,7 +285,7 @@ function deleteProject(prjId) {
 	});
 }
 
-function addResources(projectId, resources) {
+function addResourcesToProject(projectId, resources) {
 	if (resources instanceof Array) {
 	} else {
 		resources = Array(resources);
@@ -423,30 +498,6 @@ function initProjectsList() {
 			/* Open this row */
 			// this.src = "../examples_support/details_close.png";
 			oPrjTable.fnOpen(nTr, projectDetails(nTr), 'details');
-
-			var aData = oPrjTable.fnGetData(nTr);
-			var prjPosRow = oPrjTable.fnGetPosition(nTr);
-
-			$('#btnAddResource_' + aData.id).button({
-				icons : {
-					primary : "ui-icon-plus"
-				},
-				btnProjectId : aData.id,
-				btnProjectRowPos : prjPosRow
-			}).click(function() {
-				// console.log($('#btnAddResource_' + aData.id).button("option", "btnProjectId"));
-				// console.log($('#btnAddResource_' + aData.id).button("option", "btnProjectRowPos"));
-				// $("#projectAddResource").dialog("open");
-				ProjectOnEdit = $('#btnAddResource_' + aData.id).button("option", "btnProjectId");
-				ProjectRowPos = $('#btnAddResource_' + aData.id).button("option", "btnProjectRowPos");
-
-				ProjectResourcesSelection = new Array();
-
-				$("#resourcesList").dialog("open");
-
-				$('#prjRscName').selectmenu();
-
-			});
 		}
 	});
 

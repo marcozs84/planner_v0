@@ -166,23 +166,56 @@ function initResourcesList() {
 		width : '70%',
 		autoOpen : false,
 		modal : true,
+		close : function(event, ui){
+			if(ProjectOnEdit != 0){
+				ProjectOnEdit = 0;
+			}
+		},
 		open : function(event, ui) {
-			console.log("projectOnEdit: " + ProjectOnEdit);
+
+			$('input:checkbox[name=resourceIds]').each(function() {
+				$(this).attr('disabled', false);
+				$(this).attr('checked', false);
+			});
 
 			var buttons = {};
 
 			if(ProjectOnEdit != 0){
+
+				$('#btnOpenResourceForm').hide();
+
+				console.log(ProjectExistingResources);
+
+				$('input:checkbox[name=resourceIds]').each(function() {
+
+					var searchResult = jQuery.inArray($(this).attr('value'), ProjectExistingResources);
+
+					if(searchResult >= 0){
+						$(this).attr('disabled', true);
+					}else{
+						$(this).attr('disabled', false);
+//						$(this).removeAttr("disabled");
+					}
+				});
+
+				ProjectExistingResources = new Array();
+
+
 				buttons["Select"] = function() {
 					$('input:checkbox[name=resourceIds]:checked').each(function() {
 						ProjectResourcesSelection.push($(this).attr('value'));
 					});
 
-					addResources(ProjectOnEdit,ProjectResourcesSelection);
+					addResourcesToProject(ProjectOnEdit,ProjectResourcesSelection);
 
 					$(this).dialog("close");
 
 				};
+
 			}else{
+
+				$('#btnOpenResourceForm').show();
+
 				buttons["Delete"] = function() {
 					$("#resource-confirm-deletion").dialog("open");
 				};
