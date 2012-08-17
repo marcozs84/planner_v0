@@ -48,7 +48,10 @@ function renderButtonAddResource(aDataId) {
 			projectResourceIds.push($(this).attr('value'));
 		});
 
-		deleteProjectResources(projectResourceIds);
+		ProjectOnEdit = $('#btnAddResource_' + aDataId).button("option", "btnProjectId");
+		ProjectRowPos = $('#btnAddResource_' + aDataId).button("option", "btnProjectRowPos");
+
+		deleteProjectResources(projectId, projectResourceIds);
 
 		projectResourceIds = new Array();
 
@@ -285,10 +288,97 @@ function deleteProject(prjId) {
 	});
 }
 
+function deleteProjectResources(projectId, resources){
+	if (resources instanceof Array) {
+	} else {
+		resources = Array(resources);
+	}
+
+	if(resources.length < 1){
+		error('msgErrorProject', 'No resources selected.');
+		return false;
+	}
+
+	var strPrjs = "[" + resources.join(",") + "]";
+
+	$.ajax({
+		type : "POST",
+		url : "http://planner/www/removeProjectResource.php",
+		data : {
+			projectId : projectId,
+			resourceIds : strPrjs
+		}
+	}).done(function(msg) {
+		try {
+			var answer = JSON.parse(msg);
+		} catch (error) {
+			console.log(msg + ' ' + error);
+			return false;
+		}
+
+		if (answer.result == 'TRUE') {
+
+			ProjectOnEdit = 0;
+			ProjectResourcesSelection = new Array();
+
+			$.ajax({
+				type : "POST",
+				url : "http://planner/www/getProjects.php",
+				data : {
+					taskId : 1
+				// so the request is taken as POST
+				}
+			}).done(function(resultProjects) {
+
+				try {
+					var jsonProjectsResult = JSON.parse(resultProjects);
+				} catch (error) {
+					error('msgErrorProject', error);
+					return false;
+				}
+
+				if (jsonProjectsResult.result == 'FALSE') {
+					error('msgErrorProject', jsonProjectsResult.message);
+					return false;
+				}
+
+				stringProjects = JSON.stringify(jsonProjectsResult.package.projects);
+				localStorage.setItem('backProjects', stringProjects);
+				projects = JSON.parse(localStorage.getItem('backProjects'));
+
+				oPrjTable.fnClearTable(0);
+				oPrjTable.fnAddData(projects);
+				oPrjTable.fnDraw();
+
+				var nNodes = oPrjTable.fnGetNodes(ProjectRowPos);
+
+				if (oPrjTable.fnIsOpen(nNodes)) {
+					oPrjTable.fnClose(nNodes);
+					oPrjTable.fnOpen(nNodes, projectDetails(nNodes), 'details');
+				} else {
+					oPrjTable.fnOpen(nNodes, projectDetails(nNodes), 'details');
+				}
+
+				notice('msgErrorProject', 'Resources removed succesfully.', true);
+			});
+
+		} else {
+			error('msgErrorProject', 'Error trying to add resources.');
+		}
+	}).fail(function() {
+		notice('msgErrorProject', 'Couldn\'t connect with server.', true);
+	});
+}
+
 function addResourcesToProject(projectId, resources) {
 	if (resources instanceof Array) {
 	} else {
 		resources = Array(resources);
+	}
+
+	if(resources.length < 1){
+		error('msgErrorProject', 'No resources selected.');
+		return false;
 	}
 
 	var strPrjs = "[" + resources.join(",") + "]";
@@ -361,7 +451,7 @@ function addResourcesToProject(projectId, resources) {
 			});
 
 		} else {
-			error('msgErrorProject', 'Error trying to remove.');
+			error('msgErrorProject', 'Error trying to add resources.');
 		}
 	}).fail(function() {
 		notice('msgErrorProject', 'Couldn\'t connect with server.', true);
