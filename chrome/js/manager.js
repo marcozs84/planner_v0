@@ -408,51 +408,59 @@ function GenerateCalendar(from,to){
 
 	var html = '';
 
-	console.log(fromWeek);
-	console.log(toWeek);
+	var startDate = new Date();
+	startDate.setDate(startDate.getDate() - startDate.getDay());
 
+	console.log(startDate.toString("yyyy-MM-dd"));
 	for(var i = fromWeek ; i <= toWeek ; i++){
 
-		date1 = new Date(fromDate);
-		date2 = new Date(fromDate + "+1d");
-		date3 = new Date(fromDate + "+2d");
-		date4 = new Date(fromDate + "+3d");
-		date5 = new Date(fromDate + "+4d");
+		var myDate=new Date();
+//		myDate.setDate(myDate.getDate());
+
+		date1 = startDate.getDate()+1;
+		date2 = startDate.getDate()+2;
+		date3 = startDate.getDate()+3;
+		date4 = startDate.getDate()+4;
+		date5 = startDate.getDate()+5;
 
 		html += '<table class="weekTable ui-widget" cellpadding="0" cellspacing="0" border="0">';
 		html += '		<caption>Week'+ i +'</caption>';
 		html += '<thead class="ui-widget-header">';
 		html += '<tr>';
-		html += '<th></th><th>'+date1+'</th><th>'+date2+'</th><th>'+date3+'</th><th>'+date4+'</th><th>'+date5+'</th>';
+		html += '<th></th><th>'+ 'Mon ' + date1 +'</th><th>'+ 'Tue ' + date2+'</th><th>'+ 'Wed ' + date3+'</th><th>'+ 'Thu ' + date4+'</th><th>'+ 'Fri ' + date5+'</th>';
 		html += '</tr>';
 		html += '</thead>';
 		html += '<tbody class="ui-widget-content">';
 
+		var prj = getProjectById(selectedProject);
 
-
-		html += '<tr>';
-		html += '<td class="devName" style="width:50px;">';
-		html += '{$timelines[$tm][\'name\']}';
-		html += '</td>';
-		html += '<td colspan="5">';
-		html += '<div class="father">';
-		html += '<div class="smallContainer" id="div_{$weekN}_{$tm}_1">';
-		html += '</div>';
-		html += '<div class="smallContainer" id="div_{$weekN}_{$tm}_2">';
-		html += '</div>';
-		html += '<div class="smallContainer" id="div_{$weekN}_{$tm}_3">';
-		html += '</div>';
-		html += '<div class="smallContainer" id="div_{$weekN}_{$tm}_4">';
-		html += '</div>';
-		html += '<div class="smallContainer" id="div_{$weekN}_{$tm}_5">';
-		html += '</div>';
-		html += '</div>';
-		html += '</td>';
-		html += '</tr>';
-
+		for(var j = 0 ; j < prj.timelines.length ; j++){
+			html += '<tr>';
+			html += '<td class="devName" style="width:50px;">';
+			html += prj.timelines[j]['name'];
+			html += '</td>';
+			html += '<td colspan="5">';
+			html += '<div class="father">';
+			html += '<div class="smallContainer" id="div_{$weekN}_{$tm}_1">';
+			html += '</div>';
+			html += '<div class="smallContainer" id="div_{$weekN}_{$tm}_2">';
+			html += '</div>';
+			html += '<div class="smallContainer" id="div_{$weekN}_{$tm}_3">';
+			html += '</div>';
+			html += '<div class="smallContainer" id="div_{$weekN}_{$tm}_4">';
+			html += '</div>';
+			html += '<div class="smallContainer" id="div_{$weekN}_{$tm}_5">';
+			html += '</div>';
+			html += '</div>';
+			html += '</td>';
+			html += '</tr>';
+		}
 
 		html += '</tbody>';
 		html += '</table>';
+
+		startDate.setDate(startDate.getDate() + 7);
+
 	}
 
 	$('#weeksHolder').append(html);
@@ -812,6 +820,12 @@ function initFromToCalendars() {
 	}).click(function() {
 		CalendarDateFrom = $('#calendarFrom').val();
 		CalendarDateTo = $('#calendarTo').val();
+
+		if(selectedProject == '' || selectedProject == 0){
+			alert("Please select a project before generating the calendar");
+			return false;
+		}
+
 		GenerateCalendar(CalendarDateFrom,CalendarDateTo);
 	});
 }

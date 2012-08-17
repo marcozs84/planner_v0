@@ -115,3 +115,14 @@ Date.prototype.getWeek = function() {
     var WN = 1 + Math.floor(ZBDoCY / 7);
     return WN;
 };
+
+function getDayNameByIndex(index,fullShort){
+	var days = new Array();
+	days[0] = "Sun";
+	days[1] = "Mon";
+	days[2] = "Tue";
+	days[3] = "Wed";
+	days[4] = "Thu";
+	days[5] = "Fri";
+	days[6] = "Sat";
+}
