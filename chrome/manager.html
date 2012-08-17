@@ -84,12 +84,16 @@ ul#icons span.ui-icon { float: left; margin: 0 4px; }
 	<div class="weeksWrapper">
 		<div>
 
-			<div class="dateFromTo">
+			<div class="dateFromTo" style="margin:5px;">
 			
-				<label for="from">From</label>
-				<input type="text" id="from" name="from"/>
-				<label for="to">to</label>
-				<input type="text" id="to" name="to"/>
+				<label for="calendarFrom">From</label>
+				<input type="text" id="calendarFrom" name="calendarTo"/>
+				<label for="calendarTo">to</label>
+				<input type="text" id="calendarTo" name="calendarTo"/>
+
+				<a href="javascript:;" id="btnFromToCalendar">Generate</a>
+
+				<p id="lblProjectName"></p>
 			
 			</div>
 

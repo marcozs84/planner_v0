@@ -374,6 +374,91 @@ function generateAll() {
 	}
 }
 
+/**
+ * CHROME
+ * @param from
+ * @param to
+ */
+function GenerateCalendar(from,to){
+
+	console.log(from);
+	console.log(to);
+
+	var fromDate = from.split(".");
+	fromDate = new Date(fromDate[2],fromDate[1] -1 ,fromDate[0]);
+	var fromWeek = fromDate.getWeek();
+
+	var toDate = to.split(".");
+	toDate = new Date(toDate[2],toDate[1] -1 ,toDate[0]);
+	var toWeek = toDate.getWeek();
+
+//	$.ajax({
+//		type : "POST",
+//		url : "http://planner/www/getDates.php",
+//		data : {
+//			id : 1
+//		}
+//	}).done(function(msg) {
+//
+//		console.log(msg);
+//
+//	}).fail(function() {
+//		notice('msgErrorProject', 'Couldn\'t connect with server.', true);
+//	});
+
+	var html = '';
+
+	console.log(fromWeek);
+	console.log(toWeek);
+
+	for(var i = fromWeek ; i <= toWeek ; i++){
+
+		date1 = new Date(fromDate);
+		date2 = new Date(fromDate + "+1d");
+		date3 = new Date(fromDate + "+2d");
+		date4 = new Date(fromDate + "+3d");
+		date5 = new Date(fromDate + "+4d");
+
+		html += '<table class="weekTable ui-widget" cellpadding="0" cellspacing="0" border="0">';
+		html += '		<caption>Week'+ i +'</caption>';
+		html += '<thead class="ui-widget-header">';
+		html += '<tr>';
+		html += '<th></th><th>'+date1+'</th><th>'+date2+'</th><th>'+date3+'</th><th>'+date4+'</th><th>'+date5+'</th>';
+		html += '</tr>';
+		html += '</thead>';
+		html += '<tbody class="ui-widget-content">';
+
+
+
+		html += '<tr>';
+		html += '<td class="devName" style="width:50px;">';
+		html += '{$timelines[$tm][\'name\']}';
+		html += '</td>';
+		html += '<td colspan="5">';
+		html += '<div class="father">';
+		html += '<div class="smallContainer" id="div_{$weekN}_{$tm}_1">';
+		html += '</div>';
+		html += '<div class="smallContainer" id="div_{$weekN}_{$tm}_2">';
+		html += '</div>';
+		html += '<div class="smallContainer" id="div_{$weekN}_{$tm}_3">';
+		html += '</div>';
+		html += '<div class="smallContainer" id="div_{$weekN}_{$tm}_4">';
+		html += '</div>';
+		html += '<div class="smallContainer" id="div_{$weekN}_{$tm}_5">';
+		html += '</div>';
+		html += '</div>';
+		html += '</td>';
+		html += '</tr>';
+
+
+		html += '</tbody>';
+		html += '</table>';
+	}
+
+	$('#weeksHolder').append(html);
+
+}
+
 function generateTimeline(devId) {
 
 	dev = getTimelineById(devId);
@@ -694,21 +779,39 @@ function updateTimelines() {
 	});
 }
 
+var CalendarDateFrom = '';
+var CalendarDateTo = '';
+
 function initFromToCalendars() {
-	$("#from").datepicker({
+	$("#calendarFrom").datepicker({
 		defaultDate : "+1w",
+		dateFormat : "d.m.yy",
 		changeMonth : true,
 		numberOfMonths : 3,
 		onSelect : function(selectedDate) {
-			$("#to").datepicker("option", "minDate", selectedDate);
+			CalendarDateFrom = selectedDate;
+			$("#calendarTo").datepicker("option", "minDate", selectedDate);
 		}
 	});
-	$("#to").datepicker({
+	$("#calendarFrom").datepicker('setDate', 'now()');
+
+	$("#calendarTo").datepicker({
 		defaultDate : "+1w",
+		dateFormat : "d.m.yy",
 		changeMonth : true,
 		numberOfMonths : 3,
 		onSelect : function(selectedDate) {
-			$("#from").datepicker("option", "maxDate", selectedDate);
+			CalendarDateTo = selectedDate;
+			$("#calendarFrom").datepicker("option", "maxDate", selectedDate);
 		}
+	});
+	$("#calendarTo").datepicker('setDate', '+3w');
+
+	$('#btnFromToCalendar').button({
+		text : "Generate"
+	}).click(function() {
+		CalendarDateFrom = $('#calendarFrom').val();
+		CalendarDateTo = $('#calendarTo').val();
+		GenerateCalendar(CalendarDateFrom,CalendarDateTo);
 	});
 }

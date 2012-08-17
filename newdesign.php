@@ -250,9 +250,9 @@ function openModal(view){
 
 	<div>
 
-	<h1>Planner</h1>
+		<h1>Planner</h1>
 
-	<?PHP //print $literal; ?>
+		<?PHP //print $literal; ?>
 
 	</div>
 

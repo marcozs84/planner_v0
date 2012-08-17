@@ -5,6 +5,8 @@ var ProjectRowPosTmp = 0;
 var ProjectResourcesSelection = new Array();
 var ProjectExistingResources = new Array();
 
+var selectedProject = 0;
+
 function renderButtonAddResource(aDataId) {
 	$('#btnAddResource_' + aDataId).button({
 		icons : {
@@ -133,6 +135,13 @@ function editProject(projectId) {
 
 	$("#btnAddProject").button("option", "disabled", false);
 
+}
+
+function selectProject(projectId) {
+	selectedProject = projectId;
+	var prj = getProjectById(projectId);
+	$('#lblProjectName').html(prj.name);
+	$("#projectsList").dialog("close");
 }
 
 function saveProject() {
@@ -566,6 +575,15 @@ function initProjectsList() {
 			"sTitle" : "End Date",
 			"sClass" : "center",
 			"bSortable" : false
+		}, {
+			"mDataProp" : null,
+			"sTitle" : "Select",
+			"sClass" : "left",
+			"bSearchable" : false,
+			"bSortable" : false,
+			"fnRender" : function(obj) {
+				return '<a href="javascript:;" onclick="selectProject(' + obj.aData.id + ')">Select project</a>';
+			}
 		}, {
 			"mDataProp" : null,
 			"sTitle" : "",
