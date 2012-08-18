@@ -1,0 +1,2 @@
+Validations:
+- When generating the Calendar, verify if the Project is in the same range than the time period selected.
