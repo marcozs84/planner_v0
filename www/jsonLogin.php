@@ -51,6 +51,8 @@ if (isset ( $_POST ['password'] ) && isset ( $_POST ['username'] )) {
 						"id" => $row ['id'],
 						"name" => $row ['name'],
 						"team" => $row ['teamId'],
+						"projectId" => $row ['projectId'],
+						"resourceId" => $row ['resourceId'],
 						"days" =>  Array(),
 						"tasks" => $tasksTimeline
 						);

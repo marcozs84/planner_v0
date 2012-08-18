@@ -47,6 +47,8 @@ if ($res) {
 			$addTimelines [] = Array(
 					"id" => $row ['id'],
 					"name" => $row ['name'],
+					"projectId" => $row ['projectId'],
+					"resourceId" => $row ['resourceId'],
 					"team" => $row ['teamId'],
 					"days" => Array(),
 					"tasks" => $tasksTimeline

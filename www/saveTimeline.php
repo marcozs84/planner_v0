@@ -6,13 +6,18 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['teamId'] )) {
 	$devId = trim ( $_POST ['devId'] );
 	$name = trim ( $_POST ['name'] );
 	$teamId = trim ( $_POST ['teamId'] );
+	$projectId = trim ( $_POST ['projectId'] );
+	$resourceId = trim ( $_POST ['resourceId'] );
 
 	if ($devId == 0) {
 		$query = "INSERT INTO
-			tbltimeline(`name`,`teamId`)
+			tbltimeline(`name`,`teamId`,`projectId`,`resourceId`)
 			VALUES(
 			'$name',
-			$teamId)";
+			$teamId,
+			$projectId,
+			$resourceId
+		)";
 
 		$res = $mysqli->query ( $query );
 
@@ -25,6 +30,8 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['teamId'] )) {
 							"id" => $timelineId,
 							"name" => $name,
 							"team" => $teamId,
+							"projectId" => $projectId,
+							"resourceId" => $resourceId,
 							"days" => Array(),
 							"tasks" => Array()
 							)
@@ -42,7 +49,12 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['teamId'] )) {
 		}
 	} else {
 		$query = "UPDATE
-			tbltimeline set `name` = '$name', `teamId` = $teamId WHERE id=$devId";
+			tbltimeline set
+			`name` = '$name',
+			`teamId` = $teamId,
+			`projectId` = $projectId,
+			`resourceId` = $resourceId
+		WHERE id=$devId";
 
 		$res = $mysqli->query ( $query );
 
@@ -54,6 +66,8 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['teamId'] )) {
 							"id" => $devId,
 							"name" => $name,
 							"team" => $teamId,
+							"projectId" => $projectId,
+							"resourceId" => $resourceId,
 							"days" => Array(),
 							"tasks" => Array()
 					)

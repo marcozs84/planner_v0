@@ -198,6 +198,11 @@ function getTimelineById(devId) {
 	return dev;
 }
 
+/**
+ *
+ * @param Id
+ * @returns {Project}
+ */
 function getProjectById(Id) {
 	// Searching Projects
 	var dev = 0;
@@ -360,7 +365,7 @@ function assignTask(task, devId) {
 
 	setAssigned(task.parentId, task.id, devId);
 
-	// generateTimeline(dev.id);
+	generateTimeline(dev.id);
 
 }
 

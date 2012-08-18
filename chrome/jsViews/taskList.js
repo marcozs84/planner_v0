@@ -32,7 +32,16 @@ function taskDetails(nTr) {
 		if (aData.splits[i].timelineId == 0) {
 			sOut += ' [<a href="javascript:;" onclick="assignTask(' + aData.splits[i].id + ','+ posRow +');" style="color:#fff; font-weight:normal;">Assign</a>]';
 		} else {
-			sOut += ' [' + getTimelineById(aData.splits[i].timelineId).name + ']';
+			var tmlne = getTimelineById(aData.splits[i].timelineId);
+			console.log(tmlne);
+			var rsce = getResourceById(tmlne.resourceId);
+			console.log(rsce);
+			if(rsce.initials == ''){
+				sOut += ' [' + rsce.name + ']';
+			}else{
+				sOut += ' [' + rsce.initials + ']';
+			}
+
 		}
 
 		sOut += '</td>';
@@ -109,7 +118,18 @@ function assignTask(splitId,rowPos){
 
 	$("#tskDevList").empty();
 
-	$.each(timeline, function() {
+	if(localStorage.getItem('selectedProject') == 0 || localStorage.getItem('selectedProject') == ''){
+		alert("Please select a Project first.");
+		return false;
+	};
+
+	var prjId = localStorage.getItem('selectedProject');
+
+	var prj = getProjectById(prjId);
+
+	console.log(prj);
+
+	$.each(prj.timelines, function() {
 		$("#tskDevList").append($("<option/>").attr("value", this.id).text(this.name));
 	});
 
@@ -426,7 +446,7 @@ function initTaskList() {
 		autoOpen : false,
 		modal : true,
 		buttons : [ {
-			text : "Divide",
+			text : "Assign",
 			click : function() {
 
 				var thisDialTask = this;
@@ -448,7 +468,7 @@ function initTaskList() {
 
 				$.ajax({
 					type : "POST",
-					url : "http://planner/www/saveSplit.php",
+					url : "http://planner/www/assignSplit.php",
 					data : {
 						splitId : aData.id,
 						parentId : aData.parentId,

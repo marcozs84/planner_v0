@@ -22,7 +22,7 @@ function getTasksJSON(){
 
 				$parentId = $row ['id'];
 
-				$querySplits = "select * from tblsplit where parentId = ".$parentId;
+				$querySplits = "select * from tblsplit where parentId = ".$parentId." AND dayId = 0";
 
 				$resSplit = $mysqli->query($querySplits);
 				$splits = Array();

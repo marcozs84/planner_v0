@@ -64,12 +64,13 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['duration'] )) {
 				$splitResult = Array(
 						"id" => $splitId,
 						"parentId" => $timelineId,
+						"timelineId" => 0,
 						"assigned" => 0,
 						"closed" => 0,
 						"startDate" => '',
 						"originalDate" => '',
-						"delayBeginning" => '',
-						"delay" => '',
+						"delayBeginning" => 0,
+						"delay" => 0,
 						"duration" => $duration,
 						);
 
