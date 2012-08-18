@@ -21,6 +21,24 @@ CREATE DATABASE `weekplanner`
 USE `weekplanner`;
 
 #
+# Structure for the `tblday` table : 
+#
+
+DROP TABLE IF EXISTS `tblday`;
+
+CREATE TABLE `tblday` (
+  `dayId` int(11) NOT NULL auto_increment,
+  `timelineId` int(11) default NULL,
+  `date` datetime default NULL,
+  `week` int(11) default NULL,
+  `day` int(11) default NULL,
+  `totalHours` int(11) default NULL,
+  `used` int(11) default NULL,
+  PRIMARY KEY  (`dayId`),
+  UNIQUE KEY `dayId` (`dayId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+#
 # Structure for the `tblproject` table : 
 #
 
@@ -72,6 +90,7 @@ CREATE TABLE `tblsplit` (
   `id` int(11) NOT NULL auto_increment,
   `parentId` int(11) default '0',
   `timelineId` int(11) default '0',
+  `dayId` int(11) default '0',
   `assigned` int(11) default '0',
   `closed` int(11) default '0',
   `startDate` datetime default NULL,
