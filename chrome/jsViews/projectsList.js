@@ -142,6 +142,8 @@ function selectProject(projectId) {
 	var prj = getProjectById(projectId);
 	$('#lblProjectName').html(prj.name);
 	$("#projectsList").dialog("close");
+
+	localStorage.setItem('selectedProject',selectedProject);
 }
 
 function saveProject() {

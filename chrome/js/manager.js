@@ -32,6 +32,17 @@ $(document).ready(function() {
 
 	initFromToCalendars();
 
+	OnProject = localStorage.getItem('selectedProject');
+
+	if(OnProject == '' || OnProject == 0){
+		$('#lblProjectName').html('No project selected.');
+	}else{
+		var prj = getProjectById(OnProject);
+		$('#lblProjectName').html(prj.name);
+	}
+
+
+
 	return false;
 
 	assignableTasks = Array();
@@ -411,8 +422,11 @@ function GenerateCalendar(from,to){
 	var startDate = new Date();
 	startDate.setDate(startDate.getDate() - startDate.getDay());
 
-	console.log(startDate.toString("yyyy-MM-dd"));
+	console.log(fromWeek,toWeek);
+
 	for(var i = fromWeek ; i <= toWeek ; i++){
+
+		var weekN = i;
 
 		var myDate=new Date();
 //		myDate.setDate(myDate.getDate());
@@ -432,24 +446,27 @@ function GenerateCalendar(from,to){
 		html += '</thead>';
 		html += '<tbody class="ui-widget-content">';
 
-		var prj = getProjectById(selectedProject);
+		var prj = getProjectById(localStorage.getItem('selectedProject'));
 
 		for(var j = 0 ; j < prj.timelines.length ; j++){
+
+			var tm = j;
+
 			html += '<tr>';
 			html += '<td class="devName" style="width:50px;">';
 			html += prj.timelines[j]['name'];
 			html += '</td>';
 			html += '<td colspan="5">';
 			html += '<div class="father">';
-			html += '<div class="smallContainer" id="div_{$weekN}_{$tm}_1">';
+			html += '<div class="smallContainer" id="div_' + weekN +'_'+ tm +'_1">';
 			html += '</div>';
-			html += '<div class="smallContainer" id="div_{$weekN}_{$tm}_2">';
+			html += '<div class="smallContainer" id="div_' + weekN +'_'+ tm +'_2">';
 			html += '</div>';
-			html += '<div class="smallContainer" id="div_{$weekN}_{$tm}_3">';
+			html += '<div class="smallContainer" id="div_' + weekN +'_'+ tm +'_3">';
 			html += '</div>';
-			html += '<div class="smallContainer" id="div_{$weekN}_{$tm}_4">';
+			html += '<div class="smallContainer" id="div_' + weekN +'_'+ tm +'_4">';
 			html += '</div>';
-			html += '<div class="smallContainer" id="div_{$weekN}_{$tm}_5">';
+			html += '<div class="smallContainer" id="div_' + weekN +'_'+ tm +'_5">';
 			html += '</div>';
 			html += '</div>';
 			html += '</td>';
@@ -461,9 +478,13 @@ function GenerateCalendar(from,to){
 
 		startDate.setDate(startDate.getDate() + 7);
 
+		$('#weeksHolder').append(html);
+
+		html = '';
+
 	}
 
-	$('#weeksHolder').append(html);
+
 
 }
 
@@ -745,6 +766,7 @@ function toolBarInit() {
 		}
 	}).click(function() {
 		localStorage.setItem('localSession', '');
+		localStorage.setItem('selectedProject', '');
 		window.location.href = window.location.href;
 	});
 
@@ -815,13 +837,15 @@ function initFromToCalendars() {
 	});
 	$("#calendarTo").datepicker('setDate', '+3w');
 
-	$('#btnFromToCalendar').button({
+	$('#btnGenerateCalendar').button({
 		text : "Generate"
 	}).click(function() {
 		CalendarDateFrom = $('#calendarFrom').val();
 		CalendarDateTo = $('#calendarTo').val();
 
-		if(selectedProject == '' || selectedProject == 0){
+		OnProject = localStorage.getItem('selectedProject');
+
+		if(OnProject == '' || OnProject == 0){
 			alert("Please select a project before generating the calendar");
 			return false;
 		}
