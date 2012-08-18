@@ -41,8 +41,6 @@ $(document).ready(function() {
 		$('#lblProjectName').html(prj.name);
 	}
 
-
-
 	return false;
 
 	assignableTasks = Array();
