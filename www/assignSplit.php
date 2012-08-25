@@ -1,6 +1,55 @@
 <?php
 include_once ('tools.php');
 
+function assignSplitToTimeline(splitId,timelineId){
+
+	$queryFreeDays = <<<xxx
+	SELECT
+	  tblday.dayId,
+	  tblday.timelineId,
+	  tblday.`date`,
+	  tblday.week,
+	  tblday.`day`,
+	  tblday.totalHours,
+	  tblday.used
+	FROM
+	  tblday
+	WHERE (`tblday`.totalHours - `tblday`.`used`) > 0
+xxx;
+
+	$res = $mysqli->query ( $query );
+
+	$objArray = Array();
+
+	if ($res) {
+
+		while ( $row = $res->fetch_assoc () ) {
+
+			$objArray[$row ['dayId']] = Array(
+					"id" => $row ['dayId'],
+					"timelineId" => $row ['timelineId'],
+					"date" => $row ['date'],
+					"week" => $row ['week'],
+					"day" => $row ['day'],
+					"totalHours" => $row ['totalHours'],
+					"used" => $row ['used']
+					);
+
+
+		}
+
+	} else {
+		$resultJSON = Array("result" => "FALSE",
+				"message" => "Update query failed when updating. Error: ".$mysqli->error. " Query: ".$query ,
+				"package" => "null"
+		);
+
+		print json_encode($resultJSON);
+	}
+
+
+}
+
 if (isset ( $_POST ['splitId'] ) && isset ( $_POST ['duration'] )) {
 
 	$splitId = trim ( $_POST ['splitId'] );
@@ -33,10 +82,6 @@ WHERE id={$splitId}
 xxx;
 
 	$res = $mysqli->query ( $query );
-
-
-
-
 
 	if ($res) {
 		include_once ('getTasks.php');
