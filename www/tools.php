@@ -1,5 +1,16 @@
 <?php
 
+include_once ('Logging.php');
+
+function writelog($message){
+	$log = new Logging();
+	$log->lfile('tmp/mylog.txt');
+
+	$log->lwrite($message);
+
+	$log->lclose();
+}
+
 $con = @mysqli_connect('localhost','root','');
 
 if($con){

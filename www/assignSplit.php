@@ -1,7 +1,7 @@
 <?php
 include_once ('tools.php');
 
-function assignSplitToTimeline(splitId,timelineId){
+function assignSplitToTimeline(&$mysqli,$POST,$timelineId){
 
 	$queryFreeDays = <<<xxx
 	SELECT
@@ -17,11 +17,17 @@ function assignSplitToTimeline(splitId,timelineId){
 	WHERE (`tblday`.totalHours - `tblday`.`used`) > 0
 xxx;
 
-	$res = $mysqli->query ( $query );
+	$res = $mysqli->query ( $queryFreeDays );
 
 	$objArray = Array();
 
 	if ($res) {
+
+		if ($res->num_rows > 0) {
+			$lastDate = '';
+		}
+
+		$availableTime = 0;
 
 		while ( $row = $res->fetch_assoc () ) {
 
@@ -32,11 +38,46 @@ xxx;
 					"week" => $row ['week'],
 					"day" => $row ['day'],
 					"totalHours" => $row ['totalHours'],
-					"used" => $row ['used']
+					"used" => $row ['used'],
+
+					"typeQuery" => "upd"
 					);
 
+			$availableTime += (((int) $row ['totalHours'] - (int) $row ['used']) > 0) ? ((int) $row ['totalHours'] - (int) $row ['used']) : 0 ;
+
+			$lastDate = '';
+		}
+
+		writelog(print_r("\$POST['duration'] = ". $POST['duration'], true));
+		writelog(print_r("\$availableTime = ". $availableTime,true));
+
+		if($availableTime < $POST['duration']){
+			$needHrs = $POST['duration'] - $availableTime;
+			$needHrs = ceil($needHrs / 8);
+
+			for($i = 0 ; $i < $needHrs ; $i++){
+				$objArray[$row ['dayId']] = Array(
+						"id" => 0,
+						"timelineId" => $POST['timelineId'],
+						"date" => $row ['date'],
+						"week" => $row ['week'],
+						"day" => $row ['day'],
+						"totalHours" => $row ['totalHours'],
+						"used" => $row ['used'],
+
+						"typeQuery" => "ins"
+				);
+			}
+
+		}else{
+			writelog(print_r("\$availableTime = ". $availableTime,true));
+		}
+
+		for($i = 0 ; $i < count($objArray) ; $i++){
 
 		}
+
+		writelog(print_r($objArray,true));
 
 	} else {
 		$resultJSON = Array("result" => "FALSE",
@@ -84,6 +125,9 @@ xxx;
 	$res = $mysqli->query ( $query );
 
 	if ($res) {
+
+		assignSplitToTimeline($mysqli,$_POST,$timelineId);
+
 		include_once ('getTasks.php');
 	} else {
 		$resultJSON = Array("result" => "FALSE",
