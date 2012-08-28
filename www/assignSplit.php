@@ -1,6 +1,8 @@
 <?php
 include_once ('tools.php');
 
+writelog("============================================= INIT ASSIGN SPLIT =============================================");
+
 function assignSplitToTimeline(&$mysqli,$POST,$timelineId){
 
 	$queryFreeDays = <<<xxx
@@ -23,54 +25,110 @@ xxx;
 
 	if ($res) {
 
-		if ($res->num_rows > 0) {
-			$lastDate = '';
-		}
-
 		$availableTime = 0;
 
-		while ( $row = $res->fetch_assoc () ) {
+		if ($res->num_rows < 1) {
+			$queryPrjTime = <<<xxx
+				SELECT
+				  tblproject.id,
+				  tblproject.startDate AS startDate,
+				  tblproject.endDate AS endDate
+				FROM
+				  tblproject
+				WHERE `tblproject`.id= (select tbltimeline.projectId FROM tbltimeline WHERE tbltimeline.id = {$timelineId})
+xxx;
 
-			$objArray[$row ['dayId']] = Array(
-					"id" => $row ['dayId'],
-					"timelineId" => $row ['timelineId'],
-					"date" => $row ['date'],
-					"week" => $row ['week'],
-					"day" => $row ['day'],
-					"totalHours" => $row ['totalHours'],
-					"used" => $row ['used'],
+			$resPrjTime = $mysqli->query ( $queryPrjTime );
 
-					"typeQuery" => "upd"
-					);
+			if(!$resPrjTime){
+				writelog("############## ERROR IN QUERY");
+				writelog($queryPrjTime);
+				$resultJSON = Array("result" => "FALSE",
+						"message" => "Error trying to get the project based on timelineId. Error: ".$mysqli->error. " Query: ".$queryPrjTime ,
+						"package" => "null"
+				);
+				print json_encode($resultJSON);
+				die();
+			}
 
-			$availableTime += (((int) $row ['totalHours'] - (int) $row ['used']) > 0) ? ((int) $row ['totalHours'] - (int) $row ['used']) : 0 ;
+			if ($resPrjTime->num_rows > 1) {
+				writelog("############## WARNING, BIG EXCEPTION, MORE THAN 1 PROJECT IS BEING RETURNED PER TIMELINEID");
+			}
 
-			$lastDate = '';
-		}
+			while ( $row = $resPrjTime->fetch_assoc () ) {
+				$lastDate = $row['startDate'];
+			}
 
-		writelog(print_r("\$POST['duration'] = ". $POST['duration'], true));
-		writelog(print_r("\$availableTime = ". $availableTime,true));
+			$lastDate = date("d-m-Y",strtotime("$lastDate - 1 day"));
 
-		if($availableTime < $POST['duration']){
-			$needHrs = $POST['duration'] - $availableTime;
-			$needHrs = ceil($needHrs / 8);
+		}else{
+			while ( $row = $res->fetch_assoc () ) {
 
-			for($i = 0 ; $i < $needHrs ; $i++){
 				$objArray[$row ['dayId']] = Array(
-						"id" => 0,
-						"timelineId" => $POST['timelineId'],
+						"id" => $row ['dayId'],
+						"timelineId" => $row ['timelineId'],
 						"date" => $row ['date'],
 						"week" => $row ['week'],
 						"day" => $row ['day'],
 						"totalHours" => $row ['totalHours'],
 						"used" => $row ['used'],
 
+						"typeQuery" => "upd"
+				);
+
+				$availableTime += (((int) $row ['totalHours'] - (int) $row ['used']) > 0) ? ((int) $row ['totalHours'] - (int) $row ['used']) : 0 ;
+
+				$lastDate = $row ['date'];
+			}
+		}
+
+		writelog("\$lastDate = ". $lastDate);
+		writelog("\$POST['duration'] = ". $POST['duration']);
+		writelog("=============================================");
+
+		writelog("\$availableTime = ". $availableTime);
+		writelog("\$POST['duration'] = ". $POST['duration']);
+
+		if($availableTime < $POST['duration']){
+
+			writelog("generating more days");
+
+			$needHrs = $POST['duration'] - $availableTime;
+			$needHrs = ceil($needHrs / 8);
+
+			for($i = 0 ; $i < $needHrs ; $i++){
+
+				$lastDate = date("d-m-Y",strtotime("$lastDate + 1 day"));
+				writelog("\$lastDate = ". $lastDate);
+
+				$dayN = date("w",strtotime("$lastDate"));
+				if(($dayN < 1)){
+					$lastDate = date("d-m-Y",strtotime("$lastDate + 1 day"));
+					writelog("\$lastDate UPDATED avoid Weekend= ". $lastDate);
+				}elseif ($dayN > 5){
+					$lastDate = date("d-m-Y",strtotime("$lastDate + 2 day"));
+					writelog("\$lastDate UPDATED avoid Weekend= ". $lastDate);
+				}
+
+				$date2 = date("Y-m-d",strtotime("$lastDate"));
+				$weekN = date("W",strtotime("$lastDate"));
+				$dayN = date("w",strtotime("$lastDate"));
+
+				$objArray[] = Array(
+						"id" => 0,
+						"timelineId" => $POST['timelineId'],
+						"date" => $date2,
+						"week" => $weekN,
+						"day" => $dayN,
+						"totalHours" => 8,
+						"used" => 0,
+
 						"typeQuery" => "ins"
 				);
 			}
 
 		}else{
-			writelog(print_r("\$availableTime = ". $availableTime,true));
+			writelog("days covered with existing");
 		}
 
 		for($i = 0 ; $i < count($objArray) ; $i++){

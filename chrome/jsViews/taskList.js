@@ -524,6 +524,8 @@ function initTaskList() {
 
 				});
 
+				updateTimelines();
+
 				 toAssignSplitId = 0;
 			}
 		}, {

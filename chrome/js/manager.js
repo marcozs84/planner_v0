@@ -39,7 +39,21 @@ $(document).ready(function() {
 	}else{
 		var prj = getProjectById(OnProject);
 		$('#lblProjectName').html(prj.name);
+
+		selectProject(OnProject);
 	}
+
+//	generateAll();
+//
+//	$('.father > div').grrrid('justify', 'height');
+//
+//	assignHeights();
+//
+//	$('.finalCont').dotdotdot({
+//		wrapper : 'div',
+//		wrap : "word",
+//		watch : true
+//	});
 
 	return false;
 
@@ -352,6 +366,12 @@ function setClosed(parentId, id) {
 
 var elements22 = Array();
 
+/**
+ * In Fact this assigns a Split
+ * @param task
+ * @param devId
+ * @returns {Boolean}
+ */
 function assignTask(task, devId) {
 
 	if (task.assigned == 1) {
@@ -423,15 +443,20 @@ function GenerateCalendar(from,to){
 	var html = '';
 
 	var startDate = new Date();
-	startDate.setDate(startDate.getDate() - startDate.getDay());
+	startDate.setDate(fromDate.getDate() - fromDate.getDay());
 
 	console.log(fromWeek,toWeek);
+
+	var prj = getProjectById(localStorage.getItem('selectedProject'));
+	var dateday = new Date();
+//
+//	var prjTimelines = prj.timelines;
 
 	for(var i = fromWeek ; i <= toWeek ; i++){
 
 		var weekN = i;
 
-		var myDate=new Date();
+		var myDate = new Date();
 //		myDate.setDate(myDate.getDate());
 
 		date1 = startDate.getDate()+1;
@@ -449,15 +474,13 @@ function GenerateCalendar(from,to){
 		html += '</thead>';
 		html += '<tbody class="ui-widget-content">';
 
-		var prj = getProjectById(localStorage.getItem('selectedProject'));
-
-		for(var j = 0 ; j < prj.timelines.length ; j++){
+		for(var j = 0 ; j < timeline.length ; j++){
 
 			var tm = j;
 
 			html += '<tr>';
 			html += '<td class="devName" style="width:50px;">';
-			html += prj.timelines[j]['name'];
+			html += timeline[j].name;
 			html += '</td>';
 			html += '<td colspan="5">';
 			html += '<div class="father">';
@@ -474,12 +497,48 @@ function GenerateCalendar(from,to){
 			html += '</div>';
 			html += '</td>';
 			html += '</tr>';
+
+			var day = new Object();
+
+			for(var k = 1 ; k < 6 ; k++){
+
+				kt = k - 1;
+//				dateday = date("d/m/Y",strtotime("$dateSt + $kt day"));
+
+//				dateday = startDate.getDate()+k;
+
+				var day = new Object();
+
+				startDate.setDate(startDate.getDate() + 1);
+
+				day.date = startDate.getFullYear() + "/" + startDate.getMonth() + "/" + startDate.getDate();
+				day.week = weekN;
+				day.day = k;
+				day.hours = 8;
+				day.used = 0 ;
+				day.tasks = Array();
+
+				timeline[j].days.push(day);
+
+				var prjStartDate = strToDate(prj.startDate);
+				var prjEndDate = strToDate(prj.endDate);
+
+				console.log(startDate);
+				console.log(prjStartDate);
+				console.log(prjEndDate);
+
+				if((startDate >= prj.startDate) && (startDate <= prj.endDate)){
+					console.log("is in range");
+					timeline[tm].days.push(day);
+				}
+			}
+
 		}
 
 		html += '</tbody>';
 		html += '</table>';
 
-		startDate.setDate(startDate.getDate() + 7);
+		startDate.setDate(startDate.getDate() + 2);
 
 		$('#weeksHolder').append(html);
 
@@ -487,7 +546,8 @@ function GenerateCalendar(from,to){
 
 	}
 
-
+	console.log("prj.timelines");
+	console.log(timeline);
 
 }
 
@@ -540,6 +600,7 @@ function generateTimeline(devId) {
 function buildTask(task) {
 
 	// Search for first available day
+	var objI = 0;
 	for ( var i = 0; i < dev.days.length; i++) {
 		if (task.startDate == '') {
 			available = dev.days[i].hours - dev.days[i].used;
@@ -783,6 +844,9 @@ function toolBarInit() {
 	});
 }
 
+/**
+ * CHROME
+ */
 function updateTimelines() {
 	$.ajax({
 		type : "POST",
@@ -798,16 +862,12 @@ function updateTimelines() {
 
 		if (jsonTimelinesResult.result == 'FALSE') {
 			alert(jsonTimelinesResult.message);
-			return false
+			return false;
 		}
 
 		stringTimelines = JSON.stringify(jsonTimelinesResult.package.timelines);
 		localStorage.setItem('backTimelines', stringTimelines);
 		timeline = JSON.parse(localStorage.getItem('backTimelines'));
-
-		oDevTable.fnClearTable(0);
-		oDevTable.fnAddData(timeline);
-		oDevTable.fnDraw();
 
 	});
 }

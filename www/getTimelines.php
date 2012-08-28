@@ -4,7 +4,17 @@ include_once ('tools.php');
 /**
  * ************************* GETTING TIMEINES *****************************
  */
-$query = "select * from tbltimeline";
+$query = <<<xxx
+select
+	tbltimeline.id as id,
+	tbltimeline.projectId as projectId,
+	tbltimeline.resourceId as resourceId,
+	tbltimeline.teamId as teamId,
+	tblresource.name as name
+from
+tbltimeline
+	INNER JOIN tblresource on tbltimeline.resourceId = tblresource.id
+xxx;
 
 $res = $mysqli->query ( $query );
 

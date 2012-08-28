@@ -140,6 +140,12 @@ function editProject(projectId) {
 function selectProject(projectId) {
 	selectedProject = projectId;
 	var prj = getProjectById(projectId);
+
+	$("#calendarFrom").datepicker("option", "minDate", prj.startDate);
+	$("#calendarFrom").datepicker("option", "maxDate", prj.endDate);
+	$("#calendarTo").datepicker("option", "minDate", prj.startDate);
+	$("#calendarTo").datepicker("option", "maxDate", prj.endDate);
+
 	$('#lblProjectName').html(prj.name);
 	$("#projectsList").dialog("close");
 

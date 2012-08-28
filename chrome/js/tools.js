@@ -126,3 +126,9 @@ function getDayNameByIndex(index,fullShort){
 	days[5] = "Fri";
 	days[6] = "Sat";
 }
+
+function strToDate(str){
+	var n = str.split(".");
+	var nDate = new Date(n[2],n[1]+1,n[0]);
+	return nDate;
+}
