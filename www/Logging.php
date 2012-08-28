@@ -26,6 +26,7 @@ class Logging {
 		// define current time and suppress E_WARNING if using the system TZ settings
 		// (don't forget to set the INI setting date.timezone)
 		$time = @date('[d/M/Y:H:i:s]');
+		$time = @date('[m.d:H:i:s]');
 		// write current time, script name and message to the log file
 		fwrite($this->fp, "$time ($script_name) $message" . PHP_EOL);
 	}
