@@ -422,48 +422,51 @@ function GenerateCalendar(from,to){
 	fromDate = new Date(fromDate[2],fromDate[1] -1 ,fromDate[0]);
 	var fromWeek = fromDate.getWeek();
 
+	console.log("fromDate: " + fromDate);
+	console.log("fromWeek: " + fromWeek);
+	console.log("fromWeekDay: " + fromDate.getDay());
+
 	var toDate = to.split(".");
 	toDate = new Date(toDate[2],toDate[1] -1 ,toDate[0]);
 	var toWeek = toDate.getWeek();
 
-//	$.ajax({
-//		type : "POST",
-//		url : "http://planner/www/getDates.php",
-//		data : {
-//			id : 1
-//		}
-//	}).done(function(msg) {
-//
-//		console.log(msg);
-//
-//	}).fail(function() {
-//		notice('msgErrorProject', 'Couldn\'t connect with server.', true);
-//	});
+	console.log("toDate: " + toDate);
+	console.log("toWeek: " + toWeek);
 
 	var html = '';
 
 	var startDate = new Date();
-	startDate.setDate(fromDate.getDate() - fromDate.getDay());
+	startDate = fromDate;
+
+	if(fromDate.getDay() > 1){
+		startDate.setDate(startDate.getDate() - (fromDate.getDay()-1));
+	}
 
 	console.log(fromWeek,toWeek);
 
+	console.log("startDate:" + startDate);
+
 	var prj = getProjectById(localStorage.getItem('selectedProject'));
 	var dateday = new Date();
-//
-//	var prjTimelines = prj.timelines;
 
 	for(var i = fromWeek ; i <= toWeek ; i++){
 
 		var weekN = i;
 
-		var myDate = new Date();
-//		myDate.setDate(myDate.getDate());
+		var headerDate = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+//		headerDate = startDate;
 
-		date1 = startDate.getDate()+1;
-		date2 = startDate.getDate()+2;
-		date3 = startDate.getDate()+3;
-		date4 = startDate.getDate()+4;
-		date5 = startDate.getDate()+5;
+		console.log("week: " + i + " startDate:" + startDate);
+
+		date1 = headerDate.getDate();
+		headerDate.setDate(headerDate.getDate() + 1);
+		date2 = headerDate.getDate();
+		headerDate.setDate(headerDate.getDate() + 1);
+		date3 = headerDate.getDate();
+		headerDate.setDate(headerDate.getDate() + 1);
+		date4 = headerDate.getDate();
+		headerDate.setDate(headerDate.getDate() + 1);
+		date5 = headerDate.getDate();
 
 		html += '<table class="weekTable ui-widget" cellpadding="0" cellspacing="0" border="0">';
 		html += '		<caption>Week'+ i +'</caption>';
@@ -476,6 +479,8 @@ function GenerateCalendar(from,to){
 
 		for(var j = 0 ; j < timeline.length ; j++){
 
+			var timelineDate = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+
 			var tm = j;
 
 			html += '<tr>';
@@ -484,34 +489,14 @@ function GenerateCalendar(from,to){
 			html += '</td>';
 			html += '<td colspan="5">';
 			html += '<div class="father">';
-			html += '<div class="smallContainer" id="div_' + weekN +'_'+ tm +'_1">';
-			html += '</div>';
-			html += '<div class="smallContainer" id="div_' + weekN +'_'+ tm +'_2">';
-			html += '</div>';
-			html += '<div class="smallContainer" id="div_' + weekN +'_'+ tm +'_3">';
-			html += '</div>';
-			html += '<div class="smallContainer" id="div_' + weekN +'_'+ tm +'_4">';
-			html += '</div>';
-			html += '<div class="smallContainer" id="div_' + weekN +'_'+ tm +'_5">';
-			html += '</div>';
-			html += '</div>';
-			html += '</td>';
-			html += '</tr>';
-
-			var day = new Object();
 
 			for(var k = 1 ; k < 6 ; k++){
 
 				kt = k - 1;
-//				dateday = date("d/m/Y",strtotime("$dateSt + $kt day"));
-
-//				dateday = startDate.getDate()+k;
 
 				var day = new Object();
 
-				startDate.setDate(startDate.getDate() + 1);
-
-				day.date = startDate.getFullYear() + "/" + startDate.getMonth() + "/" + startDate.getDate();
+				day.date = timelineDate.getFullYear() + "/" + (timelineDate.getMonth() + 1) + "/" + timelineDate.getDate();
 				day.week = weekN;
 				day.day = k;
 				day.hours = 8;
@@ -523,26 +508,37 @@ function GenerateCalendar(from,to){
 				var prjStartDate = strToDate(prj.startDate);
 				var prjEndDate = strToDate(prj.endDate);
 
-				console.log(startDate);
-				console.log(prjStartDate);
-				console.log(prjEndDate);
+//				console.log(startDate);
+//				console.log(prjStartDate);
+//				console.log(prjEndDate);
 
-				if((startDate >= prj.startDate) && (startDate <= prj.endDate)){
+				if((timelineDate >= prjStartDate) && (timelineDate <= prjEndDate)){
 					console.log("is in range");
 					timeline[tm].days.push(day);
 				}
-			}
 
+				html += '<div class="smallContainer" id="div_' + weekN +'_'+ tm +'_'+ k +'">';
+				html += '</div>';
+
+				timelineDate.setDate(timelineDate.getDate() + 1);
+
+			}
+			html += '</div>';
+			html += '</td>';
+			html += '</tr>';
 		}
 
 		html += '</tbody>';
 		html += '</table>';
 
-		startDate.setDate(startDate.getDate() + 2);
-
 		$('#weeksHolder').append(html);
 
 		html = '';
+
+		console.log("last startDate:" + startDate);
+		startDate.setDate(startDate.getDate() + 7);
+		console.log(startDate);
+		console.log("-----------");
 
 	}
 
@@ -881,6 +877,7 @@ function initFromToCalendars() {
 		dateFormat : "d.m.yy",
 		changeMonth : true,
 		numberOfMonths : 3,
+		beforeShowDay: $.datepicker.noWeekends,
 		onSelect : function(selectedDate) {
 			CalendarDateFrom = selectedDate;
 			$("#calendarTo").datepicker("option", "minDate", selectedDate);
@@ -893,6 +890,7 @@ function initFromToCalendars() {
 		dateFormat : "d.m.yy",
 		changeMonth : true,
 		numberOfMonths : 3,
+		beforeShowDay: $.datepicker.noWeekends,
 		onSelect : function(selectedDate) {
 			CalendarDateTo = selectedDate;
 			$("#calendarFrom").datepicker("option", "maxDate", selectedDate);

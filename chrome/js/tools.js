@@ -127,8 +127,22 @@ function getDayNameByIndex(index,fullShort){
 	days[6] = "Sat";
 }
 
+/**
+ * Transforms form a text into a JS Date Obj.
+ * @param str Regular date dd/mm/yyyy
+ * @returns {Date}
+ */
 function strToDate(str){
 	var n = str.split(".");
-	var nDate = new Date(n[2],n[1]+1,n[0]);
+	var nDate = new Date(n[2],n[1]-1,n[0]);
 	return nDate;
+}
+
+Date.prototype.addDays = function (dias){
+	var fecha1 = new Date(2011, 1,20);
+	var fecha2 = new Date(2011, 1,21);
+	var diferencia = fecha2.getTime() - fecha1.getTime();
+	var luego = new Date();
+	luego.setTime( this.getTime() + (dias * diferencia )  );
+	return luego;
 }

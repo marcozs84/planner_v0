@@ -146,6 +146,9 @@ function selectProject(projectId) {
 	$("#calendarTo").datepicker("option", "minDate", prj.startDate);
 	$("#calendarTo").datepicker("option", "maxDate", prj.endDate);
 
+	$('#calendarFrom').val(prj.startDate);
+	$('#calendarTo').val(prj.endDate);
+
 	$('#lblProjectName').html(prj.name);
 	$("#projectsList").dialog("close");
 
@@ -481,6 +484,7 @@ function initPrjAddFromToCalendars() {
 		dateFormat : "d.m.yy",
 		changeMonth : true,
 		numberOfMonths : 3,
+		beforeShowDay: $.datepicker.noWeekends,
 		onSelect : function(selectedDate) {
 			$("#prjEndDate").datepicker("option", "minDate", selectedDate);
 		}
@@ -490,6 +494,7 @@ function initPrjAddFromToCalendars() {
 		dateFormat : "d.m.yy",
 		changeMonth : true,
 		numberOfMonths : 3,
+		beforeShowDay: $.datepicker.noWeekends,
 		onSelect : function(selectedDate) {
 			$("#prjStartDate").datepicker("option", "maxDate", selectedDate);
 		}
