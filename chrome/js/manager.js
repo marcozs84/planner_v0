@@ -1,4 +1,5 @@
 var assignableTasks = Array();
+var dev = new Object();
 
 $(document).ready(function() {
 
@@ -42,18 +43,6 @@ $(document).ready(function() {
 
 		selectProject(OnProject);
 	}
-
-//	generateAll();
-//
-//	$('.father > div').grrrid('justify', 'height');
-//
-//	assignHeights();
-//
-//	$('.finalCont').dotdotdot({
-//		wrapper : 'div',
-//		wrap : "word",
-//		watch : true
-//	});
 
 	return false;
 
@@ -404,7 +393,10 @@ function removeTaskFromTimeline(taskId, devId) {
 
 function generateAll() {
 	for ( var i = 0; i < timeline.length; i++) {
+		console.log("Generating Timeline: " + timeline[i].id);
+		console.log(timeline[i]);
 		generateTimeline(timeline[i].id);
+		console.log("================================================");
 	}
 }
 
@@ -415,23 +407,23 @@ function generateAll() {
  */
 function GenerateCalendar(from,to){
 
-	console.log(from);
-	console.log(to);
+//	console.log(from);
+//	console.log(to);
 
 	var fromDate = from.split(".");
 	fromDate = new Date(fromDate[2],fromDate[1] -1 ,fromDate[0]);
 	var fromWeek = fromDate.getWeek();
 
-	console.log("fromDate: " + fromDate);
-	console.log("fromWeek: " + fromWeek);
-	console.log("fromWeekDay: " + fromDate.getDay());
+//	console.log("fromDate: " + fromDate);
+//	console.log("fromWeek: " + fromWeek);
+//	console.log("fromWeekDay: " + fromDate.getDay());
 
 	var toDate = to.split(".");
 	toDate = new Date(toDate[2],toDate[1] -1 ,toDate[0]);
 	var toWeek = toDate.getWeek();
 
-	console.log("toDate: " + toDate);
-	console.log("toWeek: " + toWeek);
+//	console.log("toDate: " + toDate);
+//	console.log("toWeek: " + toWeek);
 
 	var html = '';
 
@@ -442,9 +434,9 @@ function GenerateCalendar(from,to){
 		startDate.setDate(startDate.getDate() - (fromDate.getDay()-1));
 	}
 
-	console.log(fromWeek,toWeek);
-
-	console.log("startDate:" + startDate);
+//	console.log(fromWeek,toWeek);
+//
+//	console.log("startDate:" + startDate);
 
 	var prj = getProjectById(localStorage.getItem('selectedProject'));
 	var dateday = new Date();
@@ -456,7 +448,7 @@ function GenerateCalendar(from,to){
 		var headerDate = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
 //		headerDate = startDate;
 
-		console.log("week: " + i + " startDate:" + startDate);
+//		console.log("week: " + i + " startDate:" + startDate);
 
 		date1 = headerDate.getDate();
 		headerDate.setDate(headerDate.getDate() + 1);
@@ -513,11 +505,11 @@ function GenerateCalendar(from,to){
 //				console.log(prjEndDate);
 
 				if((timelineDate >= prjStartDate) && (timelineDate <= prjEndDate)){
-					console.log("is in range");
+//					console.log("is in range");
 					timeline[tm].days.push(day);
 				}
 
-				html += '<div class="smallContainer" id="div_' + weekN +'_'+ tm +'_'+ k +'">';
+				html += '<div class="smallContainer" id="div_' + weekN +'_'+ timeline[j].id +'_'+ k +'">';
 				html += '</div>';
 
 				timelineDate.setDate(timelineDate.getDate() + 1);
@@ -535,15 +527,24 @@ function GenerateCalendar(from,to){
 
 		html = '';
 
-		console.log("last startDate:" + startDate);
+//		console.log("last startDate:" + startDate);
 		startDate.setDate(startDate.getDate() + 7);
-		console.log(startDate);
-		console.log("-----------");
+//		console.log(startDate);
+//		console.log("-----------");
 
 	}
 
-	console.log("prj.timelines");
-	console.log(timeline);
+//	console.log("prj.timelines");
+//	console.log(timeline);
+
+	generateAll();
+	$('.father > div').grrrid('justify', 'height');
+	assignHeights();
+	$('.finalCont').dotdotdot({
+		wrapper : 'div',
+		wrap : "word",
+		watch : true
+	});
 
 }
 
@@ -556,7 +557,7 @@ function generateTimeline(devId) {
 	var fTasks = Array();
 
 	for ( var i = 0; i < tasks.length; i++) {
-		if (tasks[i].startDate != '') {
+		if ((tasks[i].startDate != '') && (tasks[i].startDate != '0000-00-00 00:00:00')) {
 			fTasks.push(tasks[i]);
 		} else {
 			dTasks.push(tasks[i]);
@@ -583,10 +584,13 @@ function generateTimeline(devId) {
 
 	var task = null;
 
+	console.log("building FIXED tasks: " + fTasks.length);
 	for ( var k = 0; k < fTasks.length; k++) {
 		task = fTasks[k];
 		buildTask(task);
 	}
+
+	console.log("building DYNAMIC tasks: " + dTasks.length);
 	for ( var k = 0; k < dTasks.length; k++) {
 		task = dTasks[k];
 		buildTask(task);
@@ -597,8 +601,10 @@ function buildTask(task) {
 
 	// Search for first available day
 	var objI = 0;
+	console.log("building task: ");
+	console.log(task);
 	for ( var i = 0; i < dev.days.length; i++) {
-		if (task.startDate == '') {
+		if (task.startDate == '' || task.startDate == '0000-00-00 00:00:00') {
 			available = dev.days[i].hours - dev.days[i].used;
 			hrsTotal = dev.days[i].hours;
 			if (available > 0) {
@@ -624,6 +630,7 @@ function buildTask(task) {
 		}
 	}
 
+	var timeId = dev.id;
 	var dayCounter = objI;
 	var dayAvailable = 0;
 	var unassigned = task.duration;
@@ -633,6 +640,7 @@ function buildTask(task) {
 	var isDelay = 0;
 
 	var oDay = 0;
+
 	while (unassigned > 0) {
 		tTask = new Split(task);
 		dayAvailable = dev.days[dayCounter].hours - dev.days[dayCounter].used;
@@ -675,7 +683,7 @@ function buildTask(task) {
 
 		$('#div_' + oDay.week + '_' + timeId + '_' + oDay.day).append(
 				'<div><table id="tbl_' + sufix + '" cellspacing="0" cellpadding="0" border="0" class="task ' + classes + '" style="'
-						+ '"><tr><td class="taskName" style="background-color:' + backColor // + ';
+						+ '"><tr><td class="taskName" style="background-color:#' + backColor // + ';
 						// color:'
 						// +
 						// color

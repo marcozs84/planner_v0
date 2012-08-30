@@ -6,7 +6,17 @@ if (isset ( $_POST ['password'] ) && isset ( $_POST ['username'] )) {
 /**
  * ************************* GETTING TIMELINES *****************************
  */
-	$query = "select * from tbltimeline";
+	$query = <<<xxx
+select
+	tbltimeline.id as id,
+	tbltimeline.projectId as projectId,
+	tbltimeline.resourceId as resourceId,
+	tbltimeline.teamId as teamId,
+	tblresource.name as name
+from
+tbltimeline
+	INNER JOIN tblresource on tbltimeline.resourceId = tblresource.id
+xxx;
 
 	$res = $mysqli->query ( $query );
 
