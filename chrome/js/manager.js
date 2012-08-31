@@ -391,15 +391,6 @@ function removeTaskFromTimeline(taskId, devId) {
 	generateTimeline(devId);
 }
 
-function generateAll() {
-	for ( var i = 0; i < timeline.length; i++) {
-		console.log("Generating Timeline: " + timeline[i].id);
-		console.log(timeline[i]);
-		generateTimeline(timeline[i].id);
-		console.log("================================================");
-	}
-}
-
 /**
  * CHROME
  * @param from
@@ -495,7 +486,7 @@ function GenerateCalendar(from,to){
 				day.used = 0 ;
 				day.tasks = Array();
 
-				timeline[j].days.push(day);
+//				timeline[j].days.push(day);	// CAUSING ERROR: THIS WAS PUSHING DAYS INTO TIMELINE.CALENDAR EVEN IF THE DAY WAS OUT OF THE PROJECTS RANGE
 
 				var prjStartDate = strToDate(prj.startDate);
 				var prjEndDate = strToDate(prj.endDate);
@@ -548,6 +539,15 @@ function GenerateCalendar(from,to){
 
 }
 
+function generateAll() {
+	for ( var i = 0; i < timeline.length; i++) {
+//		console.log("Generating Timeline: " + timeline[i].id);
+//		console.log(timeline[i]);
+		generateTimeline(timeline[i].id);
+//		console.log("================================================");
+	}
+}
+
 function generateTimeline(devId) {
 
 	dev = getTimelineById(devId);
@@ -584,13 +584,13 @@ function generateTimeline(devId) {
 
 	var task = null;
 
-	console.log("building FIXED tasks: " + fTasks.length);
+//	console.log("building FIXED tasks: " + fTasks.length);
 	for ( var k = 0; k < fTasks.length; k++) {
 		task = fTasks[k];
 		buildTask(task);
 	}
 
-	console.log("building DYNAMIC tasks: " + dTasks.length);
+//	console.log("building DYNAMIC tasks: " + dTasks.length);
 	for ( var k = 0; k < dTasks.length; k++) {
 		task = dTasks[k];
 		buildTask(task);
@@ -601,8 +601,8 @@ function buildTask(task) {
 
 	// Search for first available day
 	var objI = 0;
-	console.log("building task: ");
-	console.log(task);
+//	console.log("building task: ");
+//	console.log(task);
 	for ( var i = 0; i < dev.days.length; i++) {
 		if (task.startDate == '' || task.startDate == '0000-00-00 00:00:00') {
 			available = dev.days[i].hours - dev.days[i].used;
@@ -710,7 +710,7 @@ function assignHeights() {
 	for ( var i = 0; i < timeline.length; i++) {
 		for ( var j = 0; j < timeline[i].days.length; j++) {
 
-			var divElementDiv = '#div_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day + ' div';
+			var divElementDiv = '#div_' + timeline[i].days[j].week + '_' + timeline[i].id + '_' + timeline[i].days[j].day + ' div';
 
 			if (timeline[i].days[j].tasks.length == 1) {
 				xtramargin = 1;
@@ -721,23 +721,31 @@ function assignHeights() {
 
 			xtramargin = timeline[i].days[j].tasks.length;
 
-			for ( var k = 0; k < timeline[i].days[j].tasks.length; k++) {
-				// timeline[i].days[j].week;
-				// timeline[i].days[j].tasks[k].duration;
+			if((timeline[i].days[j].used < timeline[i].days[j].hours) && (timeline[i].days[j].used > 0)){
 
-				// elename = '#tbl_' + timeline[i].days[j].week + '_' + i + '_'
-				// + timeline[i].days[j].day + '_'
-				// + timeline[i].days[j].tasks[k].id;
-				//
-				// elenameTaskName = '#tbl_' + timeline[i].days[j].week + '_' +
-				// i + '_' + timeline[i].days[j].day + '_'
-				// + timeline[i].days[j].tasks[k].id + ' .taskName div';
+				elename2 = '#div_' + timeline[i].days[j].week + '_' + timeline[i].id + '_' + timeline[i].days[j].day;
 
-				elename2 = '#tbl_' + timeline[i].days[j].week + '_' + i + '_' + timeline[i].days[j].day + '_' + timeline[i].days[j].tasks[k].id
-						+ ' .finalCont';
+				var nheightPer = ((100*timeline[i].days[j].used) / timeline[i].days[j].hours);
+				var nheight = (($(elename2).height() * nheightPer) / 100);
 
-				$(elename2).css('max-height', $(divElementDiv).height());
+				$(elename2).css('max-height', nheight + 'px');
 
+				for ( var k = 0; k < timeline[i].days[j].tasks.length; k++) {
+					elename2a = '#tbl_' + timeline[i].days[j].week + '_' + timeline[i].id + '_' + timeline[i].days[j].day + '_' + timeline[i].days[j].tasks[k].id;
+
+					$(elename2a).parent().css('height', (nheight / timeline[i].days[j].tasks.length) + 'px');
+				}
+
+
+			}else{
+				for ( var k = 0; k < timeline[i].days[j].tasks.length; k++) {
+
+					elename2 = '#tbl_' + timeline[i].days[j].week + '_' + timeline[i].id + '_' + timeline[i].days[j].day + '_' + timeline[i].days[j].tasks[k].id
+							+ ' .finalCont';
+
+					$(elename2).css('max-height', $(divElementDiv).height());
+
+				}
 			}
 		}
 	}
