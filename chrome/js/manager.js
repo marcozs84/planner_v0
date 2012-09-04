@@ -540,12 +540,17 @@ function GenerateCalendar(from,to){
 }
 
 function generateAll() {
+
+//	console.log(JSON.stringify(timeline));
+
 	for ( var i = 0; i < timeline.length; i++) {
 //		console.log("Generating Timeline: " + timeline[i].id);
 //		console.log(timeline[i]);
 		generateTimeline(timeline[i].id);
 //		console.log("================================================");
 	}
+
+//	console.log(JSON.stringify(timeline));
 }
 
 function generateTimeline(devId) {
@@ -654,7 +659,7 @@ function buildTask(task) {
 		if (unassigned > dayAvailable) {
 			tTask.duration = dayAvailable;
 			oDay.tasks.push(tTask);
-			oDay.used += dayAvailable;
+			oDay.used += eval(dayAvailable);
 			assigned = dayAvailable;
 			unassigned = unassigned - dayAvailable;
 
@@ -662,7 +667,7 @@ function buildTask(task) {
 		} else {
 			tTask.duration = unassigned;
 			oDay.tasks.push(tTask);
-			oDay.used += unassigned;
+			oDay.used += eval(unassigned);
 			assigned = unassigned;
 			unassigned = 0;
 
