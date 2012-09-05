@@ -736,9 +736,14 @@ function assignHeights() {
 				$(elename2).css('max-height', nheight + 'px');
 
 				for ( var k = 0; k < timeline[i].days[j].tasks.length; k++) {
+
+					var nheightDot = nheight / timeline[i].days[j].tasks.length;
+
 					elename2a = '#tbl_' + timeline[i].days[j].week + '_' + timeline[i].id + '_' + timeline[i].days[j].day + '_' + timeline[i].days[j].tasks[k].id;
 
-					$(elename2a).parent().css('height', (nheight / timeline[i].days[j].tasks.length) + 'px');
+					$(elename2a).parent().css('height', (nheightDot) + 'px');
+					$(elename2a).css('height', (nheightDot) + 'px');
+					$(elename2a + ' div.finalCont').css('height', (nheightDot) + 'px');
 				}
 
 
