@@ -401,7 +401,18 @@ function GenerateCalendar(from,to){
 //	console.log(from);
 //	console.log(to);
 
-	var fromDate = from.split(".");
+	var prj = getProjectById(localStorage.getItem('selectedProject'));
+
+	var leftDateLimit = from.split(".");
+	leftDateLimit = new Date(leftDateLimit[2],leftDateLimit[1] -1 ,leftDateLimit[0]);
+	var leftLimitWeek = leftDateLimit.getWeek();
+
+	var rightDateLimit = to.split(".");
+	rightDateLimit = new Date(rightDateLimit[2],rightDateLimit[1] -1 ,rightDateLimit[0]);
+	var rightLimitWeek = rightDateLimit.getWeek();
+
+//	var fromDate = from.split(".");
+	var fromDate = prj.startDate.split(".");
 	fromDate = new Date(fromDate[2],fromDate[1] -1 ,fromDate[0]);
 	var fromWeek = fromDate.getWeek();
 
@@ -409,7 +420,8 @@ function GenerateCalendar(from,to){
 //	console.log("fromWeek: " + fromWeek);
 //	console.log("fromWeekDay: " + fromDate.getDay());
 
-	var toDate = to.split(".");
+//	var toDate = to.split(".");
+	var toDate = prj.endDate.split(".");
 	toDate = new Date(toDate[2],toDate[1] -1 ,toDate[0]);
 	var toWeek = toDate.getWeek();
 
@@ -429,8 +441,9 @@ function GenerateCalendar(from,to){
 //
 //	console.log("startDate:" + startDate);
 
-	var prj = getProjectById(localStorage.getItem('selectedProject'));
+
 	var dateday = new Date();
+	var displayNone = '';
 
 	for(var i = fromWeek ; i <= toWeek ; i++){
 
@@ -451,7 +464,13 @@ function GenerateCalendar(from,to){
 		headerDate.setDate(headerDate.getDate() + 1);
 		date5 = headerDate.getDate();
 
-		html += '<table class="weekTable ui-widget" cellpadding="0" cellspacing="0" border="0">';
+		if((i >= leftLimitWeek) && (i <= rightLimitWeek)){
+			displayNone = "  ";
+		}else{
+			displayNone = " display:none; ";
+		}
+
+		html += '<table class="weekTable ui-widget" cellpadding="0" cellspacing="0" border="0" style="'+ displayNone +'">';
 		html += '		<caption>Week'+ i +'</caption>';
 		html += '<thead class="ui-widget-header">';
 		html += '<tr>';
@@ -903,6 +922,7 @@ function initFromToCalendars() {
 		dateFormat : "d.m.yy",
 		changeMonth : true,
 		numberOfMonths : 3,
+		showWeek: true,
 		beforeShowDay: $.datepicker.noWeekends,
 		onSelect : function(selectedDate) {
 			CalendarDateFrom = selectedDate;
@@ -916,6 +936,7 @@ function initFromToCalendars() {
 		dateFormat : "d.m.yy",
 		changeMonth : true,
 		numberOfMonths : 3,
+		showWeek: true,
 		beforeShowDay: $.datepicker.noWeekends,
 		onSelect : function(selectedDate) {
 			CalendarDateTo = selectedDate;
@@ -935,6 +956,12 @@ function initFromToCalendars() {
 		if(OnProject == '' || OnProject == 0){
 			alert("Please select a project before generating the calendar");
 			return false;
+		}
+
+		$('#weeksHolder').text('');
+
+		for(var j = 0 ; j < timeline.length ; j++){
+			timeline[j].days = new Array();
 		}
 
 		GenerateCalendar(CalendarDateFrom,CalendarDateTo);
