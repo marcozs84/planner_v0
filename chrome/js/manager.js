@@ -455,14 +455,19 @@ function GenerateCalendar(from,to){
 //		console.log("week: " + i + " startDate:" + startDate);
 
 		date1 = headerDate.getDate();
+		month1 = headerDate.getMonth();
 		headerDate.setDate(headerDate.getDate() + 1);
 		date2 = headerDate.getDate();
+		month2 = headerDate.getMonth();
 		headerDate.setDate(headerDate.getDate() + 1);
 		date3 = headerDate.getDate();
+		month3 = headerDate.getMonth();
 		headerDate.setDate(headerDate.getDate() + 1);
 		date4 = headerDate.getDate();
+		month4 = headerDate.getMonth();
 		headerDate.setDate(headerDate.getDate() + 1);
 		date5 = headerDate.getDate();
+		month5 = headerDate.getMonth();
 
 		if((i >= leftLimitWeek) && (i <= rightLimitWeek)){
 			displayNone = "  ";
@@ -474,7 +479,7 @@ function GenerateCalendar(from,to){
 		html += '		<caption>Week'+ i +'</caption>';
 		html += '<thead class="ui-widget-header">';
 		html += '<tr>';
-		html += '<th></th><th>'+ 'Mon ' + date1 +'</th><th>'+ 'Tue ' + date2+'</th><th>'+ 'Wed ' + date3+'</th><th>'+ 'Thu ' + date4+'</th><th>'+ 'Fri ' + date5+'</th>';
+		html += '<th></th><th>'+ 'Mon ' + date1 + ', ' + getMonthNameByIndex(month1) + '</th><th>'+ 'Tue ' + date2 + ', ' + getMonthNameByIndex(month2)+'</th><th>'+ 'Wed ' + date3 + ', ' + getMonthNameByIndex(month3)+'</th><th>'+ 'Thu ' + date4 + ', ' + getMonthNameByIndex(month4)+'</th><th>'+ 'Fri ' + date5 + ', ' + getMonthNameByIndex(month5)+'</th>';
 		html += '</tr>';
 		html += '</thead>';
 		html += '<tbody class="ui-widget-content">';

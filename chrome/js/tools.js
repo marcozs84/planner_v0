@@ -125,6 +125,26 @@ function getDayNameByIndex(index,fullShort){
 	days[4] = "Thu";
 	days[5] = "Fri";
 	days[6] = "Sat";
+
+	return days[index];
+}
+
+function getMonthNameByIndex(index,fullShort){
+	var days = new Array();
+	days[0] = "Jan";
+	days[1] = "Feb";
+	days[2] = "Mar";
+	days[3] = "Apr";
+	days[4] = "May";
+	days[5] = "Jun";
+	days[6] = "Jul";
+	days[7] = "Aug";
+	days[8] = "Sep";
+	days[9] = "Oct";
+	days[10] = "Nov";
+	days[11] = "Dic";
+
+	return days[index];
 }
 
 /**
