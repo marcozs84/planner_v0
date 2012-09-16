@@ -486,6 +486,10 @@ function GenerateCalendar(from,to){
 
 		for(var j = 0 ; j < timeline.length ; j++){
 
+			if(timeline[j].projectId != prj.id){
+				continue;
+			}
+
 			var timelineDate = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
 
 			var tm = j;
@@ -567,10 +571,15 @@ function generateAll() {
 
 //	console.log(JSON.stringify(timeline));
 
+	var prj = getProjectById(localStorage.getItem('selectedProject'));
+
 	for ( var i = 0; i < timeline.length; i++) {
 //		console.log("Generating Timeline: " + timeline[i].id);
 //		console.log(timeline[i]);
-		generateTimeline(timeline[i].id);
+		if(timeline[i].projectId == prj.id){
+			generateTimeline(timeline[i].id);
+		}
+
 //		console.log("================================================");
 	}
 
@@ -755,6 +764,9 @@ function assignHeights() {
 				elename2 = '#div_' + timeline[i].days[j].week + '_' + timeline[i].id + '_' + timeline[i].days[j].day;
 
 				var nheightPer = ((100*timeline[i].days[j].used) / timeline[i].days[j].hours);
+				if(nheightPer < 50){
+					nheightPer = 50;
+				}
 				var nheight = (($(elename2).height() * nheightPer) / 100);
 
 				$(elename2).css('max-height', nheight + 'px');
@@ -892,8 +904,9 @@ function toolBarInit() {
 
 /**
  * CHROME
+ * @param callback
  */
-function updateTimelines() {
+function updateTimelines(callback) {
 	$.ajax({
 		type : "POST",
 		url : "http://planner/www/getTimelines.php"
@@ -914,6 +927,10 @@ function updateTimelines() {
 		stringTimelines = JSON.stringify(jsonTimelinesResult.package.timelines);
 		localStorage.setItem('backTimelines', stringTimelines);
 		timeline = JSON.parse(localStorage.getItem('backTimelines'));
+
+		if(callback != null){
+			callback();
+		}
 
 	});
 }
@@ -953,22 +970,28 @@ function initFromToCalendars() {
 	$('#btnGenerateCalendar').button({
 		text : "Generate"
 	}).click(function() {
-		CalendarDateFrom = $('#calendarFrom').val();
-		CalendarDateTo = $('#calendarTo').val();
-
-		OnProject = localStorage.getItem('selectedProject');
-
-		if(OnProject == '' || OnProject == 0){
-			alert("Please select a project before generating the calendar");
-			return false;
-		}
-
-		$('#weeksHolder').text('');
-
-		for(var j = 0 ; j < timeline.length ; j++){
-			timeline[j].days = new Array();
-		}
-
-		GenerateCalendar(CalendarDateFrom,CalendarDateTo);
+		updateCalendarDisplay();
 	});
+}
+
+function updateCalendarDisplay(){
+
+	console.log("updating calendar Display");
+	CalendarDateFrom = $('#calendarFrom').val();
+	CalendarDateTo = $('#calendarTo').val();
+
+	OnProject = localStorage.getItem('selectedProject');
+
+	if(OnProject == '' || OnProject == 0){
+		alert("Please select a project before generating the calendar");
+		return false;
+	}
+
+	$('#weeksHolder').text('');
+
+	for(var j = 0 ; j < timeline.length ; j++){
+		timeline[j].days = new Array();
+	}
+
+	GenerateCalendar(CalendarDateFrom,CalendarDateTo);
 }

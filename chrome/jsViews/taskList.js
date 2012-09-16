@@ -515,7 +515,9 @@ function initTaskList() {
 
 					notice('msgErrorTask', 'Task assigned.', true);
 
-					updateTimelines();
+					updateTimelines(updateCalendarDisplay);
+
+					//updateCalendarDisplay();
 
 					toAssignSplitObj = 0;
 					toAssignSplitObj = 0;
