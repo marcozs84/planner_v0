@@ -1,13 +1,14 @@
 {
 	"name": "WebWorkPlan",
-	"version": 2,
+	"version": "1.0.0",
+	"manifest_version": 2,
 	"description": "Useful extension which allows you to organize your team tasks in a week view calendar",
 	"background_page": "background.html",
 	"omnibox": { "keyword" : "webworkplan" },
 	"icons": {
 		"16": "imgs/logo-16.png",
 		"48": "imgs/logo-48.png",
-        "128": "imgs/logo-128.png"
+		"128": "imgs/logo-128.png"
 	},
 	"permissions": [
 		"tabs",
