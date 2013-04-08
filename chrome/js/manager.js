@@ -9,7 +9,18 @@ $(document).ready(function() {
 		// chrome.extension.sendRequest({redirect: "login.html"});
 	} else {
 		if (location.search != '?detached') {
-			chrome.extension.getBackgroundPage().detachWindow('manager.html');
+
+			console.log(chrome.windows.WINDOW_ID_CURRENT);
+
+			// chrome.extension.getBackgroundPage().detachWindow('manager.html');
+			// NEW detaching procedure
+			chrome.windows.create({
+				type:"detached_panel",
+				url:"manager.html?detached"
+					}, function(){
+				alert("1");
+			});
+
 			return false;
 		} else {
 			console.log("detached already");
