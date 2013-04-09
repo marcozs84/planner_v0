@@ -10,16 +10,17 @@ $(document).ready(function() {
 	} else {
 		if (location.search != '?detached') {
 
-			console.log(chrome.windows.WINDOW_ID_CURRENT);
 
 			// chrome.extension.getBackgroundPage().detachWindow('manager.html');
 			// NEW detaching procedure
 			chrome.windows.create({
 				type:"detached_panel",
-				url:"manager.html?detached"
-					}, function(){
-				alert("1");
+				url:"manager.html?detached",
+				width:800,
+				height:400
 			});
+
+			window.close();
 
 			return false;
 		} else {
