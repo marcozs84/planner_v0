@@ -128,6 +128,10 @@ function loadView(viewName, callbackFunc) {
 	});
 }
 
+/**
+ * DEPRECATED
+ * Aparently not used anymore
+ */
 function initModalWindows() {
 	// modalsHolder
 	$.ajax({
@@ -848,7 +852,9 @@ function openModal(view) {
 
 function toolBarInit() {
 
-	$("#btnTest").button({
+	$("#btnTest")
+	.css("display","none")
+	.button({
 		text : "Test Ajax"
 	// icons: {
 	// primary: "ui-icon-stop"

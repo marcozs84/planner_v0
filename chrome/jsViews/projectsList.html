@@ -6,46 +6,45 @@
 <div id="projectsList" title="Projects List">
 	<div style="margin:0px 0px 5px 0px;">
 		<a href="javascript:;" id="btnOpenProjectForm">New Project</a>
-		
 		<div id="msgErrorProject"></div>
-		
-		<div id="frmAddProject" style="display: none; margin: 10px 0px;">
-		
-			<table class="tblForm" cellspacing="4" cellpadding="0">
-				<tr>
-					<td class="label">Name</td>
-					<td class="formInput" colspan="3">
-						<input type="text" name="prjName" id="prjName" />
-					</td>
-				</tr>
-				<tr>
-					<td class="label">StartDate</td>
-					<td class="formInput">
-						<input type="text" name="prjStartDate" id="prjStartDate" />
-					</td>
-					<td class="label">EndDate</td>
-					<td class="formInput">
-						<input type="text" name="prjEndDate" id="prjEndDate" />
-					</td>
-					
-				</tr>
-				<tr>
-					<td class="label">Description</td>
-					<td colspan="3" class="formInput">
-						<textarea name="prjDescription" id="prjDescription" style="width:100%;"></textarea>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="3"></td>
-					<td style="text-align:right;">
-						<a href="javascript:;" id="btnAddProject">Save</a>
-						<a href="javascript:;" id="btnAddProjectCancel">Cancel</a>
-					</td>
-				</tr>
-			</table>
-
-		</div>
 	</div>
 	<table id="tblProjectsList" class="display" cellspacing="0" cellpadding="0">
 	</table>
+</div>
+
+<div id="frmAddProject" title="Add Project">
+
+	<table class="tblForm" cellspacing="4" cellpadding="0">
+		<tr>
+			<td class="label">Name</td>
+			<td class="formInput" colspan="3">
+				<input type="text" name="prjName" id="prjName" />
+			</td>
+		</tr>
+		<tr>
+			<td class="label">StartDate</td>
+			<td class="formInput">
+				<input type="text" name="prjStartDate" id="prjStartDate" />
+			</td>
+			<td class="label">EndDate</td>
+			<td class="formInput">
+				<input type="text" name="prjEndDate" id="prjEndDate" />
+			</td>
+
+		</tr>
+		<tr>
+			<td class="label">Description</td>
+			<td colspan="3" class="formInput">
+				<textarea name="prjDescription" id="prjDescription" style="width:100%;"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3"></td>
+			<td style="text-align:right;">
+				<a href="javascript:;" id="btnAddProject">Save</a>
+				<a href="javascript:;" id="btnAddProjectCancel">Cancel</a>
+			</td>
+		</tr>
+	</table>
+
 </div>

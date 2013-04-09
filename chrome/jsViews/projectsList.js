@@ -660,7 +660,9 @@ function initProjectsList() {
 			primary : "ui-icon-plus"
 		}
 	}).click(function() {
-		$('#frmAddProject').slideDown();
+		openModal('frmAddProject');
+//		$("#frmAddProject").dialog("open");
+//		$('#frmAddProject').slideDown();
 		$('#prjName').val('');
 		$('#prjDescription').val('');
 		$('#prjStartDate').val('');
