@@ -524,6 +524,37 @@ function initProjectsList() {
 		} ]
 	});
 
+	$("#frmAddProject").dialog({
+		width : '70%',
+		autoOpen : false,
+		modal : true,
+		buttons : [ {
+			text : "Create",
+			click : function() {
+
+				if ($('#prjName').val() == '') {
+					alert("Please provide a valid name.");
+					return false;
+				}
+
+				if ($('#prjStartDate').val() == '') {
+					alert("Please provide a valid name.");
+					return false;
+				}
+
+//				$("#btnAddProject").button("option", "disabled", true);
+
+				saveProject();
+
+			}
+		}, {
+			text : "Close",
+			click : function() {
+				$(this).dialog("close");
+			}
+		} ]
+	});
+
 	$("#project-confirm-deletion").dialog({
 		resizable : false,
 		autoOpen : false,
@@ -708,7 +739,7 @@ function initProjectsList() {
 		$('#prjDescription').val('');
 		$('#prjStartDate').val('');
 		$('#prjEndDate').val('');
-		$('#frmAddProject').slideUp();
+		$('#frmAddProject').dialog("close");
 
 	});
 
