@@ -130,7 +130,8 @@ function editProject(projectId) {
 	$('#prjEndDate').val(objD.endDate);
 	$('#prjDescription').val(objD.description);
 
-	$('#frmAddProject').slideDown();
+//	$('#frmAddProject').slideDown();
+	$('#frmAddProject').dialog("open");
 	$('#prjName').focus();
 
 	$("#btnAddProject").button("option", "disabled", false);
@@ -186,7 +187,8 @@ function saveProject() {
 				$('#prjDescription').val('');
 				$('#prjStartDate').val('');
 				$('#prjEndDate').val('');
-				$('#frmAddProject').slideUp();
+//				$('#frmAddProject').slideUp();
+				$('#frmAddProject').dialog("close");
 
 				projects.push(answer.package);
 
@@ -207,7 +209,8 @@ function saveProject() {
 				objP.startDate = $('#prjStartDate').val();
 				objP.endDate = $('#prjEndDate').val();
 
-				$('#frmAddProject').slideUp();
+//				$('#frmAddProject').slideUp();
+				$('#frmAddProject').dialog("close");
 
 				stringProjects = JSON.stringify(projects);
 				localStorage.setItem('backProjects', stringProjects);
@@ -221,7 +224,8 @@ function saveProject() {
 				$('#prjDescription').val('');
 				$('#prjStartDate').val('');
 				$('#prjEndDate').val('');
-				$('#frmAddProject').slideUp();
+//				$('#frmAddProject').slideUp();
+				$('#frmAddProject').dialog("close");
 
 				isEditingProject = 0;
 
@@ -295,7 +299,8 @@ function deleteProject(prjId) {
 				$('#prjDescription').val('');
 				$('#prjStartDate').val('');
 				$('#prjEndDate').val('');
-				$('#frmAddProject').slideUp();
+//				$('#frmAddProject').slideUp();
+				$('#frmAddProject').dialog("close");
 
 				notice('msgErrorProject', 'Removed.', true);
 			});
@@ -456,7 +461,8 @@ function addResourcesToProject(projectId, resources) {
 				$('#prjDescription').val('');
 				$('#prjStartDate').val('');
 				$('#prjEndDate').val('');
-				$('#frmAddProject').slideUp();
+//				$('#frmAddProject').slideUp();
+				$('#frmAddProject').dialog("close");
 
 				var nNodes = oPrjTable.fnGetNodes(ProjectRowPos);
 
@@ -529,7 +535,7 @@ function initProjectsList() {
 		autoOpen : false,
 		modal : true,
 		buttons : [ {
-			text : "Create",
+			text : "Save",
 			click : function() {
 
 				if ($('#prjName').val() == '') {
@@ -538,14 +544,16 @@ function initProjectsList() {
 				}
 
 				if ($('#prjStartDate').val() == '') {
-					alert("Please provide a valid name.");
+					alert("Please provide a valid Start Date.");
 					return false;
 				}
 
-//				$("#btnAddProject").button("option", "disabled", true);
+				if ($('#prjEndDate').val() == '') {
+					alert("Please provide a valid End Date.");
+					return false;
+				}
 
 				saveProject();
-
 			}
 		}, {
 			text : "Close",
@@ -639,7 +647,7 @@ function initProjectsList() {
 		} ]
 	});
 
-	$('#tblProjectsList tbody tr td img.btnPrjOpenTbl').live('click', function() {
+	$('#tblProjectsList tbody tr td img.btnPrjOpenTbl').on('click', function() {
 
 		var nTr = $(this).parents('tr')[0];
 		if (oPrjTable.fnIsOpen(nTr)) {
@@ -653,7 +661,7 @@ function initProjectsList() {
 		}
 	});
 
-	$('#tblProjectsList tbody tr td img.btnPrjRemoveTbl').live('click', function() {
+	$('#tblProjectsList tbody tr td img.btnPrjRemoveTbl').on('click', function() {
 
 		var aData = oPrjTable.fnGetData(this.parentNode.parentNode); // get
 		// datarow
@@ -677,7 +685,7 @@ function initProjectsList() {
 
 	});
 
-	$('#tblProjectsList tbody tr td img.btnPrjEditTbl').live('click', function() {
+	$('#tblProjectsList tbody tr td img.btnPrjEditTbl').on('click', function() {
 
 		var aData = oPrjTable.fnGetData(this.parentNode.parentNode); // get
 		// datarow
@@ -701,46 +709,7 @@ function initProjectsList() {
 		$('#prjName').focus();
 
 		$("#btnAddProject").button("option", "disabled", false);
-	});
-
-	$('#btnAddProject').button({
-		icons : {
-			primary : "ui-icon-disk"
-		}
-	}).click(function() {
-
-		// console.log($( "#prjStartDate" ).datepicker( "option", "dateFormat"
-		// ));
-		// console.log($( "#prjEndDate" ).datepicker( "option", "dateFormat" ));
-		// console.log($( "#prjStartDate" ).val());
-		// console.log($( "#prjEndDate" ).val());
-
-		// return false;
-
-		if ($('#prjName').val() == '') {
-			alert("Please provide a valid name.");
-			return false;
-		}
-
-		if ($('#prjStartDate').val() == '') {
-			alert("Please provide a valid name.");
-			return false;
-		}
-
-		$("#btnAddProject").button("option", "disabled", true);
-
-		saveProject();
-
-	});
-
-	$('#btnAddProjectCancel').button().click(function() {
-
-		$('#prjName').val('');
-		$('#prjDescription').val('');
-		$('#prjStartDate').val('');
-		$('#prjEndDate').val('');
-		$('#frmAddProject').dialog("close");
-
+		return false;
 	});
 
 };

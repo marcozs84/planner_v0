@@ -623,7 +623,7 @@ function initTaskList() {
 						} ]
 			});
 
-	$('#tblTaskList tbody td img.btnTaskOpenTbl').live('click', function() {
+	$('#tblTaskList tbody td img.btnTaskOpenTbl').on('click', function() {
 		var nTr = $(this).parents('tr')[0];
 		if (oTable.fnIsOpen(nTr)) {
 			oTable.fnClose(nTr);

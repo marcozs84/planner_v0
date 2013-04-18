@@ -263,7 +263,7 @@ function initDevelopersList() {
 		}]
 	});
 
-	$('#tblDevelopersList tbody tr td img.btnDevOpenTbl').live('click', function() {
+	$('#tblDevelopersList tbody tr td img.btnDevOpenTbl').on('click', function() {
 
 		var nTr = $(this).parents('tr')[0];
 		if (oDevTable.fnIsOpen(nTr)) {
@@ -277,7 +277,7 @@ function initDevelopersList() {
 		}
 	});
 
-	$('#tblDevelopersList tbody tr td img.btnDevRemoveTbl').live('click', function() {
+	$('#tblDevelopersList tbody tr td img.btnDevRemoveTbl').on('click', function() {
 
 		var aData = oDevTable.fnGetData(this.parentNode.parentNode); // get
 		// datarow
@@ -301,7 +301,7 @@ function initDevelopersList() {
 
 	});
 
-	$('#tblDevelopersList tbody tr td img.btnDevEditTbl').live('click', function() {
+	$('#tblDevelopersList tbody tr td img.btnDevEditTbl').on('click', function() {
 
 		var aData = oDevTable.fnGetData(this.parentNode.parentNode); // get
 		// datarow

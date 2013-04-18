@@ -304,7 +304,7 @@ function initResourcesList() {
 		]
 	});
 
-	$('#tblResourcesList tbody tr td img.btnRscOpenTbl').live('click', function() {
+	$('#tblResourcesList tbody tr td img.btnRscOpenTbl').on('click', function() {
 		var nTr = $(this).parents('tr')[0];
 		if (oRscTable.fnIsOpen(nTr)) {
 			oRscTable.fnClose(nTr);
@@ -313,7 +313,7 @@ function initResourcesList() {
 		}
 	});
 
-	$('#tblResourcesList tbody tr td img.btnRscRemoveTbl').live('click', function() {
+	$('#tblResourcesList tbody tr td img.btnRscRemoveTbl').on('click', function() {
 
 		var aData = oRscTable.fnGetData(this.parentNode.parentNode); // get
 		// datarow
