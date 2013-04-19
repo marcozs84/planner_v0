@@ -234,10 +234,10 @@ function saveProject() {
 
 		} else {
 			$("#btnAddProject").button("option", "disabled", false);
-			error('msgErrorProject', 'Error trying to save.');
+			error('msgErrorProjectAdd', 'Error trying to save. '+ msg);
 		}
 	}).fail(function() {
-		notice('msgErrorProject', 'Couldn\'t connect with server.', true);
+		notice('msgErrorProjectAdd', 'Couldn\'t connect with server.', true);
 	});
 }
 
@@ -615,7 +615,10 @@ function initProjectsList() {
 			"bSearchable" : true,
 			"bSortable" : true,
 			"fnRender" : function(obj) {
-				return '<a href="javascript:;" onclick="editProject(' + obj.aData.id + ')">' + obj.aData.name + '</a>';
+				cellId = obj.iDataColumn + '_' + obj.iDataRow + '_' + obj.aData.id;
+//				console.log(obj.iDataColumn + '_' + obj.iDataRow + '_' + obj.aData.id );
+//				document.getElementById(cellId).addEventListener('onclick', editProject);
+				return '<a href="javascript:;" id="'+ cellId +'" onclick="editProject(' + obj.aData.id + ')">' + obj.aData.name + '</a>';
 			}
 		}, {
 			"mDataProp" : "startDate",
