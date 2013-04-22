@@ -16,8 +16,8 @@ $(document).ready(function() {
 			chrome.windows.create({
 				type:"detached_panel",
 				url:"manager.html?detached",
-				width:800,
-				height:400
+				width:1000,
+				height:600
 			});
 
 			window.close();

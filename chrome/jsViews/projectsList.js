@@ -121,8 +121,13 @@ function projectDetails(nTr) {
 
 var isEditingProject = 0;
 
-function editProject(projectId) {
-	isEditingProject = projectId;
+function editProject(event) {
+	var parts = event.data.id.split("_");
+	var projId = parts[parts.length - 1];
+//	isEditingProject = event.data.id;
+	isEditingProject = projId;
+
+	console.log("editing project: " + projId);
 
 	var objD = getProjectById(isEditingProject);
 	$('#prjName').val(objD.name);
@@ -610,6 +615,7 @@ function initProjectsList() {
 		// "bSortable" : true
 		}, {
 			"mDataProp" : null,
+//			"mDataProp" : 'name',
 			"sTitle" : "Name",
 			"sClass" : "left",
 			"bSearchable" : true,
@@ -618,7 +624,14 @@ function initProjectsList() {
 				cellId = obj.iDataColumn + '_' + obj.iDataRow + '_' + obj.aData.id;
 //				console.log(obj.iDataColumn + '_' + obj.iDataRow + '_' + obj.aData.id );
 //				document.getElementById(cellId).addEventListener('onclick', editProject);
-				return '<a href="javascript:;" id="'+ cellId +'" onclick="editProject(' + obj.aData.id + ')">' + obj.aData.name + '</a>';
+//				return '<a href="javascript:;" id="'+ cellId +'" onclick="editProject(' + obj.aData.id + ')">' + obj.aData.name + '</a>';
+//				this.setAttribute( 'mzIdentifier', obj.aData.id );
+//				console.log(this.parent);
+//				console.log($('td',this));
+//				$('td',this).attr( 'prjId', obj.aData.id );
+////				console.log($('tr',this.parent));
+//				console.log($('td',this).attr('prjId'));
+				return '<a href="#" id="prjList_'+ cellId +'">' + obj.aData.name + '</a>';
 			}
 		}, {
 			"mDataProp" : "startDate",
@@ -648,6 +661,22 @@ function initProjectsList() {
 				return '<input type="checkbox" value="' + obj.aData.id + '" name="projectIds" />';
 			}
 		} ]
+	});
+
+	oPrjTable.$('tr').each(function(){
+		var nTds = $('td',this.parent);
+		var nAs = $('a',this);
+
+//		console.log($(nTds[2]).text());
+//		console.log($(nTds[2]));
+//		console.log($(nAs[0]).attr('id') + ' - ' + "projId: " + $('tr',this.parent).attr('prjId'));
+
+
+//		var anchor =
+//		document.getElementById($(nAs[0]).attr('id')).addEventListener('onclick', editProject,$(nAs[0]).attr('id'));
+		$(nAs[0]).on('click',{id:$(nAs[0]).attr('id')},editProject);
+
+//		$(nTds[2]).text('<a >' + $(nTds[2]).text() +'</a>')
 	});
 
 	$('#tblProjectsList tbody tr td img.btnPrjOpenTbl').on('click', function() {
