@@ -143,6 +143,14 @@ function editProject(event) {
 
 }
 
+function updateProjectLinks(){
+	oPrjTable.$('tr').each(function(){
+		var nTds = $('td',this.parent);
+		var nAs = $('a',this);
+		$(nAs[0]).on('click',{id:$(nAs[0]).attr('id')},editProject);
+	});
+}
+
 function selectProject(projectId) {
 	selectedProject = projectId;
 	var prj = getProjectById(projectId);
@@ -224,6 +232,8 @@ function saveProject() {
 				oPrjTable.fnClearTable(0);
 				oPrjTable.fnAddData(projects);
 				oPrjTable.fnDraw();
+
+				updateProjectLinks();
 
 				$('#prjName').val('');
 				$('#prjDescription').val('');
@@ -663,21 +673,8 @@ function initProjectsList() {
 		} ]
 	});
 
-	oPrjTable.$('tr').each(function(){
-		var nTds = $('td',this.parent);
-		var nAs = $('a',this);
+	updateProjectLinks();
 
-//		console.log($(nTds[2]).text());
-//		console.log($(nTds[2]));
-//		console.log($(nAs[0]).attr('id') + ' - ' + "projId: " + $('tr',this.parent).attr('prjId'));
-
-
-//		var anchor =
-//		document.getElementById($(nAs[0]).attr('id')).addEventListener('onclick', editProject,$(nAs[0]).attr('id'));
-		$(nAs[0]).on('click',{id:$(nAs[0]).attr('id')},editProject);
-
-//		$(nTds[2]).text('<a >' + $(nTds[2]).text() +'</a>')
-	});
 
 	$('#tblProjectsList tbody tr td img.btnPrjOpenTbl').on('click', function() {
 
