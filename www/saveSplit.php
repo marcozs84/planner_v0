@@ -38,7 +38,7 @@ xxx;
 		include_once ('getTasks.php');
 	} else {
 		$resultJSON = Array("result" => "FALSE",
-				"message" => "Update query failed when updating. Error: ".$mysqli->error. " Query: ".$query ,
+				"message" => "Update query failed when updating. Error: ".$mysqli->error. " Query: ".displayQuery($query),
 				"package" => "null"
 		);
 

@@ -30,7 +30,7 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['startDate'] )) {
 			$projectId = $mysqli->insert_id;
 
 			$resultJSON = Array("result" => "TRUE",
-					"message" => "Project was saved succesfully. ".$query,
+					"message" => "Project was saved succesfully. ".displayQuery($query),
 					"package" => Array(
 							"id" => $projectId,
 							"name" => $name,
@@ -58,7 +58,7 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['startDate'] )) {
 
 		if ($res) {
 			$resultJSON = Array("result" => "TRUE",
-					"message" => "Project was saved succesfully. ".$query,
+					"message" => "Project was saved succesfully. ".displayQuery($query),
 					"package" => Array(
 							"id" => $id,
 							"name" => $name,

@@ -92,7 +92,7 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['duration'] )) {
 			}else{
 				$resultJSON = Array(
 						"result" => "FALSE",
-						"message" => "Insertion query failed. Error: ".$mysqli->error. " Query: ".$query ,
+						"message" => "Insertion query failed. Error: ".$mysqli->error. " Query: ".displayQuery($query),
 						"package" => "null"
 				);
 				print json_encode($resultJSON);
@@ -101,7 +101,7 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['duration'] )) {
 		} else {
 			$resultJSON = Array(
 					"result" => "FALSE",
-					"message" => "Insertion query failed. Error: ".$mysqli->error. " Query: ".$query ,
+					"message" => "Insertion query failed. Error: ".$mysqli->error. " Query: ".displayQuery($query),
 					"package" => "null"
 					);
 			print json_encode($resultJSON);
@@ -141,7 +141,7 @@ xxx;
 		} else {
 // 			print "{\"result\":\"FALSE\",\"message\":\"Update query failed.\",\"package\":\"null\"}";
 			$resultJSON = Array("result" => "FALSE",
-					"message" => "Update query failed when updating. Error: ".$mysqli->error. " Query: ".$query ,
+					"message" => "Update query failed when updating. Error: ".$mysqli->error. " Query: ".displayQuery($query),
 					"package" => "null"
 			);
 

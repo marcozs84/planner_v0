@@ -20,7 +20,7 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['initials'] )) {
 			$projectId = $mysqli->insert_id;
 
 			$resultJSON = Array("result" => "TRUE",
-					"message" => "Resource was saved succesfully. ".$query,
+					"message" => "Resource was saved succesfully. ".displayQuery($query),
 					"package" => Array(
 							"id" => $projectId,
 							"name" => $name,
@@ -45,7 +45,7 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['initials'] )) {
 
 		if ($res) {
 			$resultJSON = Array("result" => "TRUE",
-					"message" => "Resource was saved succesfully. ".$query,
+					"message" => "Resource was saved succesfully. ".displayQuery($query),
 					"package" => Array(
 							"id" => $id,
 							"name" => $name,

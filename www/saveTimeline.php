@@ -61,7 +61,7 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['teamId'] )) {
 		if ($res) {
 // 			print "{\"result\":\"TRUE\",\"message\":\"Timeline was saved succesfully.\",\"package\":{\"id\" : $teamId,\"name\" : \"" . $name . "\",\"team\" : $teamId,\"days\" : [],\"tasks\" : []}}";
 			$resultJSON = Array("result" => "TRUE",
-					"message" => "Timeline was saved succesfully",
+					"message" => "Timeline was saved succesfully. ".displayQuery($query),
 					"package" => Array(
 							"id" => $devId,
 							"name" => $name,
