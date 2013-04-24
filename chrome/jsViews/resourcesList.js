@@ -2,14 +2,28 @@ var oRscTable;
 
 var isEditingResource = 0;
 
-function editResource(resourceId) {
+function updateResourceLinks(){
+
+	$('#tblResourcesList tbody tr td a.linkName').on('click', function() {
+		var nTr = $(this).parents('tr')[0];
+		editResource(nTr);
+	});
+
+	return false;
+}
+
+function editResource(event) {
+
+	var aData = oPrjTable.fnGetData(event);
+	var resourceId = aData.id;
+
 	isEditingResource = resourceId;
 
 	var objD = getResourceById(isEditingResource);
 	$('#rscName').val(objD.name);
 	$('#rscInitials').val(objD.initials);
 
-	$('#frmAddResource').slideDown();
+	$('#frmAddResource').dialog("open");
 	$('#rscName').focus();
 
 	$("#btnAddResource").button("option", "disabled", false);
@@ -43,7 +57,8 @@ function saveResource() {
 			if (isEditingResource == 0) {
 				$('#rscName').val('');
 				$('#rscInitials').val('');
-				$('#frmAddResource').slideUp();
+//				$('#frmAddResource').slideUp();
+				$('#frmAddResource').dialog("close");
 
 				resources.push(answer.package);
 
@@ -54,6 +69,9 @@ function saveResource() {
 				oRscTable.fnClearTable(0);
 				oRscTable.fnAddData(resources);
 				oRscTable.fnDraw();
+
+				updateResourceLinks();
+
 				notice('msgErrorResource', 'Created.', true);
 
 			} else {
@@ -72,9 +90,12 @@ function saveResource() {
 				oRscTable.fnAddData(resources);
 				oRscTable.fnDraw();
 
+				updateResourceLinks();
+
 				$('#rscName').val('');
 				$('#rscInitials').val('');
-				$('#frmAddResource').slideUp();
+//				$('#frmAddResource').slideUp();
+				$('#frmAddResource').dialog("close");
 
 				isEditingResource = 0;
 
@@ -83,7 +104,7 @@ function saveResource() {
 
 		} else {
 			$("#btnAddResource").button("option", "disabled", false);
-			error('msgErrorResource', 'Error trying to save.');
+			error('msgErrorResourceAdd', 'Error trying to save.');
 		}
 	}).fail(function() {
 		$("#btnAddResource").button("option", "disabled", false);
@@ -144,6 +165,8 @@ function deleteResource(rscId) {
 				oRscTable.fnClearTable(0);
 				oRscTable.fnAddData(resources);
 				oRscTable.fnDraw();
+
+				updateResourceLinks();
 
 				$('#rscName').val('');
 				$('#rscInitials').val('');
@@ -245,10 +268,40 @@ function initResourcesList() {
 //		]
 	});
 
+	$("#frmAddResource").dialog({
+		width : '70%',
+		autoOpen : false,
+		modal : true,
+		buttons : [ {
+			text : "Save",
+			click : function() {
+
+				if ($('#rscName').val() == '') {
+					alert("Please provide a valid name.");
+					return false;
+				}
+
+				if ($('#rscInitials').val() == '') {
+					alert("Please provide Initials for the selected resource.");
+					return false;
+				}
+
+				$("#btnAddResource").button("option", "disabled", true);
+
+				saveResource();
+			}
+		}, {
+			text : "Close",
+			click : function() {
+				$(this).dialog("close");
+			}
+		} ]
+	});
+
 	$("#resource-confirm-deletion").dialog({
 		resizable : false,
 		autoOpen : false,
-		height : 100,
+		height : "auto",
 		modal : true,
 		buttons : {
 			Cancel : function() {
@@ -285,7 +338,7 @@ function initResourcesList() {
 					"bSearchable" : true,
 					"bSortable" : true,
 					"fnRender" : function(obj) {
-						return '<a href="javascript:;" onclick="editResource(' + obj.aData.id + ')">' + obj.aData.name + '</a>';
+						return '<a href="#" class="linkName">' + obj.aData.name + '</a>';
 					}
 				}, {
 					"mDataProp" : "initials",
@@ -303,6 +356,8 @@ function initResourcesList() {
 				}
 		]
 	});
+
+	updateResourceLinks();
 
 	$('#tblResourcesList tbody tr td img.btnRscOpenTbl').on('click', function() {
 		var nTr = $(this).parents('tr')[0];
@@ -342,34 +397,13 @@ function initResourcesList() {
 			primary : "ui-icon-plus"
 		}
 	}).click(function() {
-		$('#frmAddResource').slideDown();
+		openModal('frmAddResource');
 		$('#rscName').val('');
 		$('#rscInitials').val('');
 		$('#rscName').focus();
 
 		$("#btnAddResource").button("option", "disabled", false);
-	});
-
-	$('#btnAddResource').button({
-		icons : {
-			primary : "ui-icon-disk"
-		}
-	}).click(function() {
-
-		if ($('#rscName').val() == '') {
-			alert("Please provide a valid name.");
-			return false;
-		}
-
-		if ($('#rscInitials').val() == '') {
-			alert("Please provide Initials for the selected resource.");
-			return false;
-		}
-
-		$("#btnAddResource").button("option", "disabled", true);
-
-		saveResource();
-
+		return false;
 	});
 
 	$('#btnAddResourceCancel').button().click(function() {

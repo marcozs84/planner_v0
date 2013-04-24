@@ -5,34 +5,25 @@
 
 <div id="resourcesList" title="Resources List">
 	<div style="margin:0px 0px 5px 0px;">
-		<a href="javascript:;" id="btnOpenResourceForm">New Resource</a>
-		
+		<a href="javascript:;" id="btnOpenResourceForm">Create Resource</a>
 		<div id="msgErrorResource"></div>
-		
-		<div id="frmAddResource" style="display: none; margin: 10px 0px;">
-		
-			<table class="tblForm" cellspacing="4" cellpadding="0">
-				<tr>
-					<td class="label">Name</td>
-					<td class="formInput">
-						<input type="text" name="rscName" id="rscName" />
-					</td>
-					<td class="label">Initials</td>
-					<td class="formInput">
-						<input type="text" name="rscInitials" id="rscInitials" />
-					</td>
-				</tr>
-				<tr>
-					<td colspan="3"></td>
-					<td style="text-align:right;">
-						<a href="javascript:;" id="btnAddResource">Save</a>
-						<a href="javascript:;" id="btnAddResourceCancel">Cancel</a>
-					</td>
-				</tr>
-			</table>
-
-		</div>
 	</div>
 	<table id="tblResourcesList" class="display" cellspacing="0" cellpadding="0">
+	</table>
+</div>
+
+<div id="frmAddResource" style="display: none; margin: 10px 0px;">
+	<div id="msgErrorResourceAdd"></div>
+	<table class="tblForm" cellspacing="4" cellpadding="0">
+		<tr>
+			<td class="label">Name</td>
+			<td class="formInput">
+				<input type="text" name="rscName" id="rscName" />
+			</td>
+			<td class="label">Initials</td>
+			<td class="formInput">
+				<input type="text" name="rscInitials" id="rscInitials" />
+			</td>
+		</tr>
 	</table>
 </div>
