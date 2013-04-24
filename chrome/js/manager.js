@@ -852,6 +852,18 @@ function openModal(view) {
 
 function toolBarInit() {
 
+	var html = "";
+	projects = JSON.parse(localStorage.getItem('backProjects'));
+	for (var i = 0; i < projects.length; i++) {
+		html += "<option value=\"";
+		html += projects[i].id + "\">";
+		html += projects[i].name + "</option>";
+	}
+
+	$("#projectSelector").empty().append(html);
+
+	$("#projectSelector").on('change',selectProject);
+
 	$("#btnTest")
 	.css("display","none")
 	.button({

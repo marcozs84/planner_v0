@@ -152,8 +152,17 @@ function updateProjectLinks(){
 }
 
 function selectProject(projectId) {
+
+	console.log(projectId);
+
+	if(isNaN(projectId)){
+		projectId = $("#projectSelector").val();
+	}
+
 	selectedProject = projectId;
 	var prj = getProjectById(projectId);
+
+	console.log(projectId)
 
 	$("#calendarFrom").datepicker("option", "minDate", prj.startDate);
 	$("#calendarFrom").datepicker("option", "maxDate", prj.endDate);
@@ -212,6 +221,9 @@ function saveProject() {
 				oPrjTable.fnClearTable(0);
 				oPrjTable.fnAddData(projects);
 				oPrjTable.fnDraw();
+
+				updateProjectLinks();
+
 				notice('msgErrorProject', 'Created.', true);
 
 			} else {
@@ -581,7 +593,7 @@ function initProjectsList() {
 	$("#project-confirm-deletion").dialog({
 		resizable : false,
 		autoOpen : false,
-		height : 100,
+		height : "auto",
 		modal : true,
 		buttons : {
 			Cancel : function() {
