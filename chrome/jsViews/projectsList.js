@@ -122,12 +122,10 @@ function projectDetails(nTr) {
 var isEditingProject = 0;
 
 function editProject(event) {
-	var parts = event.data.id.split("_");
-	var projId = parts[parts.length - 1];
-//	isEditingProject = event.data.id;
-	isEditingProject = projId;
 
-	console.log("editing project: " + projId);
+	var aData = oPrjTable.fnGetData(event);
+	var projId = aData.id;
+	isEditingProject = projId;
 
 	var objD = getProjectById(isEditingProject);
 	$('#prjName').val(objD.name);
@@ -135,7 +133,6 @@ function editProject(event) {
 	$('#prjEndDate').val(objD.endDate);
 	$('#prjDescription').val(objD.description);
 
-//	$('#frmAddProject').slideDown();
 	$('#frmAddProject').dialog("open");
 	$('#prjName').focus();
 
@@ -144,11 +141,32 @@ function editProject(event) {
 }
 
 function updateProjectLinks(){
-	oPrjTable.$('tr').each(function(){
-		var nTds = $('td',this.parent);
-		var nAs = $('a',this);
-		$(nAs[0]).on('click',{id:$(nAs[0]).attr('id')},editProject);
+//	oPrjTable.$('tr').each(function(){
+//		var nAs = $('a',this);
+//		$(nAs[0]).on('click',{id:$(nAs[0]).attr('id')},editProject);
+//	});
+
+
+	$('#tblProjectsList tbody tr td a.linkName').on('click', function() {
+		var nTr = $(this).parents('tr')[0];
+		editProject(nTr);
 	});
+
+	$('#tblProjectsList tbody tr td img.btnPrjOpenTbl').on('click', function() {
+
+		var nTr = $(this).parents('tr')[0];
+		if (oPrjTable.fnIsOpen(nTr)) {
+			/* This row is already open - close it */
+			// this.src = "../examples_support/details_open.png";
+			oPrjTable.fnClose(nTr);
+		} else {
+			/* Open this row */
+			// this.src = "../examples_support/details_close.png";
+			oPrjTable.fnOpen(nTr, projectDetails(nTr), 'details');
+		}
+	});
+
+	return false;
 }
 
 function selectProject(projectId) {
@@ -321,6 +339,8 @@ function deleteProject(prjId) {
 				oPrjTable.fnClearTable(0);
 				oPrjTable.fnAddData(projects);
 				oPrjTable.fnDraw();
+
+				updateProjectLinks();
 
 				$('#prjName').val('');
 				$('#prjDescription').val('');
@@ -643,17 +663,7 @@ function initProjectsList() {
 			"bSearchable" : true,
 			"bSortable" : true,
 			"fnRender" : function(obj) {
-				cellId = obj.iDataColumn + '_' + obj.iDataRow + '_' + obj.aData.id;
-//				console.log(obj.iDataColumn + '_' + obj.iDataRow + '_' + obj.aData.id );
-//				document.getElementById(cellId).addEventListener('onclick', editProject);
-//				return '<a href="javascript:;" id="'+ cellId +'" onclick="editProject(' + obj.aData.id + ')">' + obj.aData.name + '</a>';
-//				this.setAttribute( 'mzIdentifier', obj.aData.id );
-//				console.log(this.parent);
-//				console.log($('td',this));
-//				$('td',this).attr( 'prjId', obj.aData.id );
-////				console.log($('tr',this.parent));
-//				console.log($('td',this).attr('prjId'));
-				return '<a href="#" id="prjList_'+ cellId +'">' + obj.aData.name + '</a>';
+				return '<a href="#" class="linkName">' + obj.aData.name + '</a>';
 			}
 		}, {
 			"mDataProp" : "startDate",
@@ -665,15 +675,15 @@ function initProjectsList() {
 			"sTitle" : "End Date",
 			"sClass" : "center",
 			"bSortable" : false
-		}, {
-			"mDataProp" : null,
-			"sTitle" : "Select",
-			"sClass" : "left",
-			"bSearchable" : false,
-			"bSortable" : false,
-			"fnRender" : function(obj) {
-				return '<a href="javascript:;" onclick="selectProject(' + obj.aData.id + ')">Select project</a>';
-			}
+//		}, {
+//			"mDataProp" : null,
+//			"sTitle" : "Select",
+//			"sClass" : "left",
+//			"bSearchable" : false,
+//			"bSortable" : false,
+//			"fnRender" : function(obj) {
+//				return '<a href="javascript:;" onclick="selectProject(' + obj.aData.id + ')">Select project</a>';
+//			}
 		}, {
 			"mDataProp" : null,
 			"sTitle" : "",
@@ -688,61 +698,12 @@ function initProjectsList() {
 	updateProjectLinks();
 
 
-	$('#tblProjectsList tbody tr td img.btnPrjOpenTbl').on('click', function() {
-
-		var nTr = $(this).parents('tr')[0];
-		if (oPrjTable.fnIsOpen(nTr)) {
-			/* This row is already open - close it */
-			// this.src = "../examples_support/details_open.png";
-			oPrjTable.fnClose(nTr);
-		} else {
-			/* Open this row */
-			// this.src = "../examples_support/details_close.png";
-			oPrjTable.fnOpen(nTr, projectDetails(nTr), 'details');
-		}
-	});
-
-	$('#tblProjectsList tbody tr td img.btnPrjRemoveTbl').on('click', function() {
-
-		var aData = oPrjTable.fnGetData(this.parentNode.parentNode); // get
-		// datarow
-		if (null != aData) { // null if we clicked on title row
-			console.log("remove: " + aData.id);
-			$("#project-confirm-deletion").dialog({
-				resizable : false,
-				height : 100,
-				modal : true,
-				buttons : {
-					Cancel : function() {
-						$(this).dialog("close");
-					},
-					"Accept" : function() {
-						$(this).dialog("close");
-						deleteProject(aData.id);
-					}
-				}
-			});
-		}
-
-	});
-
-	$('#tblProjectsList tbody tr td img.btnPrjEditTbl').on('click', function() {
-
-		var aData = oPrjTable.fnGetData(this.parentNode.parentNode); // get
-		// datarow
-		if (null != aData) { // null if we clicked on title row
-			console.log("edit: " + aData.id);
-		}
-	});
-
 	$('#btnOpenProjectForm').button({
 		icons : {
 			primary : "ui-icon-plus"
 		}
 	}).click(function() {
 		openModal('frmAddProject');
-//		$("#frmAddProject").dialog("open");
-//		$('#frmAddProject').slideDown();
 		$('#prjName').val('');
 		$('#prjDescription').val('');
 		$('#prjStartDate').val('');
