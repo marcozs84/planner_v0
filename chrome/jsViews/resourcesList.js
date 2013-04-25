@@ -17,9 +17,12 @@ function editResource(event) {
 	var aData = oPrjTable.fnGetData(event);
 	var resourceId = aData.id;
 
+	console.log(resourceId);
+
 	isEditingResource = resourceId;
 
 	var objD = getResourceById(isEditingResource);
+	console.log(objD);
 	$('#rscName').val(objD.name);
 	$('#rscInitials').val(objD.initials);
 

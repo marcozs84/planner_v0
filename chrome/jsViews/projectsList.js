@@ -171,8 +171,6 @@ function updateProjectLinks(){
 
 function selectProject(projectId) {
 
-	console.log(projectId);
-
 	if(isNaN(projectId)){
 		projectId = $("#projectSelector").val();
 	}else{
@@ -422,6 +420,8 @@ function deleteProjectResources(projectId, resources){
 				oPrjTable.fnAddData(projects);
 				oPrjTable.fnDraw();
 
+				updateProjectLinks();
+
 				var nNodes = oPrjTable.fnGetNodes(ProjectRowPos);
 
 				if (oPrjTable.fnIsOpen(nNodes)) {
@@ -503,6 +503,8 @@ function addResourcesToProject(projectId, resources) {
 				oPrjTable.fnClearTable(0);
 				oPrjTable.fnAddData(projects);
 				oPrjTable.fnDraw();
+
+				updateProjectLinks();
 
 				$('#prjName').val('');
 				$('#prjDescription').val('');

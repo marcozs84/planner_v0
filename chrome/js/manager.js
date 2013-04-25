@@ -846,7 +846,7 @@ function getFontColor(hexcode) {
 
 function openModal(view) {
 	console.log("opening modal: " + view);
-	console.log($("#" + view));
+//	console.log($("#" + view));
 	$("#" + view).dialog("open");
 }
 
