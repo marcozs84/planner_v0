@@ -175,12 +175,12 @@ function selectProject(projectId) {
 
 	if(isNaN(projectId)){
 		projectId = $("#projectSelector").val();
+	}else{
+		$('#projectSelector').selectmenu("value", projectId)
 	}
 
 	selectedProject = projectId;
 	var prj = getProjectById(projectId);
-
-	console.log(projectId)
 
 	$("#calendarFrom").datepicker("option", "minDate", prj.startDate);
 	$("#calendarFrom").datepicker("option", "maxDate", prj.endDate);
