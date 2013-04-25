@@ -124,13 +124,19 @@ div.floating-menu {
 	z-index: 100;
 }
 
-div.floating-menu a,div.floating-menu h3 {
-	display: inline-table;
-	padding: 5px;
-	margin: 0px;
-	text-decoration: none;
-}
+/* div.floating-menu a,div.floating-menu h3 { */
+/* 	display: inline-table; */
+/* 	padding: 5px; */
+/* 	margin: 0px; */
+/* 	text-decoration: none; */
+/* } */
 
+.projectSelector > a{
+	width:150px !important;
+}
+.projectSelector > a > ui-selectmenu-status{
+	margin:0px;
+}
 
 /************************************/
 

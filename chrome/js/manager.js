@@ -864,6 +864,8 @@ function toolBarInit() {
 
 	$("#projectSelector").on('change',selectProject);
 
+	$('#projectSelector').selectmenu().addClass("projectSelector");
+
 	$("#btnTest")
 	.css("display","none")
 	.button({
