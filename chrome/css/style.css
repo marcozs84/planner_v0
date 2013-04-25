@@ -131,8 +131,10 @@ div.floating-menu {
 /* 	text-decoration: none; */
 /* } */
 
-.projectSelector > a{
-	width:150px !important;
+.projectSelector > a, .projectSelector > ul{
+	width:auto !important;
+	max-width:160px !important;
+	overflow:hidden;
 }
 .projectSelector > a > ui-selectmenu-status{
 	margin:0px;

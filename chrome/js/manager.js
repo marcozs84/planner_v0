@@ -864,7 +864,12 @@ function toolBarInit() {
 
 	$("#projectSelector").on('change',selectProject);
 
-	$('#projectSelector').selectmenu().addClass("projectSelector");
+	$('#projectSelector').selectmenu().selectmenu("widget").addClass("projectSelector");
+
+	$('.projectSelector .ui-selectmenu-status ').dotdotdot({
+		ellipsis	: '... ',
+		wrap		: 'word'
+	});
 
 	$("#btnTest")
 	.css("display","none")
