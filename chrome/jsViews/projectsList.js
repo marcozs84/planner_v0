@@ -176,7 +176,7 @@ function selectProject(projectId) {
 	if(isNaN(projectId)){
 		projectId = $("#projectSelector").val();
 	}else{
-		$('#projectSelector').selectmenu("value", projectId)
+		$('#projectSelector').selectmenu("value", projectId);
 	}
 
 	selectedProject = projectId;
