@@ -14,7 +14,7 @@ function updateResourceLinks(){
 
 function editResource(event) {
 
-	var aData = oPrjTable.fnGetData(event);
+	var aData = oRscTable.fnGetData(event);
 	var resourceId = aData.id;
 
 	console.log(resourceId);

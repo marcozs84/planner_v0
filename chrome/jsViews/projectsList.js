@@ -110,8 +110,8 @@ function projectDetails(nTr) {
 	sOut += '</table>';
 	sOut += '<br />';
 
-	sOut += '<a href="javascript:;" id="btnAddResource_' + aData.id + '">Add Resources</a>';
-	sOut += '<a href="javascript:;" id="btnRemResource_' + aData.id + '">Remove Resources</a>';
+	sOut += '<a href="#" id="btnAddResource_' + aData.id + '">Add Resources</a>';
+	sOut += '<a href="#" id="btnRemResource_' + aData.id + '">Remove Resources</a>';
 	sOut += '<br />';
 	sOut += '<br />';
 	sOut += '<script>renderButtonAddResource(' + aData.id + ');</script>';
