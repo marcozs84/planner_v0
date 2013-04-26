@@ -854,10 +854,17 @@ function toolBarInit() {
 
 	var html = "";
 	projects = JSON.parse(localStorage.getItem('backProjects'));
-	for (var i = 0; i < projects.length; i++) {
-		html += "<option value=\"";
-		html += projects[i].id + "\">";
-		html += projects[i].name + "</option>";
+
+	if(projects.length < 1){
+		html = "";
+		html += "<option value=\"0\">No projects available </option>";
+	}else{
+		html = "";
+		for (var i = 0; i < projects.length; i++) {
+			html += "<option value=\"";
+			html += projects[i].id + "\">";
+			html += projects[i].name + "</option>";
+		}
 	}
 
 	$("#projectSelector").empty().append(html);
@@ -935,7 +942,36 @@ function toolBarInit() {
 			primary : "ui-icon-power"
 		}
 	}).click(function() {
-		window.location.replace("logout.php");
+		$.ajax({
+			type : "POST",
+			url : "http://planner/www/logout.php",
+			data : {
+				token : localStorage.getItem('localSession')
+			}
+		}).done(function(msg) {
+
+			try {
+				var answer = JSON.parse(msg);
+			} catch (error) {
+				console.log(msg + ' ' + error);
+				return false;
+			}
+
+			console.log("answer logging out: ");
+			console.log(answer);
+
+			if (answer.result == 'TRUE') {
+
+				window.location.href = 'login.html';
+
+			} else {
+				$("#btnAddResource").button("option", "disabled", false);
+				error('msgErrorResourceAdd', 'Error trying to log out.');
+			}
+		}).fail(function() {
+			$("#btnAddResource").button("option", "disabled", false);
+			notice('msgErrorResource', 'Couldn\'t connect with server.', true);
+		});
 	});
 }
 

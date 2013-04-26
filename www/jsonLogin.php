@@ -1,7 +1,14 @@
 <?php
 include_once ('tools.php');
 
+$sessionToken = '';
+
 if (isset ( $_POST ['password'] ) && isset ( $_POST ['username'] )) {
+
+	$sessionToken = 'abcde12345';
+
+	session_start();
+	$_SESSION[$sessionToken] = 1;
 
 /**
  * ************************* GETTING TIMELINES *****************************
@@ -266,7 +273,7 @@ xxx;
 	$loginResult = Array(
 		"username" => $_POST ['username'],
 		"password" => $_POST ['password'],
-		"token" => 'abcde12345',
+		"token" => $sessionToken,
 		"isManager" => "TRUE",
 		"loginResult" => "TRUE",
 		"permissions" => Array(
