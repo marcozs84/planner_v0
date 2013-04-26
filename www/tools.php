@@ -9,6 +9,7 @@ function writelog($message){
 	$log->lwrite($message);
 
 	$log->lclose();
+	return false;
 }
 
 $con = @mysqli_connect('localhost','root','');
@@ -52,7 +53,10 @@ function ConnectDB(){
 }
 
 function displayQuery($query){
-	$display_queries_in_messages = true;
+
+	writelog("\n \t".$query);
+
+	$display_queries_in_messages = false;
 	if($display_queries_in_messages){
 		return $query;
 	}else{

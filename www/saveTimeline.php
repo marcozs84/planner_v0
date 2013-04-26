@@ -42,7 +42,7 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['teamId'] )) {
 // 			print "{\"result\":\"FALSE\",\"message\":\"Insertion query failed.\",\"package\":\"null\"}";
 			$resultJSON = Array(
 					"result" => "FALSE",
-					"message" => "Insertion query failed.",
+					"message" => "Insertion query failed. ".displayQuery($query),
 					"package" => "null"
 					);
 			print json_encode($resultJSON);
@@ -77,7 +77,7 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['teamId'] )) {
 		} else {
 // 			print "{\"result\":\"FALSE\",\"message\":\"Update query failed.\",\"package\":\"null\"}";
 			$resultJSON = Array("result" => "FALSE",
-					"message" => "Update query failed.",
+					"message" => "Update query failed. ".displayQuery($query),
 					"package" => "null"
 			);
 

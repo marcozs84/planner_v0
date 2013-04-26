@@ -5,7 +5,7 @@
 
 		$projectId = json_decode($_POST['id']);
 
-		$query = "DELETE FROM tblproject_resource WHERE projectId IN (".@implode(",",$projectId).")";
+		$query = "DELETE FROM tbltimeline WHERE projectId IN (".@implode(",",$projectId).")";
 
 		$res = $mysqli->query($query);
 
