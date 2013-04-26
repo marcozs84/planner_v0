@@ -1,6 +1,8 @@
 <?php
 include_once ('tools.php');
 
+writelog("Request to: ".__FILE__);
+
 if (isset ( $_POST ['name'] ) && isset ( $_POST ['startDate'] )) {
 
 	$id = trim ( $_POST ['id'] );
@@ -41,8 +43,10 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['startDate'] )) {
 							)
 					);
 
+			writelog("Insertion succesful. ");
 			print json_encode($resultJSON);
 		} else {
+			writelog("Insertion query failed. ".$res);
 			$resultJSON = Array(
 					"result" => "FALSE",
 					"message" => "Insertion query failed.".displayQuery($query),
@@ -68,10 +72,11 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['startDate'] )) {
 							"timelines" => Array()				//@TODO fill with timelines corresponding to the updated project.
 					)
 			);
-
+			writelog("Update succesful. ");
 			print json_encode($resultJSON);
 		} else {
 // 			print "{\"result\":\"FALSE\",\"message\":\"Update query failed.\",\"package\":\"null\"}";
+			writelog("Update query failed. ".$res);
 			$resultJSON = Array("result" => "FALSE",
 					"message" => "Update query failed.",
 					"package" => "null"
