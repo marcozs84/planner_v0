@@ -70,7 +70,8 @@ function saveDeveloper() {
 
 		var answer = JSON.parse(msg);
 
-		console.log("answer: " + answer);
+		console.log("answer: ");
+		console.log(answer);
 
 		if (answer.result == 'TRUE') {
 
