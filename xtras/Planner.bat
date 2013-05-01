@@ -11,7 +11,10 @@ IF "%1"=="g" GOTO GIT
 GOTO END
 
 :GIT
-	wscript "C:\Program Files (x86)\Git\Git Bash.vbs" "%ProjectFolder%"
+	REM	wscript "C:\Program Files (x86)\Git\Git Bash.vbs" "%ProjectFolder%"
+
+	REM assuming the Console2 path is in the environment variable
+	start Console -t Planner
 GOTO END
 
 :BOTH
