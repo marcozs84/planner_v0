@@ -18,7 +18,8 @@ GOTO END
 GOTO END
 
 :BOTH
-	wscript "C:\Program Files (x86)\Git\Git Bash.vbs" "%ProjectFolder%"
+	REM wscript "C:\Program Files (x86)\Git\Git Bash.vbs" "%ProjectFolder%"
+	start Console -t Planner
 	start C:\Workshop\Planner /C
 	
 :END
