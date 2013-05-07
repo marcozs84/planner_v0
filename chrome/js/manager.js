@@ -860,6 +860,8 @@ function toolBarInit() {
 		html += "<option value=\"0\">No projects available </option>";
 	}else{
 		html = "";
+		html += "<option value=\"0\">";
+		html += "Select a project</option>";
 		for (var i = 0; i < projects.length; i++) {
 			html += "<option value=\"";
 			html += projects[i].id + "\">";
