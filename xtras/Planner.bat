@@ -5,9 +5,10 @@ set ProjectFolder=C:\Workshop\Planner
 IF "%1"=="" GOTO BOTH
 IF "%1"=="f" GOTO FOLDER
 IF "%1"=="g" GOTO GIT
+IF "%1"=="s" GOTO SELENIUM
 
 :FOLDER
-	start C:\Workshop\Planner /C
+	start %ProjectFolder% /C
 GOTO END
 
 :GIT
@@ -17,9 +18,13 @@ GOTO END
 	start Console -t Planner
 GOTO END
 
+:SELENIUM
+	start Console -d %ProjectFolder%\bin /C
+GOTO END
+
 :BOTH
 	REM wscript "C:\Program Files (x86)\Git\Git Bash.vbs" "%ProjectFolder%"
+	start %ProjectFolder% /C
 	start Console -t Planner
-	start C:\Workshop\Planner /C
 	
 :END
