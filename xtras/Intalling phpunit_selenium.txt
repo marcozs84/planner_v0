@@ -1,0 +1,33 @@
+NOTE: nice bunch of info related to startup a development server in windows.
+
+LINK1: http://trac.symfony-project.org/wiki/WindowsXPDevelopmentEnvironment
+
+
+Install PEAR
+- you can find it somewhere in LINK1
+- look inside xampp for go-pear.bat it basically makes it all.
+
+
+Install xdebug on windows (dependency for CodeCoverage)
+
+Way 1: go to http://xdebug.org/wizard.php
+
+follow the instructions, you can download the required dll at 
+
+http://xdebug.org/download.php
+
+OR
+
+way 2: go to http://xdebug.org/docs/install and follow the steps.
+
+
+Install PHP_CodeCoverage  (Dependency for phpunit according to https://bugs.launchpad.net/ubuntu/+source/phpunit/+bug/701544)
+
+https://github.com/sebastianbergmann/php-code-coverage
+
+(requires xdebug)
+
+
+Install PHPUnit
+
+http://phpunit.de/manual/3.6/en/selenium.html#selenium.selenium2testcase
