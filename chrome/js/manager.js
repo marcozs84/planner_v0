@@ -850,8 +850,7 @@ function openModal(view) {
 	$("#" + view).dialog("open");
 }
 
-function toolBarInit() {
-
+function updateProjectSelector(){
 	var html = "";
 	projects = JSON.parse(localStorage.getItem('backProjects'));
 
@@ -879,6 +878,11 @@ function toolBarInit() {
 		ellipsis	: '... ',
 		wrap		: 'word'
 	});
+}
+
+function toolBarInit() {
+
+	updateProjectSelector();
 
 	$("#btnTest")
 	.css("display","none")

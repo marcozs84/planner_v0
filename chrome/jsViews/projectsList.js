@@ -239,6 +239,7 @@ function saveProject() {
 				oPrjTable.fnDraw();
 
 				updateProjectLinks();
+				updateProjectSelector();
 
 				notice('msgErrorProject', 'Created.', true);
 
