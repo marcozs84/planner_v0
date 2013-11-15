@@ -94,8 +94,8 @@ function taskDetails(nTr) {
 		sOut += '<span style="color:#fff; font-weight:normal;">' + aData.splits[i].duration + '</span><br />';
 
 		if (aData.splits[i].timelineId == 0) {
-			sOut += ' [<a href="#;" id="lnkAssign_'+ aData.id +'" style="color:#fff; font-weight:normal;">Assign</a>]';
-			//
+			sOut += ' [<a href="#" id="lnkAssign_'+ aData.id +'" style="color:#fff; font-weight:normal;">Assign</a>]';
+			// onclick="assignTask(' + aData.splits[i].id + ','+ posRow +');"
 		} else {
 			var tmlne = getTimelineById(aData.splits[i].timelineId);
 			console.log(tmlne);
