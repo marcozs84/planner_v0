@@ -132,8 +132,7 @@ xxx;
 							"description" => $description,
 							"assigned" => $assigned,
 							"closed" => $closed,
-							"color" => $color,
-							"splits" => Array($resSplit)
+							"color" => $color
 					)
 			);
 

@@ -60,7 +60,6 @@ function saveResource() {
 			if (isEditingResource == 0) {
 				$('#rscName').val('');
 				$('#rscInitials').val('');
-//				$('#frmAddResource').slideUp();
 				$('#frmAddResource').dialog("close");
 
 				resources.push(answer.package);
@@ -83,8 +82,6 @@ function saveResource() {
 				objP.name = $('#rscName').val();
 				objP.initials = $('#rscInitials').val();
 
-				$('#frmAddResource').slideUp();
-
 				stringResources = JSON.stringify(resources);
 				localStorage.setItem('backResources', stringResources);
 				resources = JSON.parse(localStorage.getItem('backResources'));
@@ -97,7 +94,6 @@ function saveResource() {
 
 				$('#rscName').val('');
 				$('#rscInitials').val('');
-//				$('#frmAddResource').slideUp();
 				$('#frmAddResource').dialog("close");
 
 				isEditingResource = 0;
@@ -289,8 +285,6 @@ function initResourcesList() {
 					return false;
 				}
 
-				$("#btnAddResource").button("option", "disabled", true);
-
 				saveResource();
 			}
 		}, {
@@ -405,7 +399,6 @@ function initResourcesList() {
 		$('#rscInitials').val('');
 		$('#rscName').focus();
 
-		$("#btnAddResource").button("option", "disabled", false);
 		return false;
 	});
 

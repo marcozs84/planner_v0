@@ -1,9 +1,73 @@
 var oTable;
+var newDivRowObj = 0;
+var newDivParentTaskId = 0;
+var newDivOldSplitId = 0;
+var newDivOldSplitDuration = 0;
+var newDivNewSplitid = 0;
+var newDivNewSplitDuration = 0;
+
+var toAssignSplitId = 0;
+var toAssignSplitObj = 0;
+var toAssignSplitRowPos = 0;
+
+var TasktOnEdit = 0;
+var TaskRowPos = 0;
+var TaskRowPosTmp = 0;
+var TaskRowPosTmp = 0;
+
+function updateTaskLinks(){
+
+	$('#tblTaskList tbody tr td a.linkName').on('click', function() {
+		var nTr = $(this).parents('tr')[0];
+		editTask(nTr);
+	});
+
+	$('#tblTaskList tbody td img.btnTaskOpenTbl').on('click', function() {
+		var nTr = $(this).parents('tr')[0];
+		if (oTable.fnIsOpen(nTr)) {
+			oTable.fnClose(nTr);
+		} else {
+			oTable.fnOpen(nTr, taskDetails(nTr), 'details');
+		}
+	});
+
+	return false;
+}
+
+function renderButtonAssign(aDataId){
+	$('#lnkAssign_' + aDataId).click(function() {
+		// console.log($('#btnAddResource_' + aData.id).button("option",
+		// "btnProjectId"));
+		// console.log($('#btnAddResource_' + aData.id).button("option",
+		// "btnProjectRowPos"));
+		// $("#projectAddResource").dialog("open");
+
+		assignTask(' + aData.splits[i].id + ','+ posRow +');
+
+		$('input:checkbox[name=project_' + aDataId + '_ResourceIds]').each(function() {
+			ProjectExistingResources.push($(this).attr('value'));
+		});
+
+		ProjectOnEdit = $('#btnAddResource_' + aDataId).button("option", "btnProjectId");
+		ProjectRowPos = $('#btnAddResource_' + aDataId).button("option", "btnProjectRowPos");
+
+		ProjectResourcesSelection = new Array();
+
+		$("#resourcesList").dialog("open");
+
+		$('#prjRscName').selectmenu();
+		return false;
+
+	});
+
+	TaskRowPosTmp = 0;
+}
 
 /* Formating function for row details */
 function taskDetails(nTr) {
 	var posRow = oTable.fnGetPosition(nTr);
 	var aData = oTable.fnGetData(nTr);
+	TaskRowPosTmp = posRow;
 
 	var sOut = '';
 	sOut += '<table cellpadding="5" cellspacing="0" border="0" style="/*padding-left:50px;*/ width:100%;">';
@@ -30,7 +94,8 @@ function taskDetails(nTr) {
 		sOut += '<span style="color:#fff; font-weight:normal;">' + aData.splits[i].duration + '</span><br />';
 
 		if (aData.splits[i].timelineId == 0) {
-			sOut += ' [<a href="javascript:;" onclick="assignTask(' + aData.splits[i].id + ','+ posRow +');" style="color:#fff; font-weight:normal;">Assign</a>]';
+			sOut += ' [<a href="#;" id="lnkAssign_'+ aData.id +'" style="color:#fff; font-weight:normal;">Assign</a>]';
+			//
 		} else {
 			var tmlne = getTimelineById(aData.splits[i].timelineId);
 			console.log(tmlne);
@@ -53,25 +118,24 @@ function taskDetails(nTr) {
 	sOut += '</td>';
 	sOut += '</tr>';
 	sOut += '</table>';
+	sOut += '<script>renderButtonAssign(' + aData.id + ');</script>';
 
 	return sOut;
 }
 
 var isEditingTask = 0;
 
-var newDivRowObj = 0;
-var newDivParentTaskId = 0;
-var newDivOldSplitId = 0;
-var newDivOldSplitDuration = 0;
-var newDivNewSplitid = 0;
-var newDivNewSplitDuration = 0;
+function editTask(event) {
 
+	var aData = oTable.fnGetData(event);
+	var taskId = aData.id;
 
-function editTask(taskId) {
+	console.log(taskId);
 
 	isEditingTask = taskId;
 
 	var objT = getTaskById(isEditingTask);
+	console.log(objT);
 	$('#tskName').val(objT.name);
 	$('#tskDuration').val(objT.duration);
 	$('#tskDuration').attr('disabled', true);
@@ -82,10 +146,8 @@ function editTask(taskId) {
 	$('#tskAssigned').val(objT.assigned);
 	$('#tskClosed').val(objT.closed);
 
-	$('#frmAddTask').slideDown();
+	$('#frmAddTask').dialog("open");
 	$('#tskName').focus();
-
-	$("#btnAddTask").button("option", "disabled", false);
 
 }
 
@@ -106,9 +168,6 @@ function devideSplit(splitId,duration,parentId,rowPos){
 	newDivParentTaskId = parentId;
 }
 
-var toAssignSplitId = 0;
-var toAssignSplitObj = 0;
-var toAssignSplitRowPos = 0;
 
 function assignTask(splitId,rowPos){
 	toAssignSplitId = splitId;
@@ -163,7 +222,8 @@ function saveTask() {
 			return false;
 		}
 
-		console.log("answer: " + answer);
+		console.log("answer Saving Task: " + answer);
+		console.log(answer);
 
 		if (answer.result == 'TRUE') {
 
@@ -175,8 +235,7 @@ function saveTask() {
 				$('#tskColor').val('');
 				$('#tskAssigned').val('0');
 				$('#tskClosed').val('0');
-
-				$('#frmAddTask').slideUp();
+				$('#frmAddTask').dialog("close");
 
 				tasks.push(answer.package);
 
@@ -187,6 +246,8 @@ function saveTask() {
 				oTable.fnClearTable(0);
 				oTable.fnAddData(tasks);
 				oTable.fnDraw();
+
+				updateTaskLinks()
 
 				notice('msgErrorTask', 'Created.', true);
 			} else {
@@ -199,8 +260,6 @@ function saveTask() {
 				objT.assigned = $('#tskAssigned').val();
 				objT.closed = $('#tskClosed').val();
 
-				$('#frmAddTask').slideUp();
-
 				stringTasks = JSON.stringify(tasks);
 				localStorage.setItem('backTasks', stringTasks);
 				tasks = JSON.parse(localStorage.getItem('backTasks'));
@@ -209,13 +268,15 @@ function saveTask() {
 				oTable.fnAddData(tasks);
 				oTable.fnDraw();
 
+				updateTaskLinks()
+
 				$('#tskName').val('');
 				$('#tskDuration').val('');
 				$('#tskColor').val('');
 				$('#tskDescription').val('');
 				$('#tskAssigned').val('0');
 				$('#tskClosed').val('0');
-				$('#frmAddDeveloper').slideUp();
+				$('#frmAddTask').dialog("close");
 
 				isEditingTask = 0;
 
@@ -228,7 +289,7 @@ function saveTask() {
 			console.log(msg);
 		}
 	}).fail(function() {
-		notice('msgErrorTask', 'Couldn\'t connect with server.', true);
+		notice('msgErrorTaskAdd', 'Couldn\'t connect with server.', true);
 	});
 }
 
@@ -315,6 +376,36 @@ function initTaskList() {
 
 				$("#task-confirm-deletion").dialog("open");
 
+			}
+		}, {
+			text : "Close",
+			click : function() {
+				$(this).dialog("close");
+			}
+		} ]
+	});
+
+	$("#frmAddTask").dialog({
+		width : '70%',
+		autoOpen : false,
+		modal : true,
+		buttons : [ {
+			text : "Save",
+			click : function() {
+
+				if ($('#tskName').val() == '') {
+					alert("Please provide a valid name.");
+					return false;
+				}
+
+				if ($('#tskDuration').val() == '' || isNaN($('#tskDuration').val())) {
+					alert("Please provide a valid duration value. Only numbers are allowed.");
+					$('#tskDuration').focus();
+					$('#tskDuration').select();
+					return false;
+				}
+
+				saveTask();
 			}
 		}, {
 			text : "Close",
@@ -543,101 +634,94 @@ function initTaskList() {
 	});
 
 	// $(document).ready(function() {
-	oTable = $('#tblTaskList').dataTable(
+	oTable = $('#tblTaskList').dataTable({
+		"aaData" : tasks,
+		"bJQueryUI" : true,
+		"sPaginationType" : "full_numbers",
+		"aoColumns" : [
 			{
-				"aaData" : tasks,
-				"bJQueryUI" : true,
-				"sPaginationType" : "full_numbers",
-				"aoColumns" : [
-						{
-							"mDataProp" : null,
-							"sTitle" : "",
-							"sClass" : "center",
-							"fnRender" : function(obj) {
-								return '<img class="btnTaskOpenTbl" src="imgs/details_open.png" />';
-							}
-						},
-						{
-							"mDataProp" : "id",
-							"sTitle" : "Id",
-							"sClass" : "center",
-							"bSortable" : true
-						},
-						{
-							"mDataProp" : null,
-							"sTitle" : "Name",
-							"sClass" : "left",
-							"bSortable" : true,
-							"fnRender" : function(obj) {
-								return '<a href="javascript:;" onclick="editTask(' + obj.aData.id + ')">' + obj.aData.name + '</a>';
-							}
-						},
-						{
-							"mDataProp" : null,
-							"sTitle" : "Duration",
-							"sClass" : "center",
-							"bSortable" : true,
-							"fnRender" : function(obj) {
+				"mDataProp" : null,
+				"sTitle" : "",
+				"sClass" : "center",
+				"fnRender" : function(obj) {
+					return '<img class="btnTaskOpenTbl" src="imgs/details_open.png" />';
+				}
+			},
+			{
+				"mDataProp" : "id",
+				"sTitle" : "Id",
+				"sClass" : "center",
+				"bSortable" : true
+			},
+			{
+				"mDataProp" : null,
+				"sTitle" : "Name",
+				"sClass" : "left",
+				"bSortable" : true,
+				"fnRender" : function(obj) {
+					return '<a href="#" class="linkName">' + obj.aData.name + '</a>';
+				}
+			},
+			{
+				"mDataProp" : null,
+				"sTitle" : "Duration",
+				"sClass" : "center",
+				"bSortable" : true,
+				"fnRender" : function(obj) {
 
-								var residual = obj.aData.duration;
-								var iWeeks = 0;
-								var iDays = 0;
-								var iHours = 0;
+					var residual = obj.aData.duration;
+					var iWeeks = 0;
+					var iDays = 0;
+					var iHours = 0;
 
-								while (residual > 0) {
-									if (residual > 40) {
-										iWeeks++;
-										residual -= 40;
-										continue;
-									}
-									if (residual > 8) {
-										iDays++;
-										residual -= 8;
-										continue;
-									}
-									iHours = residual;
-									residual = 0;
-								}
+					while (residual > 0) {
+						if (residual > 40) {
+							iWeeks++;
+							residual -= 40;
+							continue;
+						}
+						if (residual > 8) {
+							iDays++;
+							residual -= 8;
+							continue;
+						}
+						iHours = residual;
+						residual = 0;
+					}
 
-								return ((iWeeks > 0) ? iWeeks + 'w' : '') + ' ' + ((iDays > 0) ? iDays + 'd' : '') + ' '
-										+ ((iHours > 0) ? iHours + 'h' : '') + ' ( ' + obj.aData.duration + 'h )';
-							}
-						},
-						{
-							"mDataProp" : null,
-							"sTitle" : "Color",
-							"sClass" : "center",
-							"bSortable" : false,
-							"fnRender" : function(obj) {
-								return '<a href="javascript:;" style="background-color:#' + obj.aData.color
-										+ '; text-decoration:none;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>';
-							}
-						}, {
-							"mDataProp" : null,
-							"sTitle" : "",
-							"sClass" : "center",
-							"bSortable" : false,
-							"fnRender" : function(obj) {
-								return '<input type="checkbox" value="' + obj.aData.id + '" name="taskIds" />';
-							}
-						} ]
-			});
-
-	$('#tblTaskList tbody td img.btnTaskOpenTbl').on('click', function() {
-		var nTr = $(this).parents('tr')[0];
-		if (oTable.fnIsOpen(nTr)) {
-			oTable.fnClose(nTr);
-		} else {
-			oTable.fnOpen(nTr, taskDetails(nTr), 'details');
-		}
+					return ((iWeeks > 0) ? iWeeks + 'w' : '') + ' ' + ((iDays > 0) ? iDays + 'd' : '') + ' '
+							+ ((iHours > 0) ? iHours + 'h' : '') + ' ( ' + obj.aData.duration + 'h )';
+				}
+			},
+			{
+				"mDataProp" : null,
+				"sTitle" : "Color",
+				"sClass" : "center",
+				"bSortable" : false,
+				"fnRender" : function(obj) {
+					return '<a href="javascript:;" style="background-color:#' + obj.aData.color
+							+ '; text-decoration:none;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>';
+				}
+			}, {
+				"mDataProp" : null,
+				"sTitle" : "",
+				"sClass" : "center",
+				"bSortable" : false,
+				"fnRender" : function(obj) {
+					return '<input type="checkbox" value="' + obj.aData.id + '" name="taskIds" />';
+				}
+			}
+		]
 	});
+
+	updateTaskLinks();
 
 	$('#btnOpenTaskForm').button({
 		icons : {
 			primary : "ui-icon-plus"
 		}
 	}).click(function() {
-		$('#frmAddTask').slideDown();
+		openModal('frmAddTask');
 		$('#tskName').val('');
 		$('#tskDuration').val('');
 		$('#tskDuration').removeAttr('disabled');
@@ -651,30 +735,7 @@ function initTaskList() {
 
 		$('#tskName').focus();
 
-		$("#btnAddTask").button("option", "disabled", false);
-	});
-
-	$('#btnAddTask').button({
-		icons : {
-			primary : "ui-icon-disk"
-		}
-	}).click(function() {
-
-		if ($('#tskName').val() == '') {
-			alert("Please provide a valid name.");
-			return false;
-		}
-
-		if ($('#tskDuration').val() == '' || isNaN($('#tskDuration').val())) {
-			alert("Please provide a valid duration value. Only numbers are allowed.");
-			$('#tskDuration').focus();
-			$('#tskDuration').select();
-			return false;
-		}
-
-		$("#btnAddDeveloper").button("option", "disabled", true);
-
-		saveTask();
+		return false;
 
 	});
 
@@ -682,16 +743,4 @@ function initTaskList() {
 		$('#tskColor').css('background-color', '#' + $('#tskColor').val());
 	});
 
-	$('#btnAddTaskCancel').button().click(function() {
-
-		$('#tskName').val('');
-		$('#tskDuration').val('');
-		$('#tskDescription').val('');
-		$('#tskColor').val('');
-		$('#tskAssigned').val('0');
-		$('#tskClosed').val('0');
-
-		$('#frmAddTask').slideUp();
-
-	});
 };
