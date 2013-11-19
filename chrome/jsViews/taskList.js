@@ -17,6 +17,8 @@ var TaskRowPosTmp = 0;
 
 function updateTaskLinks(){
 
+//	console.log("updating list tasks");
+
 	$('#tblTaskList tbody tr td a.linkName').on('click', function() {
 		var nTr = $(this).parents('tr')[0];
 		editTask(nTr);
@@ -34,31 +36,27 @@ function updateTaskLinks(){
 	return false;
 }
 
-function renderButtonAssign(aDataId){
-	$('#lnkAssign_' + aDataId).click(function() {
-		// console.log($('#btnAddResource_' + aData.id).button("option",
-		// "btnProjectId"));
-		// console.log($('#btnAddResource_' + aData.id).button("option",
-		// "btnProjectRowPos"));
-		// $("#projectAddResource").dialog("open");
+function renderButtonAssign(buttons){
 
-		assignTask(' + aData.splits[i].id + ','+ posRow +');
-
-		$('input:checkbox[name=project_' + aDataId + '_ResourceIds]').each(function() {
-			ProjectExistingResources.push($(this).attr('value'));
+	for(var i = 0 ; i < buttons.devideButtons.length; i++){
+		$('#lnkDevide_' + buttons.devideButtons[i].splitId).data( "splitId", buttons.devideButtons[i].splitId );
+		$('#lnkDevide_' + buttons.devideButtons[i].splitId).data( "duration", buttons.devideButtons[i].duration );
+		$('#lnkDevide_' + buttons.devideButtons[i].splitId).data( "parentId", buttons.devideButtons[i].parentId );
+		$('#lnkDevide_' + buttons.devideButtons[i].splitId).data( "posRow", buttons.devideButtons[i].posRow );
+		$('#lnkDevide_' + buttons.devideButtons[i].splitId).click(function() {
+			devideSplit($(this).data("splitId"),$(this).data("duration"),$(this).data("parentId"),$(this).data("posRow"));
+			return false;
 		});
+	}
 
-		ProjectOnEdit = $('#btnAddResource_' + aDataId).button("option", "btnProjectId");
-		ProjectRowPos = $('#btnAddResource_' + aDataId).button("option", "btnProjectRowPos");
-
-		ProjectResourcesSelection = new Array();
-
-		$("#resourcesList").dialog("open");
-
-		$('#prjRscName').selectmenu();
-		return false;
-
-	});
+	for(var i = 0 ; i < buttons.assignButtons.length; i++){
+		$('#lnkAssign_' + buttons.assignButtons[i].splitId).data( "splitId", buttons.assignButtons[i].splitId );
+		$('#lnkAssign_' + buttons.assignButtons[i].splitId).data( "posRow", buttons.assignButtons[i].posRow );
+		$('#lnkAssign_' + buttons.assignButtons[i].splitId).click(function() {
+			assignTask($(this).data("splitId"),$(this).data("posRow"));
+			return false;
+		});
+	}
 
 	TaskRowPosTmp = 0;
 }
@@ -76,12 +74,19 @@ function taskDetails(nTr) {
 	sOut += '<table cellspacing="0" cellpadding="0" style="width:100%; background:none;">';
 	sOut += '<tr>';
 
+	var assignButtons = Array();
+	var devideButtons = Array();
+
 	for ( var i = 0; i < aData.splits.length; i++) {
 		wPercent = ((aData.splits[i].duration * 100) / aData.duration);
 
 		sOut += '<td style="background-color:#ffffff; width:' + Math.floor(wPercent) + '%; height:12px; border:1px solid #000;">';
-		sOut += '<a href="javascript:;" onclick="devideSplit('+ aData.splits[i].id +','+ aData.splits[i].duration +','+ aData.splits[i].parentId +','+ posRow +');" style="text-width:normal;">Devide</a>';
+		sOut += '<a href="#" id="lnkDevide_'+ aData.splits[i].id +'" style="text-width:normal;">Devide</a>';
+		// onclick="devideSplit('+ aData.splits[i].id +','+ aData.splits[i].duration +','+ aData.splits[i].parentId +','+ posRow +');"
 		sOut += '</td>';
+
+		devideButtons.push({"splitId": aData.splits[i].id, "duration": aData.splits[i].duration, "parentId": aData.splits[i].parentId, "posRow": posRow});
+
 	}
 
 	sOut += '</tr>';
@@ -94,8 +99,9 @@ function taskDetails(nTr) {
 		sOut += '<span style="color:#fff; font-weight:normal;">' + aData.splits[i].duration + '</span><br />';
 
 		if (aData.splits[i].timelineId == 0) {
-			sOut += ' [<a href="#" id="lnkAssign_'+ aData.id +'" style="color:#fff; font-weight:normal;">Assign</a>]';
+			sOut += ' [<a href="#" id="lnkAssign_'+ aData.splits[i].id +'" style="color:#fff; font-weight:normal;">Assign</a>]';
 			// onclick="assignTask(' + aData.splits[i].id + ','+ posRow +');"
+			assignButtons.push({"splitId":aData.splits[i].id, "posRow":posRow});
 		} else {
 			var tmlne = getTimelineById(aData.splits[i].timelineId);
 			console.log(tmlne);
@@ -118,7 +124,7 @@ function taskDetails(nTr) {
 	sOut += '</td>';
 	sOut += '</tr>';
 	sOut += '</table>';
-	sOut += '<script>renderButtonAssign(' + aData.id + ');</script>';
+	sOut += '<script>renderButtonAssign(' + JSON.stringify({"assignButtons":assignButtons, "devideButtons": devideButtons}) + ');</script>';
 
 	return sOut;
 }
@@ -163,9 +169,9 @@ function devideSplit(splitId,duration,parentId,rowPos){
 	$('input[name="splitbehavior"]')[0].checked = true;
 
 	newDivRowObj = rowPos;
-	newDivOldSplitId = splitId;
-	newDivOldSplitDuration = duration;
-	newDivParentTaskId = parentId;
+	newDivOldSplitId = Number(splitId);
+	newDivOldSplitDuration = Number(duration);
+	newDivParentTaskId = Number(parentId);
 }
 
 
@@ -174,8 +180,6 @@ function assignTask(splitId,rowPos){
 //	console.log(splitObj);
 //	toAssignSplitObj = splitObj;
 	toAssignSplitRowPos = rowPos;
-
-	$("#tskDevList").empty();
 
 	if(localStorage.getItem('selectedProject') == 0 || localStorage.getItem('selectedProject') == ''){
 		alert("Please select a Project first.");
@@ -187,6 +191,13 @@ function assignTask(splitId,rowPos){
 	var prj = getProjectById(prjId);
 
 	console.log(prj);
+
+	if(prj.timelines.length < 1){
+		alert("Selected Project does not have any resources assigned to it.");
+		return false;
+	}
+
+	$("#tskDevList").empty();
 
 	$.each(prj.timelines, function() {
 		$("#tskDevList").append($("<option/>").attr("value", this.id).text(this.name));
@@ -521,6 +532,8 @@ function initTaskList() {
 					newDivNewSplitid = 0;
 					newDivNewSplitDuration = 0;
 
+					updateTaskLinks();
+
 					$(thisDialTask).dialog("close");
 				});
 			}
@@ -606,6 +619,7 @@ function initTaskList() {
 
 					notice('msgErrorTask', 'Task assigned.', true);
 
+					updateTaskLinks();
 					updateTimelines(updateCalendarDisplay);
 
 					//updateCalendarDisplay();
@@ -617,6 +631,7 @@ function initTaskList() {
 
 				});
 
+				updateTaskLinks();
 				updateTimelines();
 
 				 toAssignSplitId = 0;
