@@ -133,7 +133,7 @@ div.floating-menu {
 
 .projectSelector > a, .projectSelector > ul{
 	width:auto !important;
-	max-width:160px !important;
+	max-width:200px !important;
 	overflow:hidden;
 }
 .projectSelector > a > ui-selectmenu-status{
