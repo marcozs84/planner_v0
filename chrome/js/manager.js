@@ -150,6 +150,30 @@ function initModalWindows() {
 	});
 }
 
+var Resource = function(timeline) {
+	this.id = 0;
+	this.name = '';
+	this.projectId = 0;
+	this.resourceId = 0;
+	this.teamId = 0;
+	this.days = Array();
+	this.tasks = Array();
+
+	this.construct = function(){
+		if(timeline != null) {
+			this.id = timeline.id;
+			this.name = timeline.name;
+			this.projectId = timeline.projectId;
+			this.resourceId = timeline.resourceId;
+			this.teamId = timeline.team;
+			this.days = timeline.days;
+			this.tasks = timeline.tasks;
+		}
+	}
+
+	this.construct();
+}
+
 var Task = function(task) {
 	this.id = 0;
 	this.name = "";
@@ -204,17 +228,22 @@ var Split = function(split) {
 	this.construct();
 };
 
+/**
+ * 
+ * @param devId
+ * @returns Resource
+ */
 function getTimelineById(devId) {
 	// Searching Developers timeline
-	var dev = 0;
+	var devT = null;
 	for ( var i = 0; i < timeline.length; i++) {
 		if (timeline[i].id == devId) {
-			dev = timeline[i];
+			devT = timeline[i];
 			break;
 		}
 	}
 
-	return dev;
+	return devT;
 }
 
 /**
@@ -224,28 +253,28 @@ function getTimelineById(devId) {
  */
 function getProjectById(Id) {
 	// Searching Projects
-	var dev = 0;
+	var devP = 0;
 	for ( var i = 0; i < projects.length; i++) {
 		if (projects[i].id == Id) {
-			dev = projects[i];
+			devP = projects[i];
 			break;
 		}
 	}
 
-	return dev;
+	return devP;
 }
 
 function getResourceById(Id) {
 	// Searching Resources
-	var dev = 0;
+	var devR = 0;
 	for ( var i = 0; i < resources.length; i++) {
 		if (resources[i].id == Id) {
-			dev = resources[i];
+			devR = resources[i];
 			break;
 		}
 	}
 
-	return dev;
+	return devR;
 }
 
 function getTaskById(id) {
@@ -609,6 +638,8 @@ function generateTimeline(devId) {
 	var tasks = dev.tasks;
 	var dTasks = Array();
 	var fTasks = Array();
+
+	console.log("devId: " + devId + " name: " + dev.name + " tasks: " + dev.tasks.length);
 
 	for ( var i = 0; i < tasks.length; i++) {
 		if ((tasks[i].startDate != '') && (tasks[i].startDate != '0000-00-00 00:00:00')) {
