@@ -4,6 +4,7 @@ include_once ('tools.php');
 /**
  * ************************* GETTING RESOURCES *****************************
  */
+writelog("====================== GETTING RESOURCES ==============================");
 
 function getResourcesJSON(){
 
@@ -18,12 +19,56 @@ function getResourcesJSON(){
 
 		if ($res->num_rows > 0) {
 
-			while ( $row = $res->fetch_assoc () ) {
+			while ( $row = $res->fetch_assoc() ) {
+
+				$query2 = "SELECT
+							  tblsplit.id,
+							  tblsplit.parentId,
+							  tblsplit.timelineId,
+							  tblsplit.dayId,
+							  tblsplit.assigned,
+							  tblsplit.closed,
+							  tblsplit.startDate,
+							  tblsplit.originalDate,
+							  tblsplit.delayBeginning,
+							  tblsplit.delay,
+							  tblsplit.duration as 'split_duration',
+							  tblsplit.order,
+							  tbltask.name,
+							  tbltask.description,
+							  tbltask.duration as 'total_duration'
+							FROM
+							  tblsplit
+							  INNER JOIN tbltask ON (tblsplit.parentId = tbltask.id)
+							WHERE
+							  (tblsplit.timelineId = ".$row ['id'].")";
+
+				$res2 = $mysqli->query( $query2 );
+
+				$assignations = Array();
+
+				if ($res2) {
+					writelog("assignations query succed");
+
+					if ($res2->num_rows > 0) {
+
+						while ( $row2 = $res2->fetch_assoc() ) {
+							$assignations = array(
+									"id" => $row2['id'],
+									"name" => $row2['name'],
+									"split_duration" => $row2['split_duration'],
+									"total_duration" => $row2['total_duration']
+									);
+
+						}
+					}
+				}
 
 				$package [] = Array(
 						"id" => $row ['id'],
 						"name" => $row ['name'],
-						"initials" => $row ['initials']
+						"initials" => $row ['initials'],
+						"assignations" => $assignations
 						);
 			}
 

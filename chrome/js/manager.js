@@ -229,7 +229,7 @@ var Split = function(split) {
 };
 
 /**
- * 
+ *
  * @param devId
  * @returns Resource
  */
@@ -639,7 +639,7 @@ function generateTimeline(devId) {
 	var dTasks = Array();
 	var fTasks = Array();
 
-	console.log("devId: " + devId + " name: " + dev.name + " tasks: " + dev.tasks.length);
+//	console.log("devId: " + devId + " name: " + dev.name + " tasks: " + dev.tasks.length);
 
 	for ( var i = 0; i < tasks.length; i++) {
 		if ((tasks[i].startDate != '') && (tasks[i].startDate != '0000-00-00 00:00:00')) {
