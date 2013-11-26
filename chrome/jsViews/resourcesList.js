@@ -204,7 +204,7 @@ function initResourcesList() {
 
 			if(ProjectOnEdit != 0){
 
-				$('#btnOpenResourceForm').hide();
+//				$('#btnOpenResourceForm').hide();
 
 				console.log(ProjectExistingResources);
 
