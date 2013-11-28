@@ -3,6 +3,15 @@ include_once ('tools.php');
 
 writelog("============================================= INIT ASSIGN SPLIT =============================================");
 
+/**
+ * UNFINISHED FUNCTION
+ * THIS WAS INTENDED TO CREATE A PHP/MySQL REFLECTION OF THE CURRENT JS FUNCTIONALITY
+ * The method just makes the preliminaty calculations to create days if they were needed to hold
+ * tasks inside, this doesn't store nothing on DB, just calculations.
+ * @param unknown_type $mysqli
+ * @param unknown_type $POST
+ * @param int $timelineId
+ */
 function assignSplitToTimeline(&$mysqli,$POST,$timelineId){
 
 	$queryFreeDays = <<<xxx
@@ -162,8 +171,6 @@ if (isset ( $_POST ['splitId'] ) && isset ( $_POST ['duration'] )) {
 	$delay = trim ( $_POST ['delay'] );
 	$duration = trim ( $_POST ['duration'] );
 
-
-
 		$query = <<<xxx
 UPDATE
   tblsplit
@@ -184,7 +191,8 @@ xxx;
 
 	if ($res) {
 
-		assignSplitToTimeline($mysqli,$_POST,$timelineId);
+// 		Temporarily disabled until assignSplitToTimeline function is finished.
+// 		assignSplitToTimeline($mysqli,$_POST,$timelineId);
 
 		include_once ('getTasks.php');
 	} else {
