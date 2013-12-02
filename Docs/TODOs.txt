@@ -1,3 +1,16 @@
+Overall Fixes Planner
+	Creacion de objetos
+	Unificación de las clases, autoloading.
+	Cambios de nombre de las variables.
+	Tomar una decisión sobre:
+		LocalStorage o Ajax update antes de visualización.
+Nuevas Funcionalidades
+	Resources: 
+		Sólo mostrar los recursos relacionados al proyecto seleccionado.
+		Mostrar las asignaciones de cada recurso
+		|-> Puede ser tomado de timeline, obteniendo el timeineId del recurso seleccionado.
+		|-> Modificar la estructura PHP para que devuelva los recursos con las tareas asignadas.
+
 Validations:
 - When generating the Calendar, verify if the Project is in the same range than the time period selected.
 * DONE, the calendar FROM/TO is delimited to the period of time of the project, so it is not possible to select a date out of Projects period.  This was made using javascript, when a Project is selected, these values are sent to the FROM/TO calendar (jquery.datepicker).
@@ -5,3 +18,5 @@ Validations:
 - What happens if an assigned task is longer than the time period of the project.
 
 - Generate the Calendar after assigning all tasks to it, it means to display only the selected period disregarding if there were more tasks before
+
+
