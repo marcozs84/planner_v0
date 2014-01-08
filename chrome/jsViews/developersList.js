@@ -21,13 +21,13 @@ function developerDetails(nTr) {
 		sOut += '<td>';
 		sOut += getTaskName(aData.tasks[i].parentId);
 		sOut += '</td>';
-		sOut += '<td>';
+		sOut += '<td style="text-align:center; ">';
 		sOut += aData.tasks[i].duration;
 		sOut += '</td>';
-		sOut += '<td>';
+		sOut += '<td style="text-align:center; ">';
 		sOut += aData.tasks[i].closed;
 		sOut += '</td>';
-		sOut += '<td>';
+		sOut += '<td style="text-align:center; ">';
 		sOut += aData.tasks[i].startDate;
 		sOut += '</td>';
 		sOut += '</tr>';
@@ -188,6 +188,21 @@ function initDevelopersList() {
 		width : '70%',
 		autoOpen : false,
 		modal : true,
+		open: function( event, ui ) {
+			/**
+			 * Checking selected project before displaying developers
+			 */
+			OnProject = localStorage.getItem('selectedProject');
+			if(OnProject == '' || OnProject == 0){
+				$('#tblDevelopersList').dataTable().fnFilter(	"-1",		2,	false,	false);
+			}else{
+				$('#tblDevelopersList').dataTable().fnFilter(	OnProject,	2,	false,	false);
+			}
+
+//			oDevTable.fnClearTable(0);
+//			oDevTable.fnAddData(timeline);
+//			oDevTable.fnDraw();
+		},
 		buttons : [ {
 			text : "Delete",
 			click : function() {
@@ -240,6 +255,12 @@ function initDevelopersList() {
 			"sTitle" : "Id",
 			"sClass" : "center",
 			"bSortable" : true
+		}, {
+			"mDataProp" : "projectId",
+			"sTitle" : "Project Id",
+			"sClass" : "center",
+			"bSortable" : true,
+			"bVisible" : false
 		}, {
 			"mDataProp" : null,
 			"sTitle" : "Name",

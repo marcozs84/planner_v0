@@ -408,6 +408,8 @@ var elements22 = Array();
  */
 function assignTask(task, devId) {
 
+	console.log("running possible obsolete method manager.js/assignTask");
+
 	if (task.assigned == 1) {
 		alert('The provided task was already assigned.');
 		return false;
