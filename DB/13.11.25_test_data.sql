@@ -15,7 +15,7 @@ INSERT INTO `tblresource` (`id`, `name`, `initials`, `status`) VALUES
   (3,'Mateo Kuljis','MK',1);
 COMMIT;
 
-INSERT INTO `tblsplit` (`id`, `parentId`, `timelineId`, `dayId`, `assigned`, `closed`, `startDate`, `originalDate`, `delayBeginning`, `delay`, `duration`, `order`) VALUES 
+INSERT INTO `tblsplit` (`id`, `parentId`, `timelineId`, `dayId`, `assigned`, `closed`, `startDate`, `originalDate`, `delayBeginning`, `delay`, `duration`, `sorting`) VALUES 
   (1,1,0,0,0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00',0,0,20,0),
   (2,2,0,0,0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00',0,0,30,0),
   (3,1,0,0,0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00',0,0,10,0),
