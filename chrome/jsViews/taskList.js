@@ -620,7 +620,7 @@ function initTaskList() {
 					notice('msgErrorTask', 'Task assigned.', true);
 
 					updateTaskLinks();
-					updateTimelines(updateCalendarDisplay);
+					updateTimelines(updateCalendarDisplay);		/* <----- This is what updates the timelines after assignations */
 
 					//updateCalendarDisplay();
 
