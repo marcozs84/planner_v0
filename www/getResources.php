@@ -33,7 +33,7 @@ function getResourcesJSON(){
 							  tblsplit.delayBeginning,
 							  tblsplit.delay,
 							  tblsplit.duration as 'split_duration',
-							  tblsplit.order,
+							  tblsplit.sorting,
 							  tbltask.name,
 							  tbltask.description,
 							  tbltask.duration as 'total_duration'

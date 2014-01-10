@@ -171,6 +171,32 @@ if (isset ( $_POST ['splitId'] ) && isset ( $_POST ['duration'] )) {
 	$delay = trim ( $_POST ['delay'] );
 	$duration = trim ( $_POST ['duration'] );
 
+
+	//////////////// GETTING MAX ORDER VALUE FROM SPLITS ///////////////////////////
+
+	$queryMax = <<<xxx
+SELECT MAX(sorting) as maxOrder FROM tblsplit WHERE timelineId = {$timelineId};
+xxx;
+
+	$resMax = $mysqli->query ( $queryMax );
+	if($resMax){
+
+		while ( $rowMax = $resMax->fetch_assoc() ) {
+			$maxOrder = $rowMax['maxOrder'];
+			$maxOrder++;
+			writelog($maxOrder);
+		}
+
+	} else {
+		$resultJSON = Array(
+				"result" => "FALSE",
+				"message" => "Error: " . $mysqli->error,
+				"package" => "null"
+		);
+		print json_encode($resultJSON);
+		die();
+	}
+
 		$query = <<<xxx
 UPDATE
   tblsplit
@@ -183,7 +209,8 @@ SET
   originalDate = '{$originalDate}',
   delayBeginning = {$delayBeginning},
   delay = {$delay},
-  duration = {$duration}
+  duration = {$duration},
+  sorting = $maxOrder
 WHERE id={$splitId}
 xxx;
 

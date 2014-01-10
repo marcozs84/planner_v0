@@ -24,7 +24,7 @@ if ($res) {
 
 		while ( $row = $res->fetch_assoc () ) {
 			$tmpTimelineId = $row ['id'];
-			$devSplitsQuery = "SELECT * FROM tblsplit WHERE timelineId = $tmpTimelineId";
+			$devSplitsQuery = "SELECT * FROM tblsplit WHERE timelineId = $tmpTimelineId  order by sorting ASC";
 
 			$resSplit2 = $mysqli->query($devSplitsQuery);
 
