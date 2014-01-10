@@ -1,18 +1,90 @@
 var oDevTable;
 
-/* Formating function for row details */
+function requestSorting($splitId, $sortDirection){
+	$.ajax({
+		type : "POST",
+		url : "http://planner/www/setSorting.php",
+		data : {
+			splitId : $splitId,
+			sortDirection : $sortDirection
+		}
+	}).done(function(msg) {
 
+		try {
+			var answer = JSON.parse(msg);
+		} catch (error) {
+			console.log(msg + ' ' + error);
+			return false;
+		}
+
+		console.log("answer Sorting Split Down: ");
+		console.log(answer);
+
+		if (answer.result == 'TRUE') {
+
+			updateTimelines();
+
+			oDevTable.fnClearTable(0);
+			oDevTable.fnAddData(projects);
+			oDevTable.fnDraw();
+
+
+//			notice('msgErrorDevelopers', 'Saved.', true);
+
+		} else {
+			notice('msgErrorDevelopers', 'An error occured while trying to sort the task down.', true);
+		}
+	}).fail(function() {
+		notice('msgErrorProjectAdd', 'Couldn\'t connect with server.', true);
+	});
+}
+
+function renderSortingButtons(aDataId) {
+
+//	$( "a[class=sortingButtonDown]" ).css({"font-weight":"normal", "color":"#ffffff" }).click(function( event ) {
+	$( "a[class=sortingButtonDown]" ).button({
+		icons : {
+			primary : "ui-icon-triangle-1-s"
+		},
+		text: false
+	}).click(function( event ) {
+		event.preventDefault();
+		console.log("Start sorting");
+        console.log("SplitId: " + $(this).attr('rel'));
+		requestSorting($(this).attr('rel'), 'down');
+
+	});
+
+//	$( "a[class=sortingButtonUp]" ).css({"font-weight":"normal", "color":"#ffffff" }).click(function( event ) {
+	$( "a[class=sortingButtonUp]" ).button({
+		icons : {
+			primary : "ui-icon-triangle-1-n"
+		},
+		text: false
+	}).click(function( event ) {
+        event.preventDefault();
+        console.log("Start sorting");
+        console.log("SplitId: " + $(this).attr('rel'));
+        requestSorting($(this).attr('rel'), 'up');
+    });
+
+}
+
+/**
+ * Formatting method for row details
+ */
 function developerDetails(nTr) {
 	var aData = oDevTable.fnGetData(nTr);
 
 	var sOut = '';
-	sOut += '<table class="ui-widget" cellpadding="5" cellspacing="0" border="0" style="/*padding-left:50px;*/ width:100%;">';
+	sOut += '<table class="ui-widget" cellpadding="5" cellspacing="0" border="0" style="/*padding-left:50px;*/ width:100%; margin:5px;">';
 	sOut += '<thead class="ui-widget-header">';
 	sOut += '<tr>';
 	sOut += '<th style="width:20px; padding:0px; text-align:center;">Tasks</th>';
 	sOut += '<th style="width:20px; padding:0px; text-align:center;">Duration</th>';
 	sOut += '<th style="width:20px; padding:0px; text-align:center;">Finished</th>';
-	sOut += '<th style="width:20px; padding:0px; text-align:center;">Start Date</th>';
+//	sOut += '<th style="width:20px; padding:0px; text-align:center;">Start Date</th>';
+	sOut += '<th style="width:20px; padding:0px; text-align:center;">Sorting</th>';
 	sOut += '</tr>';
 	sOut += '</thead>';
 	sOut += '<tbody class="ui-widget-content">';
@@ -28,13 +100,30 @@ function developerDetails(nTr) {
 		sOut += '<td style="text-align:center; ">';
 		sOut += aData.tasks[i].closed;
 		sOut += '</td>';
-		sOut += '<td style="text-align:center; ">';
-		sOut += aData.tasks[i].startDate;
-		sOut += '</td>';
+
+		if(i == 0){
+			sOut += '<td style="text-align:center; width:50px;">';
+			sOut += '<a href="#" class="sortingButtonDown" rel="'+ aData.tasks[i].id +'">Down</a>';
+			sOut += '</td>';
+		} else if (i == aData.tasks.length -1) {
+			sOut += '<td style="text-align:center; width:50px;">';
+			sOut += '<a href="#" class="sortingButtonUp" rel="'+ aData.tasks[i].id +'">Up</a>';
+			sOut += '</td>';
+		} else {
+			sOut += '<td style="text-align:center; width:50px;">';
+			sOut += '<a href="#" class="sortingButtonUp" rel="'+ aData.tasks[i].id +'">Up</a> - <a href="#" class="sortingButtonDown" rel="'+ aData.tasks[i].id +'">Down</a>';
+			sOut += '</td>';
+		}
+
+
+//		sOut += '<td style="text-align:center; ">';
+//		sOut += aData.tasks[i].startDate;
+//		sOut += '</td>';
 		sOut += '</tr>';
 	}
 	sOut += '</tbody>';
 	sOut += '</table>';
+	sOut += '<script>renderSortingButtons(' + aData.id + ');</script>';
 
 	return sOut;
 }

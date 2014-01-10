@@ -1,6 +1,6 @@
 <?php
 include_once ('tools.php');
-
+writelog("============================================= RETRIEVING TIMELINES =============================================");
 /**
  * ************************* GETTING TIMEINES *****************************
  */
@@ -16,6 +16,8 @@ tbltimeline
 	INNER JOIN tblresource on tbltimeline.resourceId = tblresource.id
 xxx;
 
+writelog($query);
+
 $res = $mysqli->query ( $query );
 
 if ($res) {
@@ -25,6 +27,7 @@ if ($res) {
 		while ( $row = $res->fetch_assoc () ) {
 			$tmpTimelineId = $row ['id'];
 			$devSplitsQuery = "SELECT * FROM tblsplit WHERE timelineId = $tmpTimelineId  order by sorting ASC";
+			writelog($devSplitsQuery);
 
 			$resSplit2 = $mysqli->query($devSplitsQuery);
 
@@ -63,6 +66,7 @@ if ($res) {
 					"days" => Array(),
 					"tasks" => $tasksTimeline
 					);
+			writelog(json_encode($addTimelines));
 		}
 
 	}
