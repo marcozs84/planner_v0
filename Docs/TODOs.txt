@@ -5,11 +5,24 @@ Overall Fixes Planner
 	Tomar una decisión sobre:
 		LocalStorage o Ajax update antes de visualización.
 Nuevas Funcionalidades
+======================================================================
 	Resources: 
+-------------------------------------------------------------
 		Sólo mostrar los recursos relacionados al proyecto seleccionado.
+		- LISTO: se llama Developers, ahora muestran
+
+-------------------------------------------------------------
 		Mostrar las asignaciones de cada recurso
 		|-> Puede ser tomado de timeline, obteniendo el timeineId del recurso seleccionado.
+		- LISTO: se muestran debajo de cada developer en el popup para Developers
+		
+-------------------------------------------------------------
 		|-> Modificar la estructura PHP para que devuelva los recursos con las tareas asignadas.
+		
+======================================================================
+	Developers:
+-------------------------------------------------------------
+		Falta terminar la respuesta del servidor al ordenar splits debajo de un Developer.
 
 Validations:
 - When generating the Calendar, verify if the Project is in the same range than the time period selected.
