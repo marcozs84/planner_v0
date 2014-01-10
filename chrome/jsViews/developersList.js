@@ -1,6 +1,7 @@
 var oDevTable;
 
 /* Formating function for row details */
+
 function developerDetails(nTr) {
 	var aData = oDevTable.fnGetData(nTr);
 
@@ -40,145 +41,6 @@ function developerDetails(nTr) {
 
 var isEditingDeveloper = 0;
 
-function editDeveloper(developerId) {
-	isEditingDeveloper = developerId;
-
-	var objD = getTimelineById(isEditingDeveloper);
-	$('#devName').val(objD.name);
-	$('#devTeam').val(objD.team);
-
-	$('#frmAddDeveloper').slideDown();
-	$('#devName').focus();
-
-	$("#btnAddDeveloper").button("option", "disabled", false);
-
-}
-
-function saveDeveloper() {
-
-	strDevs = JSON.stringify(timeline);
-
-	$.ajax({
-		type : "POST",
-		url : "http://planner/www/saveTimeline.php",
-		data : {
-			devId : isEditingDeveloper,
-			name : $.trim($('#devName').val()),
-			teamId : $.trim($('#devTeam').val())
-		}
-	}).done(function(msg) {
-
-		var answer = JSON.parse(msg);
-
-		console.log("answer: ");
-		console.log(answer);
-
-		if (answer.result == 'TRUE') {
-
-			if (isEditingDeveloper == 0) {
-				$('#devName').val('');
-				$('#frmAddDeveloper').slideUp();
-
-				timeline.push(answer.package);
-
-				stringTimelines = JSON.stringify(timeline);
-				localStorage.setItem('backTimelines', stringTimelines);
-				timeline = JSON.parse(localStorage.getItem('backTimelines'));
-
-				oDevTable.fnClearTable(0);
-				oDevTable.fnAddData(timeline);
-				oDevTable.fnDraw();
-				notice('msgError', 'Created.', true);
-
-			} else {
-
-				var objD = getTimelineById(isEditingDeveloper);
-				objD.name = $('#devName').val();
-				objD.team = $('#devTeam').val();
-
-				stringTimelines = JSON.stringify(timeline);
-				localStorage.setItem('backTimelines', stringTimelines);
-				timeline = JSON.parse(localStorage.getItem('backTimelines'));
-
-				oDevTable.fnClearTable(0);
-				oDevTable.fnAddData(timeline);
-				oDevTable.fnDraw();
-
-				$('#devName').val('');
-				$('#frmAddDeveloper').slideUp();
-
-				isEditingDeveloper = 0;
-
-				notice('msgError', 'Saved.', true);
-			}
-
-		} else {
-			$("#btnAddDeveloper").button("option", "disabled", false);
-			error('msgError', 'Error trying to save.');
-		}
-	}).fail(function(){
-		notice('msgError', 'Couldn\'t connect with server.', true);
-	});
-}
-
-function deleteDeveloper(devId) {
-
-	if(devId instanceof Array){
-	}else{
-		devId = Array(devId);
-	}
-
-	var strDevs = "[" + devId.join(",") + "]";
-
-	$.ajax({
-		type : "POST",
-		url : "http://planner/www/removeTimeline.php",
-		data : {
-			devId : strDevs
-		}
-	}).done(function(msg) {
-		var answer = JSON.parse(msg);
-
-		if (answer.result == 'TRUE') {
-
-			$.ajax({
-				type : "POST",
-				url : "http://planner/www/getTimelines.php"
-			}).done(function(resultTimelines) {
-
-				try{
-					var jsonTimelinesResult = JSON.parse(resultTimelines);
-				}catch(error){
-					error('msgError',error);
-					return false;
-				}
-
-				if(jsonTimelinesResult.result == 'FALSE'){
-					error('msgError',jsonTimelinesResult.message);
-					return false
-				}
-
-				stringTimelines = JSON.stringify(jsonTimelinesResult.package.timelines);
-				localStorage.setItem('backTimelines', stringTimelines);
-				timeline = JSON.parse(localStorage.getItem('backTimelines'));
-
-				oDevTable.fnClearTable(0);
-				oDevTable.fnAddData(timeline);
-				oDevTable.fnDraw();
-
-				$('#devName').val('');
-				$('#frmAddDeveloper').slideUp();
-
-				notice('msgError', 'Removed.', true);
-			});
-
-		} else {
-			error('msgError', 'Error trying to remove.');
-		}
-	}).fail(function(){
-		notice('msgError', 'Couldn\'t connect with server.', true);
-	});
-}
 
 function initDevelopersList() {
 
@@ -191,6 +53,7 @@ function initDevelopersList() {
 		open: function( event, ui ) {
 			/**
 			 * Checking selected project before displaying developers
+			 * if non selected, then no developers are shown
 			 */
 			OnProject = localStorage.getItem('selectedProject');
 			if(OnProject == '' || OnProject == 0){
@@ -203,34 +66,7 @@ function initDevelopersList() {
 //			oDevTable.fnAddData(timeline);
 //			oDevTable.fnDraw();
 		},
-		buttons : [ {
-			text : "Delete",
-			click : function() {
-
-				$("#timeline-confirm-deletion").dialog({
-					resizable : false,
-					height : 100,
-					modal : true,
-					buttons : {
-						Cancel : function() {
-							$(this).dialog("close");
-						},
-						"Accept" : function() {
-							$(this).dialog("close");
-
-							var deletes = new Array();
-							$('input:checkbox[name=developerIds]:checked').each(function() {
-								deletes.push($(this).attr('value'));
-							});
-
-							deleteDeveloper(deletes);
-
-						}
-					}
-				});
-
-			}
-		},{
+		buttons : [{
 			text : "Close",
 			click : function(){
 				$(this).dialog("close");
@@ -254,7 +90,8 @@ function initDevelopersList() {
 			"mDataProp" : "id",
 			"sTitle" : "Id",
 			"sClass" : "center",
-			"bSortable" : true
+			"bSortable" : true,
+			"bVisible" : false
 		}, {
 			"mDataProp" : "projectId",
 			"sTitle" : "Project Id",
@@ -262,26 +99,23 @@ function initDevelopersList() {
 			"bSortable" : true,
 			"bVisible" : false
 		}, {
-			"mDataProp" : null,
+			"mDataProp" : "name",
 			"sTitle" : "Name",
 			"sClass" : "left",
-			"bSortable" : true,
-			"fnRender" : function(obj) {
-				return '<a href="javascript:;" onclick="editDeveloper(' + obj.aData.id + ')">' + obj.aData.name + '</a>';
-			}
+			"bSortable" : true
 		}, {
 			"mDataProp" : "team",
 			"sTitle" : "Team",
 			"sClass" : "center",
 			"bSortable" : true
-		}, {
-			"mDataProp" : null,
-			"sTitle" : "",
-			"sClass" : "center",
-			"bSortable" : false,
-			"fnRender" : function(obj) {
-				return '<input type="checkbox" value="' + obj.aData.id + '" name="developerIds" />';
-			}
+//		}, {
+//			"mDataProp" : null,
+//			"sTitle" : "",
+//			"sClass" : "center",
+//			"bSortable" : false,
+//			"fnRender" : function(obj) {
+//				return '<input type="checkbox" value="' + obj.aData.id + '" name="developerIds" />';
+//			}
 		}]
 	});
 
@@ -299,67 +133,5 @@ function initDevelopersList() {
 		}
 	});
 
-	$('#tblDevelopersList tbody tr td img.btnDevRemoveTbl').on('click', function() {
-
-		var aData = oDevTable.fnGetData(this.parentNode.parentNode); // get
-		// datarow
-		if (null != aData) { // null if we clicked on title row
-			console.log("remove: " + aData.id);
-			$("#timeline-confirm-deletion").dialog({
-				resizable : false,
-				height : 100,
-				modal : true,
-				buttons : {
-					Cancel : function() {
-						$(this).dialog("close");
-					},
-					"Accept" : function() {
-						$(this).dialog("close");
-						deleteDeveloper(aData.id);
-					}
-				}
-			});
-		}
-
-	});
-
-	$('#tblDevelopersList tbody tr td img.btnDevEditTbl').on('click', function() {
-
-		var aData = oDevTable.fnGetData(this.parentNode.parentNode); // get
-		// datarow
-		if (null != aData) { // null if we clicked on title row
-			console.log("edit: " + aData.id);
-		}
-	});
-
-	$('#btnOpenDeveloperForm').button({
-		icons : {
-			primary : "ui-icon-plus"
-		}
-	}).click(function() {
-		$('#frmAddDeveloper').slideDown();
-		$('#devName').val('');
-		$('#devTeam').val('');
-		$('#devName').focus();
-
-		$("#btnAddDeveloper").button("option", "disabled", false);
-	});
-
-	$('#btnAddDeveloper').button({
-		icons : {
-			primary : "ui-icon-disk"
-		}
-	}).click(function() {
-
-		if ($('#devName').val() == '') {
-			alert("Please provide a valid name.");
-			return false;
-		}
-
-		$("#btnAddDeveloper").button("option", "disabled", true);
-
-		saveDeveloper();
-
-	});
 
 };
