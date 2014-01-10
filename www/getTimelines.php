@@ -44,7 +44,8 @@ if ($res) {
 							"originalDate" => $rowSplit ['originalDate'],
 							"delayBeginning" => $rowSplit ['delayBeginning'],
 							"delay" => $rowSplit ['delay'],
-							"duration" => $rowSplit ['duration']
+							"duration" => $rowSplit ['duration'],
+							"sorting" => $rowSplit ['sorting']
 					);
 				}
 			} else {

@@ -15,13 +15,13 @@ if (isset ( $_POST ['splitId'] ) && isset ( $_POST ['sortDirection'] )) {
 SELECT * FROM tblsplit WHERE id = {$splitId};
 xxx;
 
-	$resMax = $mysqli->query ( $querySort );
+	$resSort = $mysqli->query ( $querySort );
 	if($resSort){
 
 		while ( $rowSort = $resSort->fetch_assoc() ) {
 			$timelineId = $rowSort['timelineId'];
 			$sorting = $rowSort['sorting'];
-			writelog($maxOrder);
+			writelog($sorting);
 		}
 
 	} else {
@@ -43,31 +43,71 @@ xxx;
 	 * Also it is required to think in a solution when removing splits from a timeline, what would happen with the sort order blank spaces??
 	 */
 
+	if ($sortDirection == 'up'){
+		/** Get Next Up Position */
+
 		$query = <<<xxx
-UPDATE
-  tblsplit
-SET
-  parentId = {$parentId},
-  timelineId = {$timelineId},
-  assigned = {$assigned},
-  closed = {$closed},
-  startDate = '{$startDate}',
-  originalDate = '{$originalDate}',
-  delayBeginning = {$delayBeginning},
-  delay = {$delay},
-  duration = {$duration},
-  sorting = $maxOrder
-WHERE id={$splitId}
+	SELECT id, sorting FROM tblsplit WHERE timelineId = {$timelineId} AND sorting = (SELECT MIN(sorting) FROM tblsplit WHERE timelineId = {$timelineId} AND sorting > {$sorting} )
 xxx;
+
+	} else {
+		/** Get Next Down Position */
+
+		$query = <<<xxx
+	SELECT id, sorting FROM tblsplit WHERE timelineId = {$timelineId} AND sorting = (SELECT MAX(sorting) FROM tblsplit WHERE timelineId = {$timelineId} AND sorting < {$sorting} )
+xxx;
+	}
 
 	$res = $mysqli->query ( $query );
 
+
 	if ($res) {
 
-// 		Temporarily disabled until assignSplitToTimeline function is finished.
-// 		assignSplitToTimeline($mysqli,$_POST,$timelineId);
+		if ($res->num_rows > 0) {
+			while ( $row = $res->fetch_assoc() ) {
+				$altSplitId = $row['id'];
+				$altSplitSorting = $row['sorting'];
+				writelog("Next Alternative position: splitId: " . $altSplitId . " Pos: ". $altSplitSorting);
+			}
 
-		include_once ('getTasks.php');
+			$queryUpd1 = <<<xxx
+UPDATE
+  tblsplit
+SET
+  sorting = $altSplitSorting
+WHERE id={$splitId}
+xxx;
+			$queryUpd2 = <<<xxx
+UPDATE
+  tblsplit
+SET
+  sorting = $sorting
+WHERE id={$altSplitId}
+xxx;
+
+			$resUpd1 = $mysqli->query ( $queryUpd1 );
+			$resUpd2 = $mysqli->query ( $queryUpd2 );
+
+			if(!$resUpd1 || !$resUpd2){
+				$resultJSON = Array("result" => "FALSE",
+						"message" => "An error occured during the sorting procedure.",
+						"package" => "null"
+				);
+				print json_encode($resultJSON);
+				die();
+			} else {
+				include_once ('getTimelines.php');
+			}
+
+		} else {
+			$resultJSON = Array("result" => "FALSE",
+					"message" => "The sort position has reached the limit of the list.",
+					"package" => "null"
+			);
+			print json_encode($resultJSON);
+			die();
+		}
+
 	} else {
 		$resultJSON = Array("result" => "FALSE",
 				"message" => "Update query failed when updating. Error: ".$mysqli->error. " Query: ".$query ,

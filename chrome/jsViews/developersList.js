@@ -22,11 +22,17 @@ function requestSorting($splitId, $sortDirection){
 
 		if (answer.result == 'TRUE') {
 
-			updateTimelines();
+//			updateTimelines();
+
+			stringTimelines = JSON.stringify(answer.package.timelines);
+			localStorage.setItem('backTimelines', stringTimelines);
+			timeline = JSON.parse(localStorage.getItem('backTimelines'));
 
 			oDevTable.fnClearTable(0);
-			oDevTable.fnAddData(projects);
+			oDevTable.fnAddData(timeline);
 			oDevTable.fnDraw();
+
+			updateDevelopersLinks();
 
 
 //			notice('msgErrorDevelopers', 'Saved.', true);
@@ -85,6 +91,7 @@ function developerDetails(nTr) {
 	sOut += '<th style="width:20px; padding:0px; text-align:center;">Finished</th>';
 //	sOut += '<th style="width:20px; padding:0px; text-align:center;">Start Date</th>';
 	sOut += '<th style="width:20px; padding:0px; text-align:center;">Sorting</th>';
+	sOut += '<th style="width:20px; padding:0px; text-align:center;">SortingVal</th>';
 	sOut += '</tr>';
 	sOut += '</thead>';
 	sOut += '<tbody class="ui-widget-content">';
@@ -115,6 +122,10 @@ function developerDetails(nTr) {
 			sOut += '</td>';
 		}
 
+		sOut += '<td style="text-align:center; ">';
+		sOut += aData.tasks[i].sorting;
+		sOut += '</td>';
+
 
 //		sOut += '<td style="text-align:center; ">';
 //		sOut += aData.tasks[i].startDate;
@@ -126,6 +137,26 @@ function developerDetails(nTr) {
 	sOut += '<script>renderSortingButtons(' + aData.id + ');</script>';
 
 	return sOut;
+}
+
+function updateDevelopersLinks(){
+
+
+	$('#tblDevelopersList tbody tr td img.btnDevOpenTbl').on('click', function() {
+
+		var nTr = $(this).parents('tr')[0];
+		if (oDevTable.fnIsOpen(nTr)) {
+			/* This row is already open - close it */
+			// this.src = "../examples_support/details_open.png";
+			oDevTable.fnClose(nTr);
+		} else {
+			/* Open this row */
+			// this.src = "../examples_support/details_close.png";
+			oDevTable.fnOpen(nTr, developerDetails(nTr), 'details');
+		}
+	});
+
+	return false;
 }
 
 var isEditingDeveloper = 0;
