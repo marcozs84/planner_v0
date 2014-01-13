@@ -27,6 +27,7 @@ class Logging {
 		// (don't forget to set the INI setting date.timezone)
 		$time = @date('[d/M/Y:H:i:s]');
 		$time = @date('[m.d:H:i:s]');
+		$time = @date('[d.m.y H:i:s]');
 		// write current time, script name and message to the log file
 		fwrite($this->fp, "$time ($script_name) $message" . PHP_EOL);
 	}
