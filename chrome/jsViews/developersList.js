@@ -1,4 +1,5 @@
 var oDevTable;
+var DevRowPosTmp = 0;
 
 function requestSorting($splitId, $sortDirection){
 	$.ajax({
@@ -45,19 +46,44 @@ function requestSorting($splitId, $sortDirection){
 	});
 }
 
-function renderSortingButtons(aDataId) {
+function renderSortingButtons(aDataId, devRowPosTmp) {
 
 //	$( "a[class=sortingButtonDown]" ).css({"font-weight":"normal", "color":"#ffffff" }).click(function( event ) {
 	$( "a[class=sortingButtonDown]" ).button({
+//	$( "#sortingButton_"+ ??? +"_Down" ).button({
 		icons : {
 			primary : "ui-icon-triangle-1-s"
 		},
-		text: false
+		text: false,
+		btnDevPos: devRowPosTmp
 	}).click(function( event ) {
 		event.preventDefault();
+//        console.log($(this));
+
+		console.log(DevRowPosTmp);
+
+//		var nTr = $(this).parents('tr')[0];
+
+        console.log($(this).button("option", "btnDevPos"));
+//
+        var fntr = $(this).parents('tr')[2];
+        console.log("fntr");
+        console.log(fntr);
+        var fnumo = oDevTable.fnGetData(fntr);
+//        var fnumo = oDevTable.fnGetPosition(fntr);
+        console.log("fNumo: ");
+        console.log(fnumo);
+
+//		if (oDevTable.fnIsOpen(nTr)) {
+//			oTable.fnClose(nTr);
+//			oTable.fnOpen(nTr, taskDetails(nTr), 'details');
+//		} else {
+//			oTable.fnOpen(nTr, taskDetails(nTr), 'details');
+//		}
+
 		console.log("Start sorting");
         console.log("SplitId: " + $(this).attr('rel'));
-		requestSorting($(this).attr('rel'), 'down');
+//		requestSorting($(this).attr('rel'), 'down');
 
 	});
 
@@ -66,12 +92,15 @@ function renderSortingButtons(aDataId) {
 		icons : {
 			primary : "ui-icon-triangle-1-n"
 		},
-		text: false
+		text: false,
+		btnDevPos: devRowPosTmp
 	}).click(function( event ) {
         event.preventDefault();
+//        console.log($(this));
+//        console.log($(this).button("option", "btnDevPos"));
         console.log("Start sorting");
         console.log("SplitId: " + $(this).attr('rel'));
-        requestSorting($(this).attr('rel'), 'up');
+//        requestSorting($(this).attr('rel'), 'up');
     });
 
 }
@@ -81,12 +110,15 @@ function renderSortingButtons(aDataId) {
  */
 function developerDetails(nTr) {
 	var aData = oDevTable.fnGetData(nTr);
+	var posRow = oDevTable.fnGetPosition(nTr);
+	DevRowPosTmp = posRow;
 
 	var sOut = '';
 	sOut += '<table class="ui-widget" cellpadding="5" cellspacing="0" border="0" style="/*padding-left:50px;*/ width:100%; margin:5px;">';
 	sOut += '<thead class="ui-widget-header">';
 	sOut += '<tr>';
-	sOut += '<th style="width:20px; padding:0px; text-align:center;">Tasks</th>';
+	sOut += '<th style="width:20px; padding:0px; text-align:center;">Task</th>';
+	sOut += '<th style="width:20px; padding:0px; text-align:center;">Id</th>';
 	sOut += '<th style="width:20px; padding:0px; text-align:center;">Duration</th>';
 	sOut += '<th style="width:20px; padding:0px; text-align:center;">Finished</th>';
 //	sOut += '<th style="width:20px; padding:0px; text-align:center;">Start Date</th>';
@@ -102,6 +134,9 @@ function developerDetails(nTr) {
 		sOut += getTaskName(aData.tasks[i].parentId);
 		sOut += '</td>';
 		sOut += '<td style="text-align:center; ">';
+		sOut += aData.tasks[i].id;
+		sOut += '</td>';
+		sOut += '<td style="text-align:center; ">';
 		sOut += aData.tasks[i].duration;
 		sOut += '</td>';
 		sOut += '<td style="text-align:center; ">';
@@ -110,15 +145,15 @@ function developerDetails(nTr) {
 
 		if(i == 0){
 			sOut += '<td style="text-align:center; width:50px;">';
-			sOut += '<a href="#" class="sortingButtonDown" rel="'+ aData.tasks[i].id +'">Down</a>';
+			sOut += '<a href="#" id="sortingButton_'+ aData.tasks[i].id +'_Down" rel="'+ aData.tasks[i].id +'">Down</a>';
 			sOut += '</td>';
 		} else if (i == aData.tasks.length -1) {
 			sOut += '<td style="text-align:center; width:50px;">';
-			sOut += '<a href="#" class="sortingButtonUp" rel="'+ aData.tasks[i].id +'">Up</a>';
+			sOut += '<a href="#" id="sortingButton_'+ aData.tasks[i].id +'_Up" rel="'+ aData.tasks[i].id +'">Up</a>';
 			sOut += '</td>';
 		} else {
 			sOut += '<td style="text-align:center; width:50px;">';
-			sOut += '<a href="#" class="sortingButtonUp" rel="'+ aData.tasks[i].id +'">Up</a> - <a href="#" class="sortingButtonDown" rel="'+ aData.tasks[i].id +'">Down</a>';
+			sOut += '<a href="#" id="sortingButton_'+ aData.tasks[i].id +'_Up" rel="'+ aData.tasks[i].id +'">Up</a> - <a href="#" id="sortingButton_'+ aData.tasks[i].id +'_Down" rel="'+ aData.tasks[i].id +'">Down</a>';
 			sOut += '</td>';
 		}
 
@@ -134,7 +169,7 @@ function developerDetails(nTr) {
 	}
 	sOut += '</tbody>';
 	sOut += '</table>';
-	sOut += '<script>renderSortingButtons(' + aData.id + ');</script>';
+	sOut += '<script>renderSortingButtons(' + aData.id + ','+ DevRowPosTmp +');</script>';
 
 	return sOut;
 }

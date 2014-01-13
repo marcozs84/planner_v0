@@ -43,7 +43,7 @@ xxx;
 	 * Also it is required to think in a solution when removing splits from a timeline, what would happen with the sort order blank spaces??
 	 */
 
-	if ($sortDirection == 'up'){
+	if ($sortDirection == 'down'){
 		/** Get Next Up Position */
 
 		$query = <<<xxx
@@ -57,6 +57,9 @@ xxx;
 	SELECT id, sorting FROM tblsplit WHERE timelineId = {$timelineId} AND sorting = (SELECT MAX(sorting) FROM tblsplit WHERE timelineId = {$timelineId} AND sorting < {$sorting} )
 xxx;
 	}
+
+	writelog($sortDirection);
+	writelog($query);
 
 	$res = $mysqli->query ( $query );
 
