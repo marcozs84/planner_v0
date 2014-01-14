@@ -620,7 +620,7 @@ function initTaskList() {
 					notice('msgErrorTask', 'Task assigned.', true);
 
 					updateTaskLinks();
-					updateTimelines(updateCalendarDisplay);		/* <----- This is what updates the timelines after assignations */
+					updateTimelines(updateCalendarDisplay);		/* <----- This is what updates the timelines AND updates the calendars after assignations */
 
 					//updateCalendarDisplay();
 
@@ -632,7 +632,7 @@ function initTaskList() {
 				});
 
 				updateTaskLinks();
-				updateTimelines();
+				updateTimelines();		/* <----- This only updates the timelines NOT the calendars after assignations */
 
 				 toAssignSplitId = 0;
 			}

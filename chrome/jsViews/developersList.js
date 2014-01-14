@@ -1,7 +1,7 @@
 var oDevTable;
 var DevRowPosTmp = 0;
 
-function requestSorting($splitId, $sortDirection){
+function requestSorting($splitId, $sortDirection, devRowPos){
 	$.ajax({
 		type : "POST",
 		url : "http://planner/www/setSorting.php",
@@ -35,8 +35,20 @@ function requestSorting($splitId, $sortDirection){
 
 			updateDevelopersLinks();
 
+			var nNodes = oDevTable.fnGetNodes(devRowPos);
 
-//			notice('msgErrorDevelopers', 'Saved.', true);
+			if (oDevTable.fnIsOpen(nNodes)) {
+				oDevTable.fnClose(nNodes);
+				oDevTable.fnOpen(nNodes, developerDetails(nNodes), 'details');
+			} else {
+				oDevTable.fnOpen(nNodes, developerDetails(nNodes), 'details');
+			}
+
+			/**
+			 * The UpdateTimelines will occur when the dialog is closed,
+			 * see the close event for $("#developersList").dialog
+			 */
+//			updateTimelines(updateCalendarDisplay);		/* <----- This is what updates the timelines AND updates the calendars after assignations */
 
 		} else {
 			notice('msgErrorDevelopers', 'An error occured while trying to sort the task down.', true);
@@ -48,9 +60,7 @@ function requestSorting($splitId, $sortDirection){
 
 function renderSortingButtons(aDataId, devRowPosTmp) {
 
-//	$( "a[class=sortingButtonDown]" ).css({"font-weight":"normal", "color":"#ffffff" }).click(function( event ) {
-	$( "a[class=sortingButtonDown]" ).button({
-//	$( "#sortingButton_"+ ??? +"_Down" ).button({
+	$( "a[class=sortingButtonDown_"+ devRowPosTmp +"]" ).button({
 		icons : {
 			primary : "ui-icon-triangle-1-s"
 		},
@@ -58,43 +68,11 @@ function renderSortingButtons(aDataId, devRowPosTmp) {
 		btnDevPos: devRowPosTmp
 	}).click(function( event ) {
 		event.preventDefault();
-		var btnId = $(this).attr("id");
-		console.log(btnId);
-
-		var btnDevPos = $( "#sortingButton_"+ btnId + "Down").button("option","btnDevPos");
-		console.log(btnDevPos);
-
-////        console.log($(this));
-//
-//		console.log(DevRowPosTmp);
-//
-////		var nTr = $(this).parents('tr')[0];
-//
-//        console.log($(this).button("option", "btnDevPos"));
-////
-//        var fntr = $(this).parents('tr')[2];
-//        console.log("fntr");
-//        console.log(fntr);
-//        var fnumo = oDevTable.fnGetData(fntr);
-////        var fnumo = oDevTable.fnGetPosition(fntr);
-//        console.log("fNumo: ");
-//        console.log(fnumo);
-//
-////		if (oDevTable.fnIsOpen(nTr)) {
-////			oTable.fnClose(nTr);
-////			oTable.fnOpen(nTr, taskDetails(nTr), 'details');
-////		} else {
-////			oTable.fnOpen(nTr, taskDetails(nTr), 'details');
-////		}
-
-		console.log("Start sorting");
-        console.log("SplitId: " + $(this).attr('rel'));
-//		requestSorting($(this).attr('rel'), 'down');
-
+		var btnDevPos = $(this).button("option", "btnDevPos");
+		requestSorting($(this).attr('rel'), 'down',btnDevPos);
 	});
 
-//	$( "a[class=sortingButtonUp]" ).css({"font-weight":"normal", "color":"#ffffff" }).click(function( event ) {
-	$( "a[class=sortingButtonUp]" ).button({
+	$( "a[class=sortingButtonUp_"+ devRowPosTmp +"]" ).button({
 		icons : {
 			primary : "ui-icon-triangle-1-n"
 		},
@@ -102,11 +80,8 @@ function renderSortingButtons(aDataId, devRowPosTmp) {
 		btnDevPos: devRowPosTmp
 	}).click(function( event ) {
         event.preventDefault();
-//        console.log($(this));
-//        console.log($(this).button("option", "btnDevPos"));
-        console.log("Start sorting");
-        console.log("SplitId: " + $(this).attr('rel'));
-//        requestSorting($(this).attr('rel'), 'up');
+        var btnDevPos = $(this).button("option", "btnDevPos");
+        requestSorting($(this).attr('rel'), 'up',btnDevPos);
     });
 
 }
@@ -151,15 +126,15 @@ function developerDetails(nTr) {
 
 		if(i == 0){
 			sOut += '<td style="text-align:center; width:50px;">';
-			sOut += '<a href="#" id="sortingButton_'+ aData.tasks[i].id +'_Down" class="sortingButtonDown" rel="'+ aData.tasks[i].id +'">Down</a>';
+			sOut += '<a href="#" class="sortingButtonDown_'+ DevRowPosTmp +'" rel="'+ aData.tasks[i].id +'">Down</a>';
 			sOut += '</td>';
 		} else if (i == aData.tasks.length -1) {
 			sOut += '<td style="text-align:center; width:50px;">';
-			sOut += '<a href="#" id="sortingButton_'+ aData.tasks[i].id +'_Up" class="sortingButtonUp" rel="'+ aData.tasks[i].id +'">Up</a>';
+			sOut += '<a href="#" class="sortingButtonUp_'+ DevRowPosTmp +'" rel="'+ aData.tasks[i].id +'">Up</a>';
 			sOut += '</td>';
 		} else {
 			sOut += '<td style="text-align:center; width:50px;">';
-			sOut += '<a href="#" id="sortingButton_'+ aData.tasks[i].id +'_Up" class="sortingButtonUp" rel="'+ aData.tasks[i].id +'">Up</a> - <a href="#" id="sortingButton_'+ aData.tasks[i].id +'_Down" class="sortingButtonDown" rel="'+ aData.tasks[i].id +'">Down</a>';
+			sOut += '<a href="#" class="sortingButtonUp_'+ DevRowPosTmp +'" rel="'+ aData.tasks[i].id +'">Up</a> - <a href="#" class="sortingButtonDown_'+ DevRowPosTmp +'" rel="'+ aData.tasks[i].id +'">Down</a>';
 			sOut += '</td>';
 		}
 
@@ -221,11 +196,14 @@ function initDevelopersList() {
 				$('#tblDevelopersList').dataTable().fnFilter(	"-1",		2,	false,	false);
 			}else{
 				$('#tblDevelopersList').dataTable().fnFilter(	OnProject,	2,	false,	false);
-			}
+			};
 
 //			oDevTable.fnClearTable(0);
 //			oDevTable.fnAddData(timeline);
 //			oDevTable.fnDraw();
+		},
+		close: function( event, ui ) {
+			updateTimelines(updateCalendarDisplay);		/* <----- This is what updates the timelines AND updates the calendars after assignations */
 		},
 		buttons : [{
 			text : "Close",
