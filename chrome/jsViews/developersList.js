@@ -99,12 +99,10 @@ function developerDetails(nTr) {
 	sOut += '<thead class="ui-widget-header">';
 	sOut += '<tr>';
 	sOut += '<th style="width:20px; padding:0px; text-align:center;">Task</th>';
-	sOut += '<th style="width:20px; padding:0px; text-align:center;">Id</th>';
 	sOut += '<th style="width:20px; padding:0px; text-align:center;">Duration</th>';
 	sOut += '<th style="width:20px; padding:0px; text-align:center;">Finished</th>';
 //	sOut += '<th style="width:20px; padding:0px; text-align:center;">Start Date</th>';
 	sOut += '<th style="width:20px; padding:0px; text-align:center;">Sorting</th>';
-	sOut += '<th style="width:20px; padding:0px; text-align:center;">SortingVal</th>';
 	sOut += '</tr>';
 	sOut += '</thead>';
 	sOut += '<tbody class="ui-widget-content">';
@@ -115,14 +113,15 @@ function developerDetails(nTr) {
 		sOut += getTaskName(aData.tasks[i].parentId);
 		sOut += '</td>';
 		sOut += '<td style="text-align:center; ">';
-		sOut += aData.tasks[i].id;
-		sOut += '</td>';
-		sOut += '<td style="text-align:center; ">';
 		sOut += aData.tasks[i].duration;
 		sOut += '</td>';
 		sOut += '<td style="text-align:center; ">';
 		sOut += aData.tasks[i].closed;
 		sOut += '</td>';
+
+//		sOut += '<td style="text-align:center; ">';
+//		sOut += aData.tasks[i].startDate;
+//		sOut += '</td>';
 
 		if(i == 0){
 			sOut += '<td style="text-align:center; width:50px;">';
@@ -138,14 +137,6 @@ function developerDetails(nTr) {
 			sOut += '</td>';
 		}
 
-		sOut += '<td style="text-align:center; ">';
-		sOut += aData.tasks[i].sorting;
-		sOut += '</td>';
-
-
-//		sOut += '<td style="text-align:center; ">';
-//		sOut += aData.tasks[i].startDate;
-//		sOut += '</td>';
 		sOut += '</tr>';
 	}
 	sOut += '</tbody>';
@@ -197,10 +188,6 @@ function initDevelopersList() {
 			}else{
 				$('#tblDevelopersList').dataTable().fnFilter(	OnProject,	2,	false,	false);
 			};
-
-//			oDevTable.fnClearTable(0);
-//			oDevTable.fnAddData(timeline);
-//			oDevTable.fnDraw();
 		},
 		close: function( event, ui ) {
 			updateTimelines(updateCalendarDisplay);		/* <----- This is what updates the timelines AND updates the calendars after assignations */
@@ -271,6 +258,5 @@ function initDevelopersList() {
 			oDevTable.fnOpen(nTr, developerDetails(nTr), 'details');
 		}
 	});
-
 
 };

@@ -17,8 +17,6 @@ var TaskRowPosTmp = 0;
 
 function updateTaskLinks(){
 
-//	console.log("updating list tasks");
-
 	$('#tblTaskList tbody tr td a.linkName').on('click', function() {
 		var nTr = $(this).parents('tr')[0];
 		editTask(nTr);
@@ -177,8 +175,6 @@ function devideSplit(splitId,duration,parentId,rowPos){
 
 function assignTask(splitId,rowPos){
 	toAssignSplitId = splitId;
-//	console.log(splitObj);
-//	toAssignSplitObj = splitObj;
 	toAssignSplitRowPos = rowPos;
 
 	if(localStorage.getItem('selectedProject') == 0 || localStorage.getItem('selectedProject') == ''){
@@ -258,7 +254,7 @@ function saveTask() {
 				oTable.fnAddData(tasks);
 				oTable.fnDraw();
 
-				updateTaskLinks()
+				updateTaskLinks();
 
 				notice('msgErrorTask', 'Created.', true);
 			} else {
@@ -279,7 +275,7 @@ function saveTask() {
 				oTable.fnAddData(tasks);
 				oTable.fnDraw();
 
-				updateTaskLinks()
+				updateTaskLinks();
 
 				$('#tskName').val('');
 				$('#tskDuration').val('');
@@ -384,9 +380,7 @@ function initTaskList() {
 		buttons : [ {
 			text : "Delete",
 			click : function() {
-
 				$("#task-confirm-deletion").dialog("open");
-
 			}
 		}, {
 			text : "Close",
@@ -509,11 +503,6 @@ function initTaskList() {
 					oTable.fnAddData(tasks);
 					oTable.fnDraw();
 
-//					$(this).parents("TR").fadeOut("slow", function () {
-//						var pos = oTable.fnGetPosition(this);
-//						oTable.fnDeleteRow(pos);
-//					});
-
 					var nNodes = oTable.fnGetNodes(newDivRowObj);
 
 					if (oTable.fnIsOpen(nNodes)) {
@@ -554,9 +543,6 @@ function initTaskList() {
 			click : function() {
 
 				var thisDialTask = this;
-
-//				var posRow = oTable.fnGetPosition(nTr);
-//				var aData = oTable.fnGetData(nTr);
 
 				var nNodes = oTable.fnGetNodes(toAssignSplitRowPos);
 				var aObj = oTable.fnGetData(nNodes);
@@ -648,7 +634,6 @@ function initTaskList() {
 		}
 	});
 
-	// $(document).ready(function() {
 	oTable = $('#tblTaskList').dataTable({
 		"aaData" : tasks,
 		"bJQueryUI" : true,
@@ -661,14 +646,12 @@ function initTaskList() {
 				"fnRender" : function(obj) {
 					return '<img class="btnTaskOpenTbl" src="imgs/details_open.png" />';
 				}
-			},
-			{
+			}, {
 				"mDataProp" : "id",
 				"sTitle" : "Id",
 				"sClass" : "center",
 				"bSortable" : true
-			},
-			{
+			}, {
 				"mDataProp" : null,
 				"sTitle" : "Name",
 				"sClass" : "left",
@@ -676,8 +659,7 @@ function initTaskList() {
 				"fnRender" : function(obj) {
 					return '<a href="#" class="linkName">' + obj.aData.name + '</a>';
 				}
-			},
-			{
+			}, {
 				"mDataProp" : null,
 				"sTitle" : "Duration",
 				"sClass" : "center",
@@ -707,8 +689,7 @@ function initTaskList() {
 					return ((iWeeks > 0) ? iWeeks + 'w' : '') + ' ' + ((iDays > 0) ? iDays + 'd' : '') + ' '
 							+ ((iHours > 0) ? iHours + 'h' : '') + ' ( ' + obj.aData.duration + 'h )';
 				}
-			},
-			{
+			}, {
 				"mDataProp" : null,
 				"sTitle" : "Color",
 				"sClass" : "center",

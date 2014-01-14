@@ -204,8 +204,6 @@ function initResourcesList() {
 
 			if(ProjectOnEdit != 0){
 
-//				$('#btnOpenResourceForm').hide();
-
 				console.log(ProjectExistingResources);
 
 				$('input:checkbox[name=resourceIds]').each(function() {
@@ -216,7 +214,6 @@ function initResourcesList() {
 						$(this).attr('disabled', true);
 					}else{
 						$(this).attr('disabled', false);
-//						$(this).removeAttr("disabled");
 					}
 				});
 

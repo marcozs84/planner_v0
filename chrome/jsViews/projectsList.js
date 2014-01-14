@@ -15,11 +15,6 @@ function renderButtonAddResource(aDataId) {
 		btnProjectId : aDataId,
 		btnProjectRowPos : ProjectRowPosTmp
 	}).click(function() {
-		// console.log($('#btnAddResource_' + aData.id).button("option",
-		// "btnProjectId"));
-		// console.log($('#btnAddResource_' + aData.id).button("option",
-		// "btnProjectRowPos"));
-		// $("#projectAddResource").dialog("open");
 
 		$('input:checkbox[name=project_' + aDataId + '_ResourceIds]').each(function() {
 			ProjectExistingResources.push($(this).attr('value'));
@@ -62,10 +57,6 @@ function renderButtonAddResource(aDataId) {
 	ProjectRowPosTmp = 0;
 
 	$('.tableInnerDescription tr td').css('border-bottom', '1px solid #444');
-	// oPrjTable = $('.tableInnerDescription').dataTable({
-	// "bJQueryUI" : true,
-	// "sPaginationType" : "full_numbers"
-	// });
 }
 
 /* Formating function for row details */
@@ -79,18 +70,15 @@ function projectDetails(nTr) {
 	sOut += '<strong>Description</strong><br />';
 	sOut += aData.description + '<br /><br />';
 	sOut += '<strong>Resources</strong><br />';
-	// sOut += '<table class="ui-widget" cellpadding="5" cellspacing="0"
-	// border="0" style="/*padding-left:50px;*/ width:100%;">';
-	sOut += '<table class="tableInnerDescription" cellpadding="5" cellspacing="0" border="0" style="/*padding-left:50px;*/ width:100%;">';
-	// sOut += '<caption>Resources</caption>';
-	// sOut += '<thead class="ui-widget-header">';
-	// sOut += '<tr>';
-	// sOut += '<th style="width:20px; padding:0px;
-	// text-align:center;">Name</th>';
-	// sOut += '<th style="width:20px; padding:0px;
-	// text-align:center;">Initials</th>';
-	// sOut += '</tr>';
-	// sOut += '</thead>';
+//	sOut += '<table class="ui-widget" cellpadding="5" cellspacing="0" border="0" style="/*padding-left:50px;*/ width:100%;">';
+	sOut += '<table class="tableInnerDescription" cellpadding="5" cellspacing="0" border="0" style="/*padding-left:50px;*/ margin:2px 0px 0px 0px; width:100%;">';
+//	sOut += '<caption>Resources</caption>';
+//	sOut += '<thead class="ui-widget-header">';
+//	sOut += '<tr>';
+//	sOut += '<th style="width:20px; padding:0px; text-align:center;">Name</th>';
+//	sOut += '<th style="width:20px; padding:0px; text-align:center;">Initials</th>';
+//	sOut += '</tr>';
+//	sOut += '</thead>';
 	sOut += '<tbody class="ui-widget-content">';
 	for ( var i = 0; i < aData.timelines.length; i++) {
 
@@ -141,11 +129,6 @@ function editProject(event) {
 }
 
 function updateProjectLinks(){
-//	oPrjTable.$('tr').each(function(){
-//		var nAs = $('a',this);
-//		$(nAs[0]).on('click',{id:$(nAs[0]).attr('id')},editProject);
-//	});
-
 
 	$('#tblProjectsList tbody tr td a.linkName').on('click', function() {
 		var nTr = $(this).parents('tr')[0];
@@ -156,12 +139,8 @@ function updateProjectLinks(){
 
 		var nTr = $(this).parents('tr')[0];
 		if (oPrjTable.fnIsOpen(nTr)) {
-			/* This row is already open - close it */
-			// this.src = "../examples_support/details_open.png";
 			oPrjTable.fnClose(nTr);
 		} else {
-			/* Open this row */
-			// this.src = "../examples_support/details_close.png";
 			oPrjTable.fnOpen(nTr, projectDetails(nTr), 'details');
 		}
 	});
@@ -251,7 +230,6 @@ function saveProject() {
 				objP.startDate = $('#prjStartDate').val();
 				objP.endDate = $('#prjEndDate').val();
 
-//				$('#frmAddProject').slideUp();
 				$('#frmAddProject').dialog("close");
 
 				stringProjects = JSON.stringify(projects);
@@ -268,7 +246,6 @@ function saveProject() {
 				$('#prjDescription').val('');
 				$('#prjStartDate').val('');
 				$('#prjEndDate').val('');
-//				$('#frmAddProject').slideUp();
 				$('#frmAddProject').dialog("close");
 
 				isEditingProject = 0;
@@ -315,7 +292,7 @@ function deleteProject(prjId) {
 				url : "http://planner/www/getProjects.php",
 				data : {
 					taskId : 1
-				// so the request is taken as POST
+				// Value required so the request is taken as POST, if no value it wont take it as a post.
 				}
 			}).done(function(resultProjects) {
 
@@ -345,7 +322,6 @@ function deleteProject(prjId) {
 				$('#prjDescription').val('');
 				$('#prjStartDate').val('');
 				$('#prjEndDate').val('');
-//				$('#frmAddProject').slideUp();
 				$('#frmAddProject').dialog("close");
 
 				notice('msgErrorProject', 'Removed.', true);
@@ -396,8 +372,7 @@ function deleteProjectResources(projectId, resources){
 				type : "POST",
 				url : "http://planner/www/getProjects.php",
 				data : {
-					taskId : 1
-				// so the request is taken as POST
+					taskId : 1			// so the request is taken as POST
 				}
 			}).done(function(resultProjects) {
 
@@ -511,7 +486,6 @@ function addResourcesToProject(projectId, resources) {
 				$('#prjDescription').val('');
 				$('#prjStartDate').val('');
 				$('#prjEndDate').val('');
-//				$('#frmAddProject').slideUp();
 				$('#frmAddProject').dialog("close");
 
 				var nNodes = oPrjTable.fnGetNodes(ProjectRowPos);
@@ -649,16 +623,6 @@ function initProjectsList() {
 				return '<img class="btnPrjOpenTbl" src="imgs/icon-add.png" />';
 			}
 		}, {
-			"mDataProp" : "id",
-			"sTitle" : "Id",
-			"sClass" : "center",
-			"bSortable" : true
-		// }, {
-		// "mDataProp" : "name",
-		// "sTitle" : "NameHidden",
-		// "sClass" : "center",
-		// "bSortable" : true
-		}, {
 			"mDataProp" : null,
 //			"mDataProp" : 'name',
 			"sTitle" : "Name",
@@ -678,15 +642,6 @@ function initProjectsList() {
 			"sTitle" : "End Date",
 			"sClass" : "center",
 			"bSortable" : false
-//		}, {
-//			"mDataProp" : null,
-//			"sTitle" : "Select",
-//			"sClass" : "left",
-//			"bSearchable" : false,
-//			"bSortable" : false,
-//			"fnRender" : function(obj) {
-//				return '<a href="javascript:;" onclick="selectProject(' + obj.aData.id + ')">Select project</a>';
-//			}
 		}, {
 			"mDataProp" : null,
 			"sTitle" : "",

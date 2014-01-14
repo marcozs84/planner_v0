@@ -169,10 +169,10 @@ var Resource = function(timeline) {
 			this.days = timeline.days;
 			this.tasks = timeline.tasks;
 		}
-	}
+	};
 
 	this.construct();
-}
+};
 
 var Task = function(task) {
 	this.id = 0;
@@ -485,7 +485,6 @@ function GenerateCalendar(from,to){
 	}
 
 //	console.log(fromWeek,toWeek);
-//
 //	console.log("startDate:" + startDate);
 
 
@@ -566,12 +565,8 @@ function GenerateCalendar(from,to){
 				var prjStartDate = strToDate(prj.startDate);
 				var prjEndDate = strToDate(prj.endDate);
 
-//				console.log(startDate);
-//				console.log(prjStartDate);
-//				console.log(prjEndDate);
 
 				if((timelineDate >= prjStartDate) && (timelineDate <= prjEndDate)){
-//					console.log("is in range");
 					timeline[tm].days.push(day);
 				}
 
@@ -593,15 +588,8 @@ function GenerateCalendar(from,to){
 
 		html = '';
 
-//		console.log("last startDate:" + startDate);
 		startDate.setDate(startDate.getDate() + 7);
-//		console.log(startDate);
-//		console.log("-----------");
-
 	}
-
-//	console.log("prj.timelines");
-//	console.log(timeline);
 
 	generateAll();
 	$('.father > div').grrrid('justify', 'height');
@@ -616,21 +604,13 @@ function GenerateCalendar(from,to){
 
 function generateAll() {
 
-//	console.log(JSON.stringify(timeline));
-
 	var prj = getProjectById(localStorage.getItem('selectedProject'));
 
 	for ( var i = 0; i < timeline.length; i++) {
-//		console.log("Generating Timeline: " + timeline[i].id);
-//		console.log(timeline[i]);
 		if(timeline[i].projectId == prj.id){
 			generateTimeline(timeline[i].id);
 		}
-
-//		console.log("================================================");
 	}
-
-//	console.log(JSON.stringify(timeline));
 }
 
 function generateTimeline(devId) {
@@ -686,7 +666,7 @@ function generateTimeline(devId) {
 
 function buildTask(task) {
 
-	// Search for first available day
+//	Search for first available day
 	var objI = 0;
 //	console.log("building task: ");
 //	console.log(task);
