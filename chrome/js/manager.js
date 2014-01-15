@@ -952,7 +952,8 @@ function toolBarInit() {
 	}).click(function() {
 		localStorage.setItem('localSession', '');
 		localStorage.setItem('selectedProject', '');
-		window.location.href = window.location.href;
+//		window.location.href = window.location.href;
+		window.location.href = 'login.html';
 	});
 
 	$("#btnLogOut").button({
