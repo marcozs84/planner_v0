@@ -514,6 +514,8 @@ function initPrjAddFromToCalendars() {
 		dateFormat : "d.m.yy",
 		changeMonth : true,
 		numberOfMonths : 3,
+		showWeek: true,
+		firstDay: 1,
 		beforeShowDay: $.datepicker.noWeekends,
 		onSelect : function(selectedDate) {
 			$("#prjEndDate").datepicker("option", "minDate", selectedDate);
@@ -524,6 +526,8 @@ function initPrjAddFromToCalendars() {
 		dateFormat : "d.m.yy",
 		changeMonth : true,
 		numberOfMonths : 3,
+		showWeek: true,
+		firstDay: 1,
 		beforeShowDay: $.datepicker.noWeekends,
 		onSelect : function(selectedDate) {
 			$("#prjStartDate").datepicker("option", "maxDate", selectedDate);

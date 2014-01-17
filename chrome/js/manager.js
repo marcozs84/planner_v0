@@ -1038,6 +1038,7 @@ function initFromToCalendars() {
 		changeMonth : true,
 		numberOfMonths : 3,
 		showWeek: true,
+		firstDay: 1,
 		beforeShowDay: $.datepicker.noWeekends,
 		onSelect : function(selectedDate) {
 			CalendarDateFrom = selectedDate;
@@ -1052,6 +1053,7 @@ function initFromToCalendars() {
 		changeMonth : true,
 		numberOfMonths : 3,
 		showWeek: true,
+		firstDay: 1,
 		beforeShowDay: $.datepicker.noWeekends,
 		onSelect : function(selectedDate) {
 			CalendarDateTo = selectedDate;
