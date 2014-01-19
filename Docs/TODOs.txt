@@ -4,6 +4,7 @@ Overall Fixes Planner
 	Cambios de nombre de las variables.
 	Tomar una decisión sobre:
 		LocalStorage o Ajax update antes de visualización.
+
 Nuevas Funcionalidades
 ======================================================================
 	Resources: 
@@ -23,6 +24,8 @@ Nuevas Funcionalidades
 	Developers:
 -------------------------------------------------------------
 		Falta terminar la respuesta del servidor al ordenar splits debajo de un Developer.
+		Luego de agregar un recurso a un projecto, actualizar la timeline, o Resources,
+		de manera que no sea necesario actualizar la pagina para ver la lista de developers.
 
 Validations:
 - When generating the Calendar, verify if the Project is in the same range than the time period selected.
