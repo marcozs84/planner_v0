@@ -45,7 +45,8 @@ if ($res) {
 							"delayBeginning" => $rowSplit ['delayBeginning'],
 							"delay" => $rowSplit ['delay'],
 							"duration" => $rowSplit ['duration'],
-							"sorting" => $rowSplit ['sorting']
+							"sorting" => $rowSplit ['sorting'],
+							"status" => $rowSplit ['status']
 					);
 				}
 			} else {

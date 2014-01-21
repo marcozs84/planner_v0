@@ -44,7 +44,9 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['duration'] )) {
 				`originalDate`,
 				`delayBeginning`,
 				`delay`,
-				`duration`)
+				`duration`,
+				`sorting`,
+				`status`)
 				VALUES(
 				$timelineId,
 				0,
@@ -54,7 +56,9 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['duration'] )) {
 				'',
 				0,
 				0,
-				$duration)";
+				$duration,
+				1,
+				0)";
 
 			$resSplit = $mysqli->query ( $querySplit );
 
@@ -72,6 +76,8 @@ if (isset ( $_POST ['name'] ) && isset ( $_POST ['duration'] )) {
 						"delayBeginning" => 0,
 						"delay" => 0,
 						"duration" => $duration,
+						"sorting" => 1,
+						"status" => 0
 						);
 
 				$resultJSON = Array("result" => "TRUE",

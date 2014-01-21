@@ -569,7 +569,8 @@ function initTaskList() {
 						originalDate : aData.originalDate,
 						delayBeginning : aData.delayBeginning,
 						delay : aData.delay,
-						duration : aData.duration
+						duration : aData.duration,
+						status : aData.status
 					}
 				}).done(function(msg) {
 

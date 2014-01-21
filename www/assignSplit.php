@@ -170,6 +170,7 @@ if (isset ( $_POST ['splitId'] ) && isset ( $_POST ['duration'] )) {
 	$delayBeginning = trim ( $_POST ['delayBeginning'] );
 	$delay = trim ( $_POST ['delay'] );
 	$duration = trim ( $_POST ['duration'] );
+	$status = trim ( $_POST ['status'] );
 
 
 	//////////////// GETTING MAX ORDER VALUE FROM SPLITS ///////////////////////////
@@ -210,7 +211,8 @@ SET
   delayBeginning = {$delayBeginning},
   delay = {$delay},
   duration = {$duration},
-  sorting = $maxOrder
+  sorting = {$maxOrder},
+  status = {$status}
 WHERE id={$splitId}
 xxx;
 

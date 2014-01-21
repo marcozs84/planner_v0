@@ -58,6 +58,63 @@ function requestSorting($splitId, $sortDirection, devRowPos){
 	});
 }
 
+function setSplitStatus($splitId, $status, devRowPos){
+	$.ajax({
+		type : "POST",
+		url : "http://planner/www/setSplitStatus.php",
+		data : {
+			splitId : $splitId,
+			status : $status
+		}
+	}).done(function(msg) {
+
+		try {
+			var answer = JSON.parse(msg);
+		} catch (error) {
+			console.log(msg + ' ' + error);
+			return false;
+		}
+
+		console.log("answer setting split status: ");
+		console.log(answer);
+
+		if (answer.result == 'TRUE') {
+
+//			updateTimelines();
+
+			stringTimelines = JSON.stringify(answer.package.timelines);
+			localStorage.setItem('backTimelines', stringTimelines);
+			timeline = JSON.parse(localStorage.getItem('backTimelines'));
+
+			oDevTable.fnClearTable(0);
+			oDevTable.fnAddData(timeline);
+			oDevTable.fnDraw();
+
+			updateDevelopersLinks();
+
+			var nNodes = oDevTable.fnGetNodes(devRowPos);
+
+			if (oDevTable.fnIsOpen(nNodes)) {
+				oDevTable.fnClose(nNodes);
+				oDevTable.fnOpen(nNodes, developerDetails(nNodes), 'details');
+			} else {
+				oDevTable.fnOpen(nNodes, developerDetails(nNodes), 'details');
+			}
+
+			/**
+			 * The UpdateTimelines will occur when the dialog is closed,
+			 * see the close event for $("#developersList").dialog
+			 */
+//			updateTimelines(updateCalendarDisplay);		/* <----- This is what updates the timelines AND updates the calendars after assignations */
+
+		} else {
+			notice('msgErrorDevelopers', 'An error occured while trying to set a status for the selected task.', true);
+		}
+	}).fail(function() {
+		notice('msgErrorProjectAdd', 'Couldn\'t connect with server.', true);
+	});
+}
+
 function renderSortingButtons(aDataId, devRowPosTmp) {
 
 	$( "a[class=sortingButtonDown_"+ devRowPosTmp +"]" ).button({
@@ -84,6 +141,11 @@ function renderSortingButtons(aDataId, devRowPosTmp) {
         requestSorting($(this).attr('rel'), 'up',btnDevPos);
     });
 
+	$( "select[class=taskStatusSelector_"+ devRowPosTmp +"]" ).on("change", function( event ){
+//		console.log($(this).attr('id'),$(this).val(),$(this).attr('rel'));
+		setSplitStatus($(this).attr('id'),$(this).val(),$(this).attr('rel'));
+	});
+
 }
 
 /**
@@ -100,7 +162,8 @@ function developerDetails(nTr) {
 	sOut += '<tr>';
 	sOut += '<th style="width:20px; padding:0px; text-align:center;">Task</th>';
 	sOut += '<th style="width:20px; padding:0px; text-align:center;">Duration</th>';
-	sOut += '<th style="width:20px; padding:0px; text-align:center;">Finished</th>';
+//	sOut += '<th style="width:20px; padding:0px; text-align:center;">Finished</th>';
+	sOut += '<th style="width:20px; padding:0px; text-align:center;">Status</th>';
 //	sOut += '<th style="width:20px; padding:0px; text-align:center;">Start Date</th>';
 	sOut += '<th style="width:20px; padding:0px; text-align:center;">Sorting</th>';
 	sOut += '</tr>';
@@ -115,8 +178,20 @@ function developerDetails(nTr) {
 		sOut += '<td style="text-align:center; ">';
 		sOut += aData.tasks[i].duration;
 		sOut += '</td>';
+//		sOut += '<td style="text-align:center; ">';
+//		sOut += aData.tasks[i].closed;
+//		sOut += '</td>';
 		sOut += '<td style="text-align:center; ">';
-		sOut += aData.tasks[i].closed;
+//		sOut += aData.tasks[i].status;
+
+		sOut += '<select class="taskStatusSelector_'+ DevRowPosTmp +'" id="'+ aData.tasks[i].id +'" rel="'+ DevRowPosTmp +'">';
+		sOut += '<option value="0" ' + (0 == aData.tasks[i].status ? 'selected' : '') + '>Open</option>';
+		sOut += '<option value="1" ' + (1 == aData.tasks[i].status ? 'selected' : '') + '>In Progress</option>';
+		sOut += '<option value="2" ' + (2 == aData.tasks[i].status ? 'selected' : '' )+ '>Sent to QA</option>';
+		sOut += '<option value="3" ' + (3 == aData.tasks[i].status ? 'selected' : '' )+ '>Resolved</option>';
+		sOut += '<option value="4" ' + (4 == aData.tasks[i].status ? 'selected' : '' )+ '>Closed</option>';
+		sOut += '</select>';
+
 		sOut += '</td>';
 
 //		sOut += '<td style="text-align:center; ">';

@@ -13,6 +13,8 @@ if (isset ( $_POST ['splitId'] ) && isset ( $_POST ['duration'] )) {
 	$delayBeginning = trim ( $_POST ['delayBeginning'] );
 	$delay = trim ( $_POST ['delay'] );
 	$duration = trim ( $_POST ['duration'] );
+	$sorting = trim ( $_POST ['sorting'] );
+	$status = trim ( $_POST ['status'] );
 
 
 
@@ -28,7 +30,9 @@ SET
   originalDate = '{$originalDate}',
   delayBeginning = {$delayBeginning},
   delay = {$delay},
-  duration = {$duration}
+  duration = {$duration},
+  sorting = {$sorting},
+  status = {$status}
 WHERE id={$splitId}
 xxx;
 

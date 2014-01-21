@@ -17,7 +17,9 @@ if (isset ( $_POST ['oldId'] ) && isset ( $_POST ['behavior'] ) && isset ( $_POS
 		`originalDate`,
 		`delayBeginning`,
 		`delay`,
-		`duration`)
+		`duration`,
+		`sorting`,
+		`status`)
 	SELECT
 		`parentId`,
 		0,
@@ -27,7 +29,9 @@ if (isset ( $_POST ['oldId'] ) && isset ( $_POST ['behavior'] ) && isset ( $_POS
 		'',
 		'',
 		'',
-		$duration
+		$duration,
+		1,
+		0
 	from tblsplit WHERE id = $splitId ";
 
 	$res = $mysqli->query ( $query );
