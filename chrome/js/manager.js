@@ -490,6 +490,7 @@ function GenerateCalendar(from,to){
 
 	var dateday = new Date();
 	var displayNone = '';
+	var nameHolderCounter = 0;
 
 	for(var i = fromWeek ; i <= toWeek ; i++){
 
@@ -542,10 +543,16 @@ function GenerateCalendar(from,to){
 
 			html += '<tr>';
 			html += '<td class="devName" style="width:50px;">';
-			html += timeline[j].name;
+			html += '<a href="#" id="nameHolder_'+ nameHolderCounter +'" rel="'+ timeline[j].id +'" class="nameHover">' + timeline[j].name + '</a>';
+			html += '<div id="ah_nameHolder_'+ nameHolderCounter +'" class="actionsHolder">';
+			html += '	<div><a href="#" rel="'+ timeline[j].id +'">Add Action</a></div>';
+			html += '	<div><a href="#" rel="'+ timeline[j].id +'">Show Details</a></div>';
+			html += '</div>';
 			html += '</td>';
 			html += '<td colspan="5">';
 			html += '<div class="father">';
+
+			nameHolderCounter++;
 
 			for(var k = 1 ; k < 6 ; k++){
 
@@ -590,6 +597,28 @@ function GenerateCalendar(from,to){
 
 		startDate.setDate(startDate.getDate() + 7);
 	}
+
+	$('#actionsHolder').mouseleave(function(){
+		$(this).css({"margin-left":"-100px", "top":"10px"});
+	});
+
+	$('a[class=nameHover]')
+		.css({
+		"text-decoration":"none"})
+		.mouseenter(function(){
+//			console.log($(this).attr('id'));
+//			var posNameHover = $(this).offset();
+//			console.log(posNameHover.top);
+//			$('#actionsHolder').offset({top:posNameHover.top-8});
+//			$('#actionsHolder').animate({
+//				"margin-left":"30px"
+//			});
+
+//			$('#ah_'+ $(this).attr('id')).
+		})
+		.mouseleave(function(){
+//			$('#actionsHolder').css({"margin-left":"-100px", "top":"10px"});
+		});
 
 	generateAll();
 	$('.father > div').grrrid('justify', 'height');
