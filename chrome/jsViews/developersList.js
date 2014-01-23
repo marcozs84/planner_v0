@@ -146,6 +146,11 @@ function renderSortingButtons(aDataId, devRowPosTmp) {
 		setSplitStatus($(this).attr('id'),$(this).val(),$(this).attr('rel'));
 	});
 
+	$('#devSubList_'+ devRowPosTmp).dataTable({
+		"bJQueryUI" : true,
+		"sPaginationType" : "two_button",
+	});
+
 }
 
 /**
@@ -157,15 +162,15 @@ function developerDetails(nTr) {
 	DevRowPosTmp = posRow;
 
 	var sOut = '';
-	sOut += '<table class="ui-widget" cellpadding="5" cellspacing="0" border="0" style="/*padding-left:50px;*/ width:100%; margin:5px;">';
-	sOut += '<thead class="ui-widget-header">';
+	sOut += '<table id="devSubList_'+ DevRowPosTmp +'" class="ui-widget" cellpadding="5" cellspacing="0" border="0" style="/*padding-left:50px;*/ width:100%; margin:5px;">';
+	sOut += '<thead>';
 	sOut += '<tr>';
-	sOut += '<th style="width:20px; padding:0px; text-align:center;">Task</th>';
-	sOut += '<th style="width:20px; padding:0px; text-align:center;">Duration</th>';
-//	sOut += '<th style="width:20px; padding:0px; text-align:center;">Finished</th>';
-	sOut += '<th style="width:20px; padding:0px; text-align:center;">Status</th>';
-//	sOut += '<th style="width:20px; padding:0px; text-align:center;">Start Date</th>';
-	sOut += '<th style="width:20px; padding:0px; text-align:center;">Sorting</th>';
+	sOut += '<th style="width:20px; text-align:center;">Task</th>';
+	sOut += '<th style="width:20px; text-align:center;">Duration</th>';
+//	sOut += '<th style="width:20px; text-align:center;">Finished</th>';
+	sOut += '<th style="width:20px; text-align:center;">Status</th>';
+//	sOut += '<th style="width:20px; text-align:center;">Start Date</th>';
+	sOut += '<th style="width:20px; text-align:center;">Sorting</th>';
 	sOut += '</tr>';
 	sOut += '</thead>';
 	sOut += '<tbody class="ui-widget-content">';
