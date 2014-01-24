@@ -5,6 +5,9 @@ Overall Fixes Planner
 	Tomar una decisión sobre:
 		LocalStorage o Ajax update antes de visualización.
 
+Cleaning
+	Need to clean the stylesheets, check loading order and duplicated classes
+
 Nuevas Funcionalidades
 ======================================================================
 	Resources: 
