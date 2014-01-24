@@ -598,27 +598,31 @@ function GenerateCalendar(from,to){
 		startDate.setDate(startDate.getDate() + 7);
 	}
 
-	$('#actionsHolder').mouseleave(function(){
-		$(this).css({"margin-left":"-100px", "top":"10px"});
-	});
-
-	$('a[class=nameHover]')
-		.css({
-		"text-decoration":"none"})
-		.mouseenter(function(){
-//			console.log($(this).attr('id'));
-//			var posNameHover = $(this).offset();
-//			console.log(posNameHover.top);
-//			$('#actionsHolder').offset({top:posNameHover.top-8});
-//			$('#actionsHolder').animate({
-//				"margin-left":"30px"
-//			});
-
-//			$('#ah_'+ $(this).attr('id')).
-		})
-		.mouseleave(function(){
-//			$('#actionsHolder').css({"margin-left":"-100px", "top":"10px"});
+	/**
+	 * Animated menus
+	 */
+	var currNameHover = null;
+	$('.actionsHolder').mouseenter(function(){
+		currNameHover = $(this);
+		var thisobj1 = $(this);
+		setTimeout(function() {
+			if(currNameHover.attr("id") == thisobj1.attr("id")){
+				thisobj1.animate({
+					"margin-left":"-5px",
+					"line-height":"29px",
+					"margin-top":"-28px"
+				},200,"swing");
+			}
+		}, 500);
+	}).mouseleave(function(){
+		currNameHover = null;
+		$(this).animate({
+			"margin-left":"-200px",
+			"line-height":"10px",
+			"margin-top":"-13px"
 		});
+	});
+	// END Animated Menús
 
 	generateAll();
 	$('.father > div').grrrid('justify', 'height');

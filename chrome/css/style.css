@@ -141,6 +141,37 @@ div.floating-menu {
 }
 
 /************************************/
+/* Animated Actions Holder */
+
+.actionsHolder {
+	color:#000;
+	width:200px;
+	min-height:40px;
+/* 	margin-left:-100px; */
+/* 	border:1px solid #ff44ff; */
+
+	position: absolute;
+	z-index: 40;
+	margin-top:-13px;
+	margin-left:-200px;
+/*  	margin-left:0px; */
+	padding-left:50px;
+	line-height:10px;
+}
+
+.actionsHolder > div {
+	float:left;
+	clear:both;
+}
+
+.nameHover{
+	position: absolute;
+	z-index: 10;
+	margin-top:-7px;
+	text-decoration:none;
+}
+
+/************************************/
 
 
 .father{
