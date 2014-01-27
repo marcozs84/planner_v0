@@ -611,7 +611,7 @@ function GenerateCalendar(from,to){
 					"margin-left":"-5px",
 					"line-height":"29px",
 					"margin-top":"-28px"
-				},200,"swing");
+				},200);
 			}
 		}, 500);
 	}).mouseleave(function(){
