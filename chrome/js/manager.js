@@ -490,15 +490,27 @@ function GenerateCalendar(from,to){
 
 	var dateday = new Date();
 	var displayNone = '';
+	var refFromYear = fromDate.getFullYear();
+	var refToYear = toDate.getFullYear();
 
-	for(var i = fromWeek ; i <= toWeek ; i++){
+	refToYear = toWeek + refToYear;
 
-		var weekN = i;
+//	for(var i = fromWeek ; (i <= toWeek) && (refFromYear != refToYear) ; i++){
+	for(var i = fromWeek ; refFromYear <= refToYear ; i++){
+
+//		var weekN = i;
+
+		if( i == 12){
+			i = 1;
+			refFromYear++;
+		}
 
 		var headerDate = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
 //		headerDate = startDate;
 
 //		console.log("week: " + i + " startDate:" + startDate);
+
+		var currentWeekNo = headerDate.getWeek();
 
 		date1 = headerDate.getDate();
 		month1 = headerDate.getMonth();
@@ -522,7 +534,7 @@ function GenerateCalendar(from,to){
 		}
 
 		html += '<table class="weekTable ui-widget" cellpadding="0" cellspacing="0" border="0" style="'+ displayNone +'">';
-		html += '		<caption>Week'+ i +'</caption>';
+		html += '		<caption>Week'+ currentWeekNo +'</caption>';
 		html += '<thead class="ui-widget-header">';
 		html += '<tr>';
 		html += '<th></th><th>'+ 'Mon ' + date1 + ', ' + getMonthNameByIndex(month1) + '</th><th>'+ 'Tue ' + date2 + ', ' + getMonthNameByIndex(month2)+'</th><th>'+ 'Wed ' + date3 + ', ' + getMonthNameByIndex(month3)+'</th><th>'+ 'Thu ' + date4 + ', ' + getMonthNameByIndex(month4)+'</th><th>'+ 'Fri ' + date5 + ', ' + getMonthNameByIndex(month5)+'</th>';
@@ -554,7 +566,7 @@ function GenerateCalendar(from,to){
 				var day = new Object();
 
 				day.date = timelineDate.getFullYear() + "/" + (timelineDate.getMonth() + 1) + "/" + timelineDate.getDate();
-				day.week = weekN;
+				day.week = currentWeekNo;
 				day.day = k;
 				day.hours = 8;
 				day.used = 0 ;
@@ -570,7 +582,7 @@ function GenerateCalendar(from,to){
 					timeline[tm].days.push(day);
 				}
 
-				html += '<div class="smallContainer" id="div_' + weekN +'_'+ timeline[j].id +'_'+ k +'">';
+				html += '<div class="smallContainer" id="div_' + currentWeekNo +'_'+ timeline[j].id +'_'+ k +'">';
 				html += '</div>';
 
 				timelineDate.setDate(timelineDate.getDate() + 1);
